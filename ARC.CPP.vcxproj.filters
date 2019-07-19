@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source files">
+      <UniqueIdentifier>{c7bab1e8-0ba3-4b3a-9a95-1649d4032a40}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{369b6eb4-eea6-4724-877c-6340b3cb05c2}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource files">
+      <UniqueIdentifier>{af9dea21-d769-475c-83ae-2ed28bf189b4}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="VisualGDB settings">
+      <UniqueIdentifier>{0cdcac84-cbc7-4b1e-b3d6-8c0b285fdbf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source files\MyRio_lib">
+      <UniqueIdentifier>{561764c7-be7c-455b-b3ca-2f7871ec5737}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files\MyRio_lib">
+      <UniqueIdentifier>{db3b6dd6-fcf2-4287-9be9-f673d22b7796}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ARC.CPP-Debug.vgdbsettings">
+      <Filter>VisualGDB settings</Filter>
+    </None>
+    <None Include="ARC.CPP-Release.vgdbsettings">
+      <Filter>VisualGDB settings</Filter>
+    </None>
+    <ClCompile Include="main.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyRio_lib\AIO.c">
+      <Filter>Source files\MyRio_lib</Filter>
+    </ClCompile>
+    <ClCompile Include="MyRio_lib\ButtonIRQ.c">
+      <Filter>Source files\MyRio_lib</Filter>
+    </ClCompile>
+    <ClCompile Include="MyRio_lib\DIO.c">
+      <Filter>Source files\MyRio_lib</Filter>
+    </ClCompile>
+    <ClCompile Include="MyRio_lib\Encoder.c">
+      <Filter>Source files\MyRio_lib</Filter>
+    </ClCompile>
+    <ClCompile Include="MyRio_lib\I2C.c">
+      <Filter>Source files\MyRio_lib</Filter>
+    </ClCompile>
+    <ClCompile Include="MyRio_lib\IRQConfigure.c">
+      <Filter>Source files\MyRio_lib</Filter>
+    </ClCompile>
+    <ClCompile Include="MyRio_lib\MyRio.c">
+      <Filter>Source files\MyRio_lib</Filter>
+    </ClCompile>
+    <ClCompile Include="MyRio_lib\NiFpga.c">
+      <Filter>Source files\MyRio_lib</Filter>
+    </ClCompile>
+    <ClCompile Include="MyRio_lib\PWM.c">
+      <Filter>Source files\MyRio_lib</Filter>
+    </ClCompile>
+    <ClCompile Include="MyRio_lib\UART.c">
+      <Filter>Source files\MyRio_lib</Filter>
+    </ClCompile>
+    <ClInclude Include="MyRio_lib\AIO.h">
+      <Filter>Header files\MyRio_lib</Filter>
+    </ClInclude>
+    <ClInclude Include="MyRio_lib\ButtonIRQ.h">
+      <Filter>Header files\MyRio_lib</Filter>
+    </ClInclude>
+    <ClInclude Include="MyRio_lib\DIO.h">
+      <Filter>Header files\MyRio_lib</Filter>
+    </ClInclude>
+    <ClInclude Include="MyRio_lib\MyRio1900.h">
+      <Filter>Header files\MyRio_lib</Filter>
+    </ClInclude>
+    <ClInclude Include="MyRio_lib\Encoder.h">
+      <Filter>Header files\MyRio_lib</Filter>
+    </ClInclude>
+    <ClInclude Include="MyRio_lib\I2C.h">
+      <Filter>Header files\MyRio_lib</Filter>
+    </ClInclude>
+    <ClInclude Include="MyRio_lib\IRQConfigure.h">
+      <Filter>Header files\MyRio_lib</Filter>
+    </ClInclude>
+    <ClInclude Include="MyRio_lib\MyRio.h">
+      <Filter>Header files\MyRio_lib</Filter>
+    </ClInclude>
+    <ClInclude Include="MyRio_lib\MyRio1950.h">
+      <Filter>Header files\MyRio_lib</Filter>
+    </ClInclude>
+    <ClInclude Include="MyRio_lib\NiFpga.h">
+      <Filter>Header files\MyRio_lib</Filter>
+    </ClInclude>
+    <ClInclude Include="MyRio_lib\NiFpga_MyRio1900Fpga30.h">
+      <Filter>Header files\MyRio_lib</Filter>
+    </ClInclude>
+    <ClInclude Include="MyRio_lib\NiFpga_MyRio1950Fpga30.h">
+      <Filter>Header files\MyRio_lib</Filter>
+    </ClInclude>
+    <ClInclude Include="MyRio_lib\PWM.h">
+      <Filter>Header files\MyRio_lib</Filter>
+    </ClInclude>
+    <ClInclude Include="MyRio_lib\UART.h">
+      <Filter>Header files\MyRio_lib</Filter>
+    </ClInclude>
+    <ClInclude Include="MyRio_lib\visa.h">
+      <Filter>Header files\MyRio_lib</Filter>
+    </ClInclude>
+    <ClInclude Include="MyRio_lib\visatype.h">
+      <Filter>Header files\MyRio_lib</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="lidar_driver.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="drivers.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="lidar_driver.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Config.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="drivers.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

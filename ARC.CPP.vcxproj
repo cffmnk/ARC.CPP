@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|VisualGDB">
+      <Configuration>Debug</Configuration>
+      <Platform>VisualGDB</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|VisualGDB">
+      <Configuration>Release</Configuration>
+      <Platform>VisualGDB</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{3EC13F93-BC40-43DF-B395-69C92A776D89}</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
+    <ExplicitSysroot>C:\arm_Myrio_2017\sysroots\cortexa9-vfpv3-nilrt-linux-gnueabi</ExplicitSysroot>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
+    <ExplicitSysroot>C:\arm_Myrio_2017\sysroots\cortexa9-vfpv3-nilrt-linux-gnueabi</ExplicitSysroot>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
+    <GNUConfigurationType>Debug</GNUConfigurationType>
+    <ToolchainID>com.sysprogs.imported.arm-nilrt-linux-gnueabi1</ToolchainID>
+    <ToolchainVersion>4.9.2/7.8.1/r0</ToolchainVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
+    <ToolchainID>com.sysprogs.imported.arm-nilrt-linux-gnueabi1</ToolchainID>
+    <ToolchainVersion>4.9.2/7.8.1/r0</ToolchainVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>=/usr/include;=/usr/include/c++/4.9.2;=/usr/include/c++/4.9.2/arm-nilrt-linux-gnueabi;$(ToolchainDir)\..\..\..\opencv_3.4.5/include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CPPLanguageStandard>CPP14</CPPLanguageStandard>
+    </ClCompile>
+    <Link>
+      <LibrarySearchDirectories>$(ToolchainDir)\..\..\..\C_Support_for_myRIO/source;$(ToolchainDir)\..\..\..\opencv_3.4.5\staticDebug\lib;$(ToolchainDir)\..\..\..\opencv_3.4.5\staticDebug\share\OpenCV\3rdparty\lib;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
+      <AdditionalLibraryNames>visa;pthread;jpeg;webp;png;z;tiff;dl;m;pthread;rt;libprotobuf;libjasper;IlmImf;quirc;opencv_dnn;opencv_ml;opencv_objdetect;opencv_shape;opencv_stitching;opencv_superres;opencv_videostab;opencv_calib3d;opencv_features2d;opencv_highgui;opencv_videoio;opencv_imgcodecs;opencv_video;opencv_photo;opencv_imgproc;opencv_flann;opencv_core;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>=/usr/include;=/usr/include/c++/4.9.2;=/usr/include/c++/4.9.2/arm-nilrt-linux-gnueabi;$(ToolchainDir)\..\..\..\opencv_3.4.5/include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <CPPLanguageStandard>CPP14</CPPLanguageStandard>
+      <EnableAddressSanitizer>true</EnableAddressSanitizer>
+      <EnableThreadSanitizer>true</EnableThreadSanitizer>
+      <EnableLeakSanitizer>true</EnableLeakSanitizer>
+    </ClCompile>
+    <Link>
+      <LibrarySearchDirectories>$(ToolchainDir)\..\..\..\C_Support_for_myRIO/source;$(ToolchainDir)\..\..\..\opencv_3.4.5\staticDebug\lib;$(ToolchainDir)\..\..\..\opencv_3.4.5\staticDebug\share\OpenCV\3rdparty\lib;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
+      <AdditionalLibraryNames>visa;pthread;jpeg;webp;png;z;tiff;dl;m;pthread;rt;libprotobuf;libjasper;IlmImf;quirc;opencv_dnn;opencv_ml;opencv_objdetect;opencv_shape;opencv_stitching;opencv_superres;opencv_videostab;opencv_calib3d;opencv_features2d;opencv_highgui;opencv_videoio;opencv_imgcodecs;opencv_video;opencv_photo;opencv_imgproc;opencv_flann;opencv_core;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ItemGroup>
+    <None Include="ARC.CPP-Debug.vgdbsettings" />
+    <None Include="ARC.CPP-Release.vgdbsettings" />
+    <ClCompile Include="drivers.cpp" />
+    <ClCompile Include="lidar_driver.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MyRio_lib\AIO.c" />
+    <ClCompile Include="MyRio_lib\ButtonIRQ.c" />
+    <ClCompile Include="MyRio_lib\DIO.c" />
+    <ClCompile Include="MyRio_lib\Encoder.c" />
+    <ClCompile Include="MyRio_lib\I2C.c" />
+    <ClCompile Include="MyRio_lib\IRQConfigure.c" />
+    <ClCompile Include="MyRio_lib\MyRio.c" />
+    <ClCompile Include="MyRio_lib\NiFpga.c" />
+    <ClCompile Include="MyRio_lib\PWM.c" />
+    <ClCompile Include="MyRio_lib\UART.c" />
+    <ClInclude Include="Config.h" />
+    <ClInclude Include="drivers.h" />
+    <ClInclude Include="lidar_driver.h" />
+    <ClInclude Include="MyRio_lib\AIO.h" />
+    <ClInclude Include="MyRio_lib\ButtonIRQ.h" />
+    <ClInclude Include="MyRio_lib\DIO.h" />
+    <ClInclude Include="MyRio_lib\MyRio1900.h" />
+    <ClInclude Include="MyRio_lib\Encoder.h" />
+    <ClInclude Include="MyRio_lib\I2C.h" />
+    <ClInclude Include="MyRio_lib\IRQConfigure.h" />
+    <ClInclude Include="MyRio_lib\MyRio.h" />
+    <ClInclude Include="MyRio_lib\MyRio1950.h" />
+    <ClInclude Include="MyRio_lib\NiFpga.h" />
+    <ClInclude Include="MyRio_lib\NiFpga_MyRio1900Fpga30.h" />
+    <ClInclude Include="MyRio_lib\NiFpga_MyRio1950Fpga30.h" />
+    <ClInclude Include="MyRio_lib\PWM.h" />
+    <ClInclude Include="MyRio_lib\UART.h" />
+    <ClInclude Include="MyRio_lib\visa.h" />
+    <ClInclude Include="MyRio_lib\visatype.h" />
+  </ItemGroup>
+</Project>
