@@ -116,7 +116,7 @@
     <ClCompile Include="lidar_driver.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="drivers.cpp">
+    <ClCompile Include="controllers.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -127,7 +127,7 @@
     <ClInclude Include="Config.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="drivers.h">
+    <ClInclude Include="controllers.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -67,7 +67,7 @@
   <ItemGroup>
     <None Include="ARC.CPP-Debug.vgdbsettings" />
     <None Include="ARC.CPP-Release.vgdbsettings" />
-    <ClCompile Include="drivers.cpp" />
+    <ClCompile Include="controllers.cpp" />
     <ClCompile Include="lidar_driver.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyRio_lib\AIO.c" />
@@ -81,7 +81,7 @@
     <ClCompile Include="MyRio_lib\PWM.c" />
     <ClCompile Include="MyRio_lib\UART.c" />
     <ClInclude Include="Config.h" />
-    <ClInclude Include="drivers.h" />
+    <ClInclude Include="controllers.h" />
     <ClInclude Include="lidar_driver.h" />
     <ClInclude Include="MyRio_lib\AIO.h" />
     <ClInclude Include="MyRio_lib\ButtonIRQ.h" />
