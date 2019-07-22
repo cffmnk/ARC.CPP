@@ -50,9 +50,9 @@
     <ClCompile>
       <AdditionalIncludeDirectories>=/usr/include;=/usr/include/c++/4.9.2;=/usr/include/c++/4.9.2/arm-nilrt-linux-gnueabi;$(ToolchainDir)\..\..\..\opencv_3.4.5/include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CPPLanguageStandard>CPP14</CPPLanguageStandard>
-      <EnableAddressSanitizer>true</EnableAddressSanitizer>
-      <EnableThreadSanitizer>true</EnableThreadSanitizer>
-      <EnableLeakSanitizer>true</EnableLeakSanitizer>
+      <EnableAddressSanitizer>false</EnableAddressSanitizer>
+      <EnableThreadSanitizer>false</EnableThreadSanitizer>
+      <EnableLeakSanitizer>false</EnableLeakSanitizer>
     </ClCompile>
     <Link>
       <LibrarySearchDirectories>$(ToolchainDir)\..\..\..\C_Support_for_myRIO/source;$(ToolchainDir)\..\..\..\opencv_3.4.5\staticDebug\lib;$(ToolchainDir)\..\..\..\opencv_3.4.5\staticDebug\share\OpenCV\3rdparty\lib;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>

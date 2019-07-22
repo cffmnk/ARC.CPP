@@ -4,19 +4,23 @@ MotorController::MotorController(MyRio_I2c* i2c, uint8_t address)
 	: i2c_(i2c)
 	, address_(address)
 {
+	reset();
 	enable();
-	setSpeedPID(MC_SPEED_P, MC_SPEED_I, MC_SPEED_D);
+	// setSpeedPID(MC_SPEED_P, MC_SPEED_I, MC_SPEED_D);
+	dd(10);
 }
 
 MotorController::~MotorController()
 {
 	reset();
+	dd(10);
 }
 
 void MotorController::enable()
 {
 	uint8_t writeData = MC_ENABLE;
 	I2c_Write(i2c_, address_, &writeData, 1);
+	dd(10);
 }
 
 uint16_t MotorController::batteryVoltage()
@@ -25,6 +29,7 @@ uint16_t MotorController::batteryVoltage()
 	I2c_Write(i2c_, address_, &writeData, 1);
 	uint8_t readData[2];
 	I2c_Read(i2c_, address_, readData, 2);
+	dd(10);
 	return (readData[0] << 8) + readData[1];
 }
 	
@@ -40,6 +45,7 @@ void MotorController::setInvertState(uint8_t motor, bool state)
 	
 	writeData[1] = state;
 	I2c_Write(i2c_, address_, writeData, 2);
+	dd(10);
 }
 	
 int32_t MotorController::readEncoderCount(uint8_t motor)
@@ -58,6 +64,7 @@ int32_t MotorController::readEncoderCount(uint8_t motor)
 	int32_t result = 0;
 	for (int i = 0; i < 4; ++i)
 		result = (result << 8) + readData[3 - i];
+	dd(10);
 	return result;
 }
 	
@@ -77,6 +84,7 @@ int32_t MotorController::readEncoderDegree(uint8_t motor)
 	int32_t result = 0;
 	for (int i = 0; i < 4; ++i)
 		result = (result << 8) + readData[i];
+	dd(10);
 	return result;
 }
 	
@@ -93,6 +101,7 @@ uint16_t MotorController::readCurrent(uint8_t motor)
 	I2c_Write(i2c_, address_, &writeData, 1);
 	uint8_t readData[2];
 	I2c_Read(i2c_, address_, readData, 2);
+	dd(10);
 	return (readData[0] << 8) + readData[1];
 }
 	

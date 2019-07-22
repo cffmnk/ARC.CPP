@@ -5,6 +5,10 @@
 #include "MyRio_lib/MyRio.h"
 #include "MyRio_lib/I2C.h"
 #include "Config.h"
+#include <chrono>
+#include <thread>
+
+#define dd(x) std::this_thread::sleep_for(std::chrono::milliseconds(x))
 
 #define MC_FIRMWARE 0x26
 #define MC_SET_ID 0x24
