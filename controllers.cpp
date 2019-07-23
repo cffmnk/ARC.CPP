@@ -1,13 +1,15 @@
 #include "controllers.h"
-
+/*
 MotorController::MotorController(MyRio_I2c* i2c, uint8_t address)
-	: i2c_(i2c)
-	, address_(address)
 {
-	reset();
+	i2c_ =  i2c;
+	address_ = address;
 	enable();
+	
+	//reset();
+	//
 	// setSpeedPID(MC_SPEED_P, MC_SPEED_I, MC_SPEED_D);
-	dd(10);
+	//dd(10);
 }
 
 MotorController::~MotorController()
@@ -20,7 +22,7 @@ void MotorController::enable()
 {
 	uint8_t writeData = MC_ENABLE;
 	I2c_Write(i2c_, address_, &writeData, 1);
-	dd(10);
+	dd(50);
 }
 
 uint16_t MotorController::batteryVoltage()
@@ -147,6 +149,7 @@ void MotorController::setMotorPower(uint8_t motor, int8_t power)
 	
 	writeData[1] = power;
 	I2c_Write(i2c_, address_, writeData, 2);
+
 }
 	
 void MotorController::setMotorsPower(int8_t power1, int8_t power2)
@@ -206,5 +209,7 @@ void MotorController::setSpeedPID(float p, float i, float d)
 	writeData[6] = dk & 0xFF;
 	I2c_Write(i2c_, address_, writeData, 7);
 }
+
+*/
 	
 // void setTargetPID(float p, float i, float d);

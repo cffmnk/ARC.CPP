@@ -4,17 +4,22 @@
 #include <string>
 #include <iostream>
 
-#include "lidar_driver.h"
-#include "initialization.cpp"
-#include "controllers.h"
-#include "Config.h"
+
 
 #include "MyRio_lib/MyRio.h"
 #include "MyRio_lib/I2C.h"
 #include "MyRio_lib/DIO.h"
 #include <opencv2/opencv.hpp>
 
-using namespace cv;
+#include "lidar_driver.h"
+#include "initialization.cpp"
+#include "motorcontrollers.cpp"
+#include "Config.h"
+#include "servo.cpp"
+
+//using namespace cv;
+
+
 
 int main()
 {
@@ -24,148 +29,51 @@ int main()
 	MyRio_Dio Button;
 	
 	initHardware(&status, &i2cA, &Button);
-	{
-		uint8_t w[1] = {MC_ENABLE};
-		I2c_Write(&i2cA, 1, w, 1);
-		auto t1 = std::chrono::high_resolution_clock::now();
-		std::this_thread::sleep_for(std::chrono::milliseconds(50));
-	}
-	{
-		uint8_t w[1] = {MC_ENABLE};
-		I2c_Write(&i2cA, 2, w, 1);
-		std::this_thread::sleep_for(std::chrono::milliseconds(50));
-	}
-//	{
-//		int16_t speed = -200;
-//		uint8_t w[3] = {MC_M2_SPEED};
-//		w[1] = speed >> 8;
-//		w[2] = speed & 0xFF;
-//		I2c_Write(&i2cA, 1, w, 3);
-//		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-//	}
-//	{
-//		int16_t speed = -200;
-//		uint8_t w[3] = {MC_M1_SPEED};
-//		w[1] = speed >> 8;
-//		w[2] = speed & 0xFF;
-//		I2c_Write(&i2cA, 1, w, 3);
-//		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-//	}
-//	{
-//		int16_t speed = 200;
-//		uint8_t w[3] = {MC_M1_SPEED};
-//		w[1] = speed >> 8;
-//		w[2] = speed & 0xFF;
-//		I2c_Write(&i2cA, 2, w, 3);
-//		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-//	}
-//	{
-//		int16_t speed = 200;
-//		uint8_t w[3] = {MC_M2_SPEED};
-//		w[1] = speed >> 8;
-//		w[2] = speed & 0xFF;
-//		I2c_Write(&i2cA, 2, w, 3);
-//		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-//	}
-//	
-//	std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-//	{
-//		int16_t speed = 200;
-//		uint8_t w[3] = {MC_M2_SPEED};
-//		w[1] = speed >> 8;
-//		w[2] = speed & 0xFF;
-//		I2c_Write(&i2cA, 1, w, 3);
-//		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-//	}
 	
-//	{
-//		int16_t speed = 200;
-//		uint8_t w[3] = {MC_M1_SPEED};
-//		w[1] = speed >> 8;
-//		w[2] = speed & 0xFF;
-//		I2c_Write(&i2cA, 1, w, 3);
-//		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-//	}
+	auto t1 = std::chrono::high_resolution_clock::now();
 	
-//	{
-//		int16_t speed = -200;
-//		uint8_t w[3] = {MC_M1_SPEED};
-//		w[1] = speed >> 8;
-//		w[2] = speed & 0xFF;
-//		I2c_Write(&i2cA, 2, w, 3);
-//		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-//	}
-//	{
-//		int16_t speed = -200;
-//		uint8_t w[3] = {MC_M2_SPEED};
-//		w[1] = speed >> 8;
-//		w[2] = speed & 0xFF;
-//		I2c_Write(&i2cA, 2, w, 3);
-//		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-//	}
-//	std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-	//	{
-	//		int16_t speed = 0;
-	//		uint8_t w[3] = {MC_M2_SPEED};
-	//		w[1] = speed >> 8;
-	//		w[2] = speed & 0xFF;
-	//		I2c_Write(&i2cA, 1, w, 3);
-	//		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-	//	}
-	//	{
-	//		int16_t speed = 0;
-	//		uint8_t w[3] = {MC_M1_SPEED};
-	//		w[1] = speed >> 8;
-	//		w[2] = speed & 0xFF;
-	//		I2c_Write(&i2cA, 1, w, 3);
-	//		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-	//	}
-	//	{
-	//		int16_t speed = 0;
-	//		uint8_t w[3] = {MC_M1_SPEED};
-	//		w[1] = speed >> 8;
-	//		w[2] = speed & 0xFF;
-	//		I2c_Write(&i2cA, 2, w, 3);
-	//		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-	//	}
-	//	{
-	//		int16_t speed = 0;
-	//		uint8_t w[3] = {MC_M2_SPEED};
-	//		w[1] = speed >> 8;
-	//		w[2] = speed & 0xFF;
-	//		I2c_Write(&i2cA, 2, w, 3);
-	//		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-	//	}
+	MotorController mc1(&i2cA, 1);
+	MotorController mc2(&i2cA, 2);
 	
-	{
-		uint16_t speed1 = -0;
-		uint16_t speed2 = -00;
-		uint8_t w[5] = {MC_M12_SPEED};
-		w[1] = speed1 >> 8;
-		w[2] = speed1 & 0xFF;
-		w[3] = speed2 >> 8;
-		w[4] = speed2 & 0xFF;
-		I2c_Write(&i2cA, 1, w, 5);
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-	}
-	{
-		uint16_t speed1 = -00;
-		uint16_t speed2 = -00;
-		uint8_t w[5] = {MC_M12_SPEED};
-		w[1] = speed1 >> 8;
-		w[2] = speed1 & 0xFF;
-		w[3] = speed2 >> 8;
-		w[4] = speed2 & 0xFF;
-		I2c_Write(&i2cA, 2, w, 5);
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-	}
+	ServoController s1(&i2cA, 3);
 	
-	VideoCapture cap(0);
-	Mat frames;
-	cap >> frames;
-	imshow("lol", frames);
-	waitKey(0);
-	destroyAllWindows();
+
+	
+	s1.setSpeed(80, 50, 50, 80);
+	
+	
+	
+	s1.down();
+	s1.openLeft();
+	s1.openRight();
+	delay(500);
+	
+	
+	s1.up();
+	
+	delay(1000);
+	s1.closeRight();
+	delay(1000);
+	
+	s1.down();
+	
+	
+	
+	
+	
+	
+	
+	delay(1000);
+	s1.reset();
+	
+
+
+	//cv ::VideoCapture cap(0);
+	//cv :: Mat frames;
+	//cap >> frames;
+	//imshow("lol", frames);
+	//waitKey(0);
+	//destroyAllWindows();
 	
 	MyRio_Close();
 	return status;

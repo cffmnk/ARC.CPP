@@ -31,6 +31,7 @@
     <GNUConfigurationType>Debug</GNUConfigurationType>
     <ToolchainID>com.sysprogs.imported.arm-nilrt-linux-gnueabi1</ToolchainID>
     <ToolchainVersion>4.9.2/7.8.1/r0</ToolchainVersion>
+    <OutDir>C:\arm_Myrio_2017\sysroots\cortexa9-vfpv3-nilrt-linux-gnueabi</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
     <ToolchainID>com.sysprogs.imported.arm-nilrt-linux-gnueabi1</ToolchainID>
