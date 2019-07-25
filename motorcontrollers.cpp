@@ -69,7 +69,7 @@ public:
     {
         uint8_t writeData = MC_ENABLE;
         I2c_Write(i2c_, address_, &writeData, 1);
-        delay(30);
+        delay(10);
     }
     
     void setInvertState(uint8_t motor, bool state)
@@ -133,7 +133,7 @@ public:
 		int32_t result = 0;
 		for (int i = 0; i < 4; ++i)
 			result = (result << 8) + readData[i];
-		delay(30);
+		delay(10);
 		return result;
 	}
     
@@ -158,7 +158,7 @@ public:
 	{
 		uint8_t writeData = MC_RESET;
 		I2c_Write(i2c_, address_, &writeData, 1);
-		delay(50);
+		delay(10);
 	}
 		
     void resetEncoder(uint8_t motor)
@@ -171,14 +171,14 @@ public:
 		else
 			return;
 		I2c_Write(i2c_, address_, &writeData, 1);
-		delay(20);
+		delay(10);
 	}
     
     void resetEncoders()
 	{
 		uint8_t writeData = MC_E12_RESET;
 		I2c_Write(i2c_, address_, &writeData, 1);
-		delay(20);
+		delay(10);
 	}
     
     void setAddress(uint8_t address)
@@ -200,7 +200,7 @@ public:
         
         writeData[1] = power;
         I2c_Write(i2c_, address_, writeData, 2);
-	    delay(30);
+	    delay(10);
     }
     
     void setMotorsPower(int8_t power1, int8_t power2)
@@ -223,7 +223,7 @@ public:
 		writeData[1] = speed >> 8;
 		writeData[2] = speed & 0xFF;
 		I2c_Write(i2c_, address_, writeData, 3);
-		delay(30);
+		delay(10);
 	}
     
     void setMotorsSpeed(int16_t speed1, int16_t speed2)
@@ -252,7 +252,7 @@ public:
 		writeData[5] = target >> 8;
 		writeData[6] = target & 0xFF;
 		I2c_Write(i2c_, address_, writeData, 7);
-		delay(20);
+		delay(10);
 	}
 //  
 	void setMotorsTarget(int16_t speed1, int32_t target1, int16_t speed2, int32_t target2)
