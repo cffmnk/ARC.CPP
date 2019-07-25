@@ -66,11 +66,13 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ItemGroup>
+    <ClCompile Include="initialization.cpp" />
+    <ClCompile Include="servo.cpp" />
     <None Include="ARC.CPP-Debug.vgdbsettings" />
     <None Include="ARC.CPP-Release.vgdbsettings" />
-    <ClCompile Include="controllers.cpp" />
-    <ClCompile Include="lidar_driver.cpp" />
+    <ClCompile Include="lidar.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="motorcontrollers.cpp" />
     <ClCompile Include="MyRio_lib\AIO.c" />
     <ClCompile Include="MyRio_lib\ButtonIRQ.c" />
     <ClCompile Include="MyRio_lib\DIO.c" />
@@ -82,8 +84,8 @@
     <ClCompile Include="MyRio_lib\PWM.c" />
     <ClCompile Include="MyRio_lib\UART.c" />
     <ClInclude Include="Config.h" />
-    <ClInclude Include="controllers.h" />
-    <ClInclude Include="lidar_driver.h" />
+    <ClInclude Include="initialization.h" />
+    <ClInclude Include="lidar.h" />
     <ClInclude Include="MyRio_lib\AIO.h" />
     <ClInclude Include="MyRio_lib\ButtonIRQ.h" />
     <ClInclude Include="MyRio_lib\DIO.h" />

@@ -4,22 +4,19 @@
 #include <string>
 #include <iostream>
 
-
-
 #include "MyRio_lib/MyRio.h"
 #include "MyRio_lib/I2C.h"
 #include "MyRio_lib/DIO.h"
 #include <opencv2/opencv.hpp>
 
-#include "lidar_driver.h"
-#include "initialization.cpp"
+#include "lidar.h"
+#include "initialization.h"
 #include "motorcontrollers.cpp"
 #include "Config.h"
 #include "servo.cpp"
 
-//using namespace cv;
-
-
+using namespace cv;
+using namespace std;
 
 int main()
 {
@@ -30,50 +27,13 @@ int main()
 	
 	initHardware(&status, &i2cA, &Button);
 	
-	auto t1 = std::chrono::high_resolution_clock::now();
-	
-	MotorController mc1(&i2cA, 1);
-	MotorController mc2(&i2cA, 2);
-	
+    MotorController mc1(&i2cA, 1);
+    MotorController mc2(&i2cA, 2);
 	ServoController s1(&i2cA, 3);
 	
-
-	
-	s1.setSpeed(80, 50, 50, 80);
-	
-	
-	
-	s1.down();
-	s1.openLeft();
-	s1.openRight();
-	delay(500);
-	
-	
-	s1.up();
-	
-	delay(1000);
-	s1.closeRight();
-	delay(1000);
-	
-	s1.down();
-	
-	
-	
-	
-	
-	
-	
-	delay(1000);
-	s1.reset();
-	
-
-
-	//cv ::VideoCapture cap(0);
-	//cv :: Mat frames;
-	//cap >> frames;
-	//imshow("lol", frames);
-	//waitKey(0);
-	//destroyAllWindows();
+	Lidar lidar;
+	lidar.poll();
+	std::cout << lidar.ranges[30] << "\n";
 	
 	MyRio_Close();
 	return status;

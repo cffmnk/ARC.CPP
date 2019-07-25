@@ -7,3 +7,5 @@
 #define MC_SPEED_P 1.5	// default: 1.5
 #define MC_SPEED_I 2.5	// default: 2.5
 #define MC_SPEED_D .008	// default: .008
+
+#define delay(x) std::this_thread::sleep_for(std::chrono::milliseconds(x));
