@@ -1,6 +1,5 @@
 #include "initialization.h"
 
-
 NiFpga_Status initHardware(NiFpga_Status* status, MyRio_I2c* i2cA, MyRio_Dio* Button)
 {
 	uint8_t selectReg;
@@ -79,14 +78,14 @@ NiFpga_Status initHardware(NiFpga_Status* status, MyRio_I2c* i2cA, MyRio_Dio* Bu
 	 * Enable the I2C block.
 	 */
 	I2c_Configure(i2cA, I2c_Enabled);
-	printf("I2C init succeed!\n");
+	//printf("I2C init succeed!\n");
 	
 	
-	Button->dir = DIOB_70DIR;
-	Button->out = DIOB_70OUT;
-	Button->in = DIOB_70IN;
+	Button->dir = DIOC_70DIR;
+	Button->out = DIOC_70OUT;
+	Button->in = DIOC_70IN;
 	Button->bit = 7;
-	printf("DIO init succeed!\n");
+	//printf("DIO init succeed!\n");
 	
 	return *status;
 }

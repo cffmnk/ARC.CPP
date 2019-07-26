@@ -1,10 +1,8 @@
-#include "lidar_driver.h"
+#include "lidar.h"
 
-LFCDLaser::LFCDLaser()
+Lidar::Lidar()
 	: shutting_down_(false)
-{
-	MyRio_Uart uart_;
-	
+{	
 	uart_.name = LDS_PORT;
 	uart_.defaultRM = 0;
 	uart_.session = 0;
@@ -16,17 +14,18 @@ LFCDLaser::LFCDLaser()
 		Uart_ParityNone);
 	uint8_t writeData = 'b';
 	status_ = Uart_Write(&uart_, &writeData, 1);
+	ranges = std::vector<float>(360);
 }
 
-LFCDLaser::~LFCDLaser()
+Lidar::~Lidar()
 {
 	uint8_t writeData = 'e';
-	status_ = Uart_Read(&uart_, &writeData, 1);
+	status_ = Uart_Write(&uart_, &writeData, 1);
 	status_ = Uart_Clear(&uart_);
 	status_ = Uart_Close(&uart_);
 }
 
-void LFCDLaser::poll()
+void Lidar::poll()
 {
 	uint8_t temp_char;
 	uint8_t start_count = 0;
@@ -58,7 +57,10 @@ void LFCDLaser::poll()
 				// Now that entire start sequence has been found, read in the rest of the message
 				got_scan = true;
 
-				status_ = Uart_Read(&uart_, &raw_bytes[2], 2518);
+				for (int i = 0; i < 2518; ++i)
+				{
+					status_ = Uart_Read(&uart_, &raw_bytes[2 + i], 1);
+				}
 				// scan->angle_min = 0.0;
 				// scan->angle_max = 2.0*M_PI;
 				// scan->angle_increment = (2.0*M_PI/360.0);
@@ -95,7 +97,8 @@ void LFCDLaser::poll()
 
 								// scan->ranges[359-index] = range / 1000.0;
 								// scan->intensities[359-index] = intensity;
-								//printf("r[%d]=%f,", 359 - index, range / 1000.0);
+								//printf("r[%d]=%f,", 359 - index, range / 10.0);
+								ranges[359 - index] = range;
 							}
 						}
 				}

@@ -9,14 +9,15 @@
 #define BaudRate 230400
 #define DataBit 8
 
-class LFCDLaser
+class Lidar
 {
 public:
 	uint16_t rpms;  // RPMS derived from the rpm bytes in an LFCD packet
-	LFCDLaser();
-	~LFCDLaser();
+	Lidar();
+	~Lidar();
 	void poll();
 	void close() { shutting_down_ = true; }
+	std::vector<float> ranges;
 	
 private:
 	uint32_t baud_rate_;

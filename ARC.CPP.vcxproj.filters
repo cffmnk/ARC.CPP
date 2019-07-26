@@ -113,21 +113,27 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="lidar_driver.cpp">
+    <ClCompile Include="motorcontrollers.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="controllers.cpp">
+    <ClCompile Include="servo.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="initialization.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="lidar.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="lidar_driver.h">
-      <Filter>Header files</Filter>
-    </ClInclude>
     <ClInclude Include="Config.h">
       <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="controllers.h">
+    <ClInclude Include="initialization.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="lidar.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

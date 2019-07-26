@@ -1,3 +1,9 @@
+#include <iostream>
+#include <thread>
+#include <chrono>
+
+#include "MyRio_lib/I2C.h"
+#include "Config.h"
 
 #define SC_FIRMWARE 0x26
 #define SC_SET_ID 0x24

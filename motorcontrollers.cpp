@@ -1,4 +1,4 @@
-	#pragma once
+#pragma once
 
 #include <stdio.h>
 
@@ -7,8 +7,6 @@
 #include "Config.h"
 #include <chrono>
 #include <thread>
-
-#define delay(x) std::this_thread::sleep_for(std::chrono::milliseconds(x))
 
 #define MC_FIRMWARE 0x26
 #define MC_SET_ID 0x24
