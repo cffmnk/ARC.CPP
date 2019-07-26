@@ -125,6 +125,9 @@
     <ClCompile Include="lidar.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="CoreSLAM.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Config.h">
@@ -134,6 +137,9 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="lidar.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreSLAM.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -66,6 +66,7 @@
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
   <ItemGroup>
+    <ClCompile Include="CoreSLAM.cpp" />
     <ClCompile Include="initialization.cpp" />
     <ClCompile Include="servo.cpp" />
     <None Include="ARC.CPP-Debug.vgdbsettings" />
@@ -84,6 +85,7 @@
     <ClCompile Include="MyRio_lib\PWM.c" />
     <ClCompile Include="MyRio_lib\UART.c" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="CoreSLAM.h" />
     <ClInclude Include="initialization.h" />
     <ClInclude Include="lidar.h" />
     <ClInclude Include="MyRio_lib\AIO.h" />

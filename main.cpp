@@ -15,6 +15,8 @@
 #include "Config.h"
 #include "servo.cpp"
 
+#include "CoreSLAM.h"
+
 using namespace cv;
 using namespace std;
 
@@ -33,8 +35,13 @@ int main()
 	
 	Lidar lidar;
 	lidar.poll();
-	std::cout << lidar.ranges[30] << "\n";
+	
+	
 	
 	MyRio_Close();
+	
+	for (int i = 0; i < lidar.ranges.size(); ++i)
+		std::cout << lidar.ranges[i] << "\n";
+	
 	return status;
 }
