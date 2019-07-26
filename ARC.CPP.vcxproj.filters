@@ -119,6 +119,12 @@
     <ClCompile Include="controllers.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="motorcontrollers.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="servo.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lidar_driver.h">
