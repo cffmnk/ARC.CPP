@@ -110,8 +110,8 @@ public:
 		I2c_Read(i2c_, address_, readData, 4);
 		int32_t result = 0;
 		for (int i = 0; i < 4; ++i)
-			result = (result << 8) + readData[3 - i];
-		delay(10);
+			result = (result << 8) + readData[i];
+		delay(25);
 		return result;
 	}
     

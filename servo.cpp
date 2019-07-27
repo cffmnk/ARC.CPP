@@ -183,7 +183,6 @@ class ServoController
         writeData[6] = pos6;
         I2c_Write(i2c_, address_, writeData, 7);
         delay(10);
-
     }
 
     uint8_t readPosition(uint8_t servo)
@@ -206,6 +205,7 @@ class ServoController
 	
 	void openLeft()
 	{
+
 		setPosition(1, 70);
 	}
 	

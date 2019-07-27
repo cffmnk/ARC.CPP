@@ -39,11 +39,11 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>=/usr/include;=/usr/include/c++/4.9.2;=/usr/include/c++/4.9.2/arm-nilrt-linux-gnueabi;$(ToolchainDir)\..\..\..\opencv_3.4.5/include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\arm_Myrio_2017\include;=/usr/include;=/usr/include/c++/4.9.2;=/usr/include/c++/4.9.2/arm-nilrt-linux-gnueabi;$(ToolchainDir)\..\..\..\opencv_3.4.5/include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CPPLanguageStandard>CPP14</CPPLanguageStandard>
     </ClCompile>
     <Link>
-      <LibrarySearchDirectories>$(ToolchainDir)\..\..\..\C_Support_for_myRIO/source;$(ToolchainDir)\..\..\..\opencv_3.4.5\staticDebug\lib;$(ToolchainDir)\..\..\..\opencv_3.4.5\staticDebug\share\OpenCV\3rdparty\lib;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
+      <LibrarySearchDirectories>C:\arm_Myrio_2017\libzbar_so_0_2;$(ToolchainDir)\..\..\..\C_Support_for_myRIO/source;$(ToolchainDir)\..\..\..\opencv_3.4.5\staticDebug\lib;$(ToolchainDir)\..\..\..\opencv_3.4.5\staticDebug\share\OpenCV\3rdparty\lib;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
       <AdditionalLibraryNames>visa;pthread;jpeg;webp;png;z;tiff;dl;m;pthread;rt;libprotobuf;libjasper;IlmImf;quirc;opencv_dnn;opencv_ml;opencv_objdetect;opencv_shape;opencv_stitching;opencv_superres;opencv_videostab;opencv_calib3d;opencv_features2d;opencv_highgui;opencv_videoio;opencv_imgcodecs;opencv_video;opencv_photo;opencv_imgproc;opencv_flann;opencv_core;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
     </Link>
   </ItemDefinitionGroup>
@@ -67,6 +67,7 @@
   </ImportGroup>
   <ItemGroup>
     <ClCompile Include="initialization.cpp" />
+    <ClCompile Include="moveRobot.cpp" />
     <ClCompile Include="servo.cpp" />
     <None Include="ARC.CPP-Debug.vgdbsettings" />
     <None Include="ARC.CPP-Release.vgdbsettings" />
