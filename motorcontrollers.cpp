@@ -1,5 +1,3 @@
-#pragma once
-
 #include <stdio.h>
 
 #include "MyRio_lib/MyRio.h"
@@ -44,11 +42,11 @@
 
 class MotorController
 {
-private:
+ private:
     MyRio_I2c* i2c_;
     uint8_t address_;
     
-public:
+ public:
     MotorController(MyRio_I2c* i2c, uint8_t address)
     {
         i2c_ =  i2c;

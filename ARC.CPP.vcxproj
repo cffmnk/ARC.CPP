@@ -67,8 +67,11 @@
   </ImportGroup>
   <ItemGroup>
     <ClCompile Include="initialization.cpp" />
+    <ClCompile Include="motors.cpp" />
     <ClCompile Include="moveRobot.cpp" />
     <ClCompile Include="servo.cpp" />
+    <ClInclude Include="motors.h" />
+    <ClInclude Include="servo.h" />
     <None Include="ARC.CPP-Debug.vgdbsettings" />
     <None Include="ARC.CPP-Release.vgdbsettings" />
     <ClCompile Include="lidar.cpp" />
@@ -87,6 +90,7 @@
     <ClInclude Include="Config.h" />
     <ClInclude Include="initialization.h" />
     <ClInclude Include="lidar.h" />
+    <ClInclude Include="moveRobot.h" />
     <ClInclude Include="MyRio_lib\AIO.h" />
     <ClInclude Include="MyRio_lib\ButtonIRQ.h" />
     <ClInclude Include="MyRio_lib\DIO.h" />

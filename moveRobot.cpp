@@ -1,60 +1,24 @@
-#include <thread>
-#include <chrono>
-#include <time.h>
-#include <string>
-#include <iostream>
-
-#include "MyRio_lib/MyRio.h"
-#include "MyRio_lib/I2C.h"
-#include "MyRio_lib/DIO.h"
-#include <opencv2/opencv.hpp>
-
-#include "lidar.h"
-#include "initialization.h"
-#include "motorcontrollers.cpp"
-#include "Config.h"
-#include "servo.cpp"
+#include "moveRobot.h"
 
 double prevEncoders[4] = { 0, 0, 0, 0 };
 
-const double ROBOT_RADIUS = 147;
-const double WHEEL_RADIUS = 50.8;
-const double CONSTANT = 1440;
-
-class Pair
+Pair::Pair(double x_, double y_ = 0)
 {
-private:
+	x = x_;
+	y = y_;
+}
 
-public:
-	double x;
-	double y;
-    
-	Pair(double x_ = 0, double y_ = 0)
-	{
-		x = x_;
-		y = y_;
-	}
-};
-
-class Position
+Position::Position(double x_, double y_ = 0, double theta_ = 0)
 {
-private:
-    
-public:
-	double x;
-	double y;
-	double theta;
-	Position(double x_ = 0, double y_ = 0, double theta_ = 0)
-	{
-		x = x_;
-		y = y_;
-		theta = theta_;
-	}
-};//
+	x = x_;
+	y = y_;
+	theta = theta_;
+}
+
 
 Pair rotate(double x, double y, double theta)
 {
-	Pair res;
+	Pair res(0, 0);
 	res.x = x * cos(theta) + y * sin(theta);
 	res.y = -x * sin(theta) + y * cos(theta);
 	return res;
@@ -65,8 +29,6 @@ Pair shift(double x, double y, double dx, double dy)
 	return Pair(x - dx, y - dy);
 }
 
-
-///*
 Position moveRobot(Position cur, MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2, double x, double y, double theta, bool reset = false, bool relativeToFrame = false)
 {
 	Position pos = Position(x, y, theta);
@@ -134,30 +96,42 @@ Position moveRobot(Position cur, MyRio_I2c* i2c, MotorController & mc1, MotorCon
 }
 //*/
 
-
 Position moveShift(Position &cur, MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2, double x_shift, double y_shift, double max_speed, double precision) 
 {
 	Position pos = cur;
 
 	Pair c1 = rotate(x_shift, y_shift, -pos.theta);
     
-	Pair c2 = shift(cur.x, cur.y, c1.x, c1.y);
+	Pair c2 = shift(c1.x, c1.y, cur.x, cur.y);
 
 	pos = cur;
 
-	double x_speed = 2 * precision;
-	double y_speed = 2 * precision;
+	double x_speed = std::max(std::min((c2.x - pos.x) * 3, max_speed), -max_speed); 
+	double y_speed = std::max(std::min((c2.y - pos.y) * 3, max_speed), -max_speed);
+	std::cout << "Speed: " << x_speed << " " << y_speed << "\n";
 	
 	std::cout << "VFD " << c2.x << " " << c2.y << "\n";
 	
-
+	/*
+	for (int i = 0; i < 20; ++i)
+	{
+		x_speed = std::max(std::min((c2.x - pos.x) * 3, max_speed), -max_speed);
+		y_speed = std::max(std::min((c2.y - pos.y) * 3, max_speed), -max_speed);
+		pos = moveRobot(pos, i2c, mc1, mc2, x_speed, y_speed, 0, false, true);
+		
+	}
+	*/
+	
 	while ((std::abs(x_speed) > precision) || (std::abs(y_speed) > precision))
 	{
 		x_speed = std::max(std::min((c2.x - pos.x) * 3, max_speed), -max_speed);
 		y_speed = std::max(std::min((c2.y - pos.y) * 3, max_speed), -max_speed);
 		pos = moveRobot(pos, i2c, mc1, mc2, x_speed, y_speed, 0, false, true);
+		std::cout << "Speed: " << x_speed << " " << y_speed << "\n";
+		std::cout << "Pos " << pos.x << " " << pos.y << " " << pos.theta << "\n" << "";
 
 	}
+	
 
 	//pos = moveRobot(pos, i2c, mc1, mc2, 0, 0, 0, false, true);
 	mc1.setMotorsSpeed(0, 0);

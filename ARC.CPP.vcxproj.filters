@@ -128,6 +128,9 @@
     <ClCompile Include="moveRobot.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="motors.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Config.h">
@@ -137,6 +140,15 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="lidar.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="moveRobot.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="servo.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="motors.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>
