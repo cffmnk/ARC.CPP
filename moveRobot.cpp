@@ -101,26 +101,22 @@ Position moveShift(Position &cur, MyRio_I2c* i2c, MotorController & mc1, MotorCo
 	Position pos = cur;
 
 	Pair c1 = rotate(x_shift, y_shift, -pos.theta);
-    
-	Pair c2 = shift(c1.x, c1.y, cur.x, cur.y);
-
+	
+	std::cout << "shift " << x_shift << " " << y_shift << "\n";
+	
+	std::cout << "Cur " << cur.x << " " << cur.y << '\n';
+	std::cout << "rot " << c1.x << " " << c1.y << "\n";
+	Pair c2 = Pair(cur.x + c1.x, cur.y + c1.y);//shift(cur.x, cur.y, c1.x, c1.y);
+	
+	std::cout << "VFD " << c2.x << " " << c2.y << "\n";
 	pos = cur;
+	std::cout << "Pos " << pos.x << " " << pos.y << '\n';
 
 	double x_speed = std::max(std::min((c2.x - pos.x) * 3, max_speed), -max_speed); 
 	double y_speed = std::max(std::min((c2.y - pos.y) * 3, max_speed), -max_speed);
 	std::cout << "Speed: " << x_speed << " " << y_speed << "\n";
 	
-	std::cout << "VFD " << c2.x << " " << c2.y << "\n";
 	
-	/*
-	for (int i = 0; i < 20; ++i)
-	{
-		x_speed = std::max(std::min((c2.x - pos.x) * 3, max_speed), -max_speed);
-		y_speed = std::max(std::min((c2.y - pos.y) * 3, max_speed), -max_speed);
-		pos = moveRobot(pos, i2c, mc1, mc2, x_speed, y_speed, 0, false, true);
-		
-	}
-	*/
 	
 	while ((std::abs(x_speed) > precision) || (std::abs(y_speed) > precision))
 	{
@@ -129,11 +125,8 @@ Position moveShift(Position &cur, MyRio_I2c* i2c, MotorController & mc1, MotorCo
 		pos = moveRobot(pos, i2c, mc1, mc2, x_speed, y_speed, 0, false, true);
 		std::cout << "Speed: " << x_speed << " " << y_speed << "\n";
 		std::cout << "Pos " << pos.x << " " << pos.y << " " << pos.theta << "\n" << "";
-
 	}
 	
-	
-
 	//pos = moveRobot(pos, i2c, mc1, mc2, 0, 0, 0, false, true);
 	mc1.setMotorsSpeed(0, 0);
 	mc2.setMotorsSpeed(0, 0);

@@ -22,6 +22,9 @@
     <Filter Include="Header files\MyRio_lib">
       <UniqueIdentifier>{db3b6dd6-fcf2-4287-9be9-f673d22b7796}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header files\zbar">
+      <UniqueIdentifier>{cf922e65-92cf-422c-be5c-689a7844c5be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ARC.CPP-Debug.vgdbsettings">
@@ -159,6 +162,45 @@
     </ClInclude>
     <ClInclude Include="QR.h">
       <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="zbar.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Decoder.h">
+      <Filter>Header files\zbar</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Exception.h">
+      <Filter>Header files\zbar</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Image.h">
+      <Filter>Header files\zbar</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\ImageScanner.h">
+      <Filter>Header files\zbar</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Processor.h">
+      <Filter>Header files\zbar</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\QZBar.h">
+      <Filter>Header files\zbar</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\QZBarImage.h">
+      <Filter>Header files\zbar</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Scanner.h">
+      <Filter>Header files\zbar</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Symbol.h">
+      <Filter>Header files\zbar</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Video.h">
+      <Filter>Header files\zbar</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Window.h">
+      <Filter>Header files\zbar</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\zbargtk.h">
+      <Filter>Header files\zbar</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

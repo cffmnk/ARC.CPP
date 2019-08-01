@@ -39,12 +39,12 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|VisualGDB'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\arm_Myrio_2017\include;=/usr/include;=/usr/include/c++/4.9.2;=/usr/include/c++/4.9.2/arm-nilrt-linux-gnueabi;$(ToolchainDir)\..\..\..\opencv_3.4.5/include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>=/usr/include;=/usr/include/c++/4.9.2;=/usr/include/c++/4.9.2/arm-nilrt-linux-gnueabi;$(ToolchainDir)\..\..\..\opencv_3.4.5/include;%(ClCompile.AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CPPLanguageStandard>CPP14</CPPLanguageStandard>
     </ClCompile>
     <Link>
       <LibrarySearchDirectories>C:\arm_Myrio_2017\libzbar_so_0_2;$(ToolchainDir)\..\..\..\C_Support_for_myRIO/source;$(ToolchainDir)\..\..\..\opencv_3.4.5\staticDebug\lib;$(ToolchainDir)\..\..\..\opencv_3.4.5\staticDebug\share\OpenCV\3rdparty\lib;%(Link.LibrarySearchDirectories)</LibrarySearchDirectories>
-      <AdditionalLibraryNames>visa;pthread;jpeg;webp;png;z;tiff;dl;m;pthread;rt;libprotobuf;libjasper;IlmImf;quirc;opencv_dnn;opencv_ml;opencv_objdetect;opencv_shape;opencv_stitching;opencv_superres;opencv_videostab;opencv_calib3d;opencv_features2d;opencv_highgui;opencv_videoio;opencv_imgcodecs;opencv_video;opencv_photo;opencv_imgproc;opencv_flann;opencv_core;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
+      <AdditionalLibraryNames>zbar;visa;pthread;jpeg;webp;png;z;tiff;dl;m;pthread;rt;libprotobuf;libjasper;IlmImf;quirc;opencv_dnn;opencv_ml;opencv_objdetect;opencv_shape;opencv_stitching;opencv_superres;opencv_videostab;opencv_calib3d;opencv_features2d;opencv_highgui;opencv_videoio;opencv_imgcodecs;opencv_video;opencv_photo;opencv_imgproc;opencv_flann;opencv_core;%(Link.AdditionalLibraryNames)</AdditionalLibraryNames>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|VisualGDB'">
@@ -72,10 +72,23 @@
     <ClCompile Include="path.cpp" />
     <ClCompile Include="QR.cpp" />
     <ClCompile Include="servo.cpp" />
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Decoder.h" />
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Exception.h" />
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Image.h" />
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\ImageScanner.h" />
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Processor.h" />
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\QZBar.h" />
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\QZBarImage.h" />
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Scanner.h" />
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Symbol.h" />
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Video.h" />
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Window.h" />
+    <ClInclude Include="C:\arm_Myrio_2017\include\zbar\zbargtk.h" />
     <ClInclude Include="motors.h" />
     <ClInclude Include="path.h" />
     <ClInclude Include="QR.h" />
     <ClInclude Include="servo.h" />
+    <ClInclude Include="zbar.h" />
     <None Include="ARC.CPP-Debug.vgdbsettings" />
     <None Include="ARC.CPP-Release.vgdbsettings" />
     <ClCompile Include="lidar.cpp" />

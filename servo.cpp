@@ -3,7 +3,7 @@ ServoController::ServoController(MyRio_I2c* i2c, uint8_t address)
 {
     i2c_ =  i2c;
     address_ = address;
-    // reset();
+    reset();
     enable();
 }
     
@@ -25,6 +25,7 @@ uint16_t ServoController::batteryVoltage()
     uint8_t writeData = SC_VOLTAGE;
     I2c_Write(i2c_, address_, &writeData, 1);
     uint8_t readData[2];
+	delay(10);
     I2c_Read(i2c_, address_, readData, 2);
     delay(10);
     return (readData[0] << 8) + readData[1];
@@ -129,6 +130,7 @@ uint8_t ServoController::readPosition(uint8_t servo)
         writeData[0] = SC_S4_READ;
     uint8_t res;
     I2c_Write(i2c_, address_, writeData, 1);
+	delay(10);
     I2c_Read(i2c_, address_, &res, 1);
     delay(10);
     return res;

@@ -40,6 +40,7 @@ uint16_t MotorController::batteryVoltage()
 {
 	uint8_t writeData = MC_VOLTAGE;
 	I2c_Write(i2c_, address_, &writeData, 1);
+	delay(10);
 	uint8_t readData[2];
 	I2c_Read(i2c_, address_, readData, 2);
 	delay(10);
@@ -57,12 +58,13 @@ int32_t MotorController::readEncoderCount(uint8_t motor)
 		return 0;
 	
 	I2c_Write(i2c_, address_, &writeData, 1);
+	delay(10);
 	uint8_t readData[4];
 	I2c_Read(i2c_, address_, readData, 4);
 	int32_t result = 0;
 	for (int i = 0; i < 4; ++i)
 		result = (result << 8) + readData[i];
-	delay(30);
+	delay(10);
 	return result;
 }
     
@@ -78,6 +80,7 @@ int32_t MotorController::readEncoderDegree(uint8_t motor)
 	
 	I2c_Write(i2c_, address_, &writeData, 1);
 	uint8_t readData[4];
+	delay(10);
 	I2c_Read(i2c_, address_, readData, 4);
 	int32_t result = 0;
 	for (int i = 0; i < 4; ++i)
@@ -97,6 +100,7 @@ uint16_t MotorController::readCurrent(uint8_t motor)
 		return 0;
 	
 	I2c_Write(i2c_, address_, &writeData, 1);
+	delay(10);
 	uint8_t readData[2];
 	I2c_Read(i2c_, address_, readData, 2);
 	delay(10);
@@ -259,6 +263,7 @@ bool MotorController::isBusy(uint8_t motor)
 		return false;
 	uint8_t res;
 	I2c_Write(i2c_, address_, writeData, 1);
+	delay(10);
 	I2c_Read(i2c_, address_, &res, 1);
 	delay(10);
 	return res;

@@ -1,7 +1,50 @@
 #include "QR.h"
-
+using namespace std;
+using namespace cv;
+using namespace zbar;
 const int8_t N = 23;
 const int16_t CELL = 115;
+// Find and decode barcodes and QR codes
+std ::string decode(Mat &im)
+{
+  
+	// Create zbar scanner
+	ImageScanner scanner;
+
+	// Configure scanner
+	scanner.set_config(ZBAR_NONE, ZBAR_CFG_ENABLE, 1);
+  
+	// Convert image to grayscale
+	Mat imGray;
+	cvtColor(im, imGray, CV_BGR2GRAY);
+
+	// Wrap image data in a zbar image
+	Image image(im.cols, im.rows, "Y800", (uchar *)imGray.data, im.cols * im.rows);
+
+	// Scan the image for barcodes and QRCodes
+	int n = scanner.scan(image);
+  
+	// Print results
+	for(Image::SymbolIterator symbol = image.symbol_begin() ; symbol != image.symbol_end() ; ++symbol)
+	{
+		decodedObject obj;
+    
+		obj.type = symbol->get_type_name();
+		obj.data = symbol->get_data();
+    
+		// Print type and data
+		cout << "Type : " << obj.type << endl;
+		cout << "Data : " << obj.data << endl << endl;
+		return obj.data;
+		// Obtain location
+		for(int i = 0 ; i < symbol->get_location_size() ; i++)
+		{
+			obj.location.push_back(Point(symbol->get_location_x(i), symbol->get_location_y(i)));
+		}
+   
+	}
+	return "";
+}
 
 void fill(std::vector<std::vector<int16_t>> & field)
 {
@@ -36,8 +79,16 @@ void QR(Position & pos, std::vector<std::vector<int16_t>> & field)
     std::vector<int> ddx = {-1, -1, -1, 0, 1, 1, 1, 0};
     std::vector<int> ddy = {-1, 0, 1, 1, 1, 0, -1, -1};
     
-    //data = qr.read();
-    qr = "(M,O,L,R)(U,L,S,N)(E,K,C,M)(J,D,H,F)";
+	//data = qr.read();
+	//qr = "(M,O,L,R)(U,L,S,N)(E,K,C,M)(J,D,H,F)";
+	
+	cv ::VideoCapture cap(0);
+	cv :: Mat im;
+	cap >> im;
+	
+	qr = decode(im);
+	
+	
     
     int16_t start_x1 = (qr[1] - 'A') * CELL;
     int16_t start_y1 = ('U' - qr[3]) * CELL;
