@@ -113,9 +113,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="motorcontrollers.cpp">
-      <Filter>Source files</Filter>
-    </ClCompile>
     <ClCompile Include="servo.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
@@ -129,6 +126,12 @@
       <Filter>Source files</Filter>
     </ClCompile>
     <ClCompile Include="motors.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="path.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="QR.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -149,6 +152,12 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="motors.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="path.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="QR.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

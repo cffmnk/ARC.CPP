@@ -23,9 +23,13 @@ using namespace cv;
 using namespace std;
 
 #include "moveRobot.h"
+#include "path.h"
+#include "QR.h"
+
+const int N = 23;
+std::vector<std::vector<int16_t>> field(N, std::vector<int16_t>(N));
 
 // cam light port 29
-
 
 int main()
 {
@@ -37,41 +41,57 @@ int main()
 	
 	initHardware(&status, &i2cA, &Button);
 	
-	MotorController mc1(&i2cA, 1);
-	MotorController mc2(&i2cA, 2);
-	ServoController s1(&i2cA, 3);
-
-	mc1.resetEncoders();
-	mc2.resetEncoders();
-	s1.setSpeed(70, 60, 60, 70, 0, 0);
+	V start(3, 3);
+	V goal(10, 7);
 	
-	s1.closeLeft();
-	s1.closeRight();
-	s1.down();
-	delay(2000);
+	std::vector<PairI> res = aStar(start, goal, field);
+	
+	Position pos(0, 0, 0);
+	
+	//QR(pos);
+	
+	std::cout << "path: \n";
+	
+	for (int i = 0; i < res.size(); ++i)
+	{
+		std::cout << (int)res[i].x << " " << (int)res[i].y << '\n';
+	}
+	
+	//MotorController mc1(&i2cA, 1);
+	//MotorController mc2(&i2cA, 2);
+	//ServoController s1(&i2cA, 3);
+
+	//mc1.resetEncoders();
+	//mc2.resetEncoders();
+	//s1.setSpeed(70, 60, 60, 70, 0, 0);
+	
+	//s1.closeLeft();
+	//s1.closeRight();
+	//s1.down();
+	//delay(2000);
 
 
 	//delay(1000);
 	
 	
-	Position pos(0, 0, 0);
+	//Position pos(0, 0, 0);
 	
-	pos = moveShift(pos, &i2cA, mc1, mc2, 200, 400, 200, 20);
+	//pos = moveShift(pos, &i2cA, mc1, mc2, 200, 400, 200, 20);
 	
-	mc1.setMotorsSpeed(0, 0);
-	mc2.setMotorsSpeed(0, 0);
+	//mc1.setMotorsSpeed(0, 0);
+	//mc2.setMotorsSpeed(0, 0);
 	
 	
 	
 	//pos = moveShift(pos, &i2cA, mc1, mc2, 400, 0, 250, 20);
 	
 	
-    //mc1.reset();
+  //  mc1.reset();
 	//mc2.reset();
 	
 	
 	
-	s1.reset();
+	//s1.reset();
 	MyRio_Close();
 	return status;
 }

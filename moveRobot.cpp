@@ -132,6 +132,7 @@ Position moveShift(Position &cur, MyRio_I2c* i2c, MotorController & mc1, MotorCo
 
 	}
 	
+	
 
 	//pos = moveRobot(pos, i2c, mc1, mc2, 0, 0, 0, false, true);
 	mc1.setMotorsSpeed(0, 0);

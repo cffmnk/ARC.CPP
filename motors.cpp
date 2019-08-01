@@ -62,7 +62,7 @@ int32_t MotorController::readEncoderCount(uint8_t motor)
 	int32_t result = 0;
 	for (int i = 0; i < 4; ++i)
 		result = (result << 8) + readData[i];
-	delay(25);
+	delay(30);
 	return result;
 }
     
