@@ -58,13 +58,13 @@ int32_t MotorController::readEncoderCount(uint8_t motor)
 		return 0;
 	
 	I2c_Write(i2c_, address_, &writeData, 1);
-	delay(15);
+	delay(10);
 	uint8_t readData[4];
 	I2c_Read(i2c_, address_, readData, 4);
 	int32_t result = 0;
 	for (int i = 0; i < 4; ++i)
 		result = (result << 8) + readData[i];
-	delay(15);
+	delay(10);
 	return result;
 }
     
