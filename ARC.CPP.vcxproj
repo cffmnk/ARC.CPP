@@ -73,11 +73,14 @@
     <ClCompile Include="QR.cpp" />
     <ClCompile Include="servo.cpp" />
 <<<<<<< HEAD
+<<<<<<< HEAD
     <ClCompile Include="slam.cpp" />
     <ClCompile Include="VL53L0X.cpp" />
 =======
     <ClInclude Include="alignment.h" />
 >>>>>>> parent of 3241663... ,/.,/.
+=======
+>>>>>>> parent of 4b7f399... vyravnivaniye  + mnogo chego
     <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Decoder.h" />
     <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Exception.h" />
     <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Image.h" />
