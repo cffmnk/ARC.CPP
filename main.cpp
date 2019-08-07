@@ -3,18 +3,14 @@
 #include <time.h>
 #include <string>
 #include <iostream>
-
-#include "lidar.h"
-#include "initialization.h"
-#include "motors.h"
-#include "Config.h"
-#include "servo.h"
+#include "zbar.h"
 
 #include "MyRio_lib/MyRio.h"
 #include "MyRio_lib/I2C.h"
 #include "MyRio_lib/DIO.h"
 #include <opencv2/opencv.hpp>
 
+<<<<<<< HEAD
 using namespace cv;
 using namespace std;
 
@@ -23,21 +19,33 @@ using namespace std;
 #include "QR.h"
 #include "goTo.h"
 #include "alignment.h"
+=======
+#include "lidar.h"
+#include "initialization.h"
+#include "Config.h"
+>>>>>>> 494a389d003e0933c60afecbbe94f2ab67d6b4f4
 
-const int N = 23;
-std::vector<std::vector<int16_t>> field(N, std::vector<int16_t>(N));
+#include "motors.h"
 
-// cam light port 29
+#include "slam.h"
 
+<<<<<<< HEAD
+=======
+
+using namespace cv;
+using namespace std;
+
+>>>>>>> 494a389d003e0933c60afecbbe94f2ab67d6b4f4
 int main()
 {
 	NiFpga_Status status;
 	MyRio_I2c i2cA;
 	NiFpga_Bool buttonState;
 	MyRio_Dio Button;
-	
+    
 	initHardware(&status, &i2cA, &Button);
 	
+<<<<<<< HEAD
 	MotorController mc1(&i2cA, 1);
 	MotorController mc2(&i2cA, 2);
 	ServoController s1(&i2cA, 3);
@@ -100,6 +108,17 @@ int main()
 	mc2.reset();
 	s1.reset();
 	
+=======
+//	  MotorController mc1(&i2cA, 1);
+//	  MotorController mc2(&i2cA, 2);
+	//  ServoController s1(&i2cA, 3);
+
+	Lidar lidar;
+//	delay(1000);
+	lidar.poll();
+	slam(&lidar);
+
+>>>>>>> 494a389d003e0933c60afecbbe94f2ab67d6b4f4
 	MyRio_Close();
 	return status;
 }
