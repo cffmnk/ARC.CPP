@@ -137,10 +137,17 @@
     <ClCompile Include="QR.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="VL53L0X.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
     <ClCompile Include="slam.cpp">
+=======
+    <ClCompile Include="goTo.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="alignment.cpp">
+>>>>>>> parent of 3241663... ,/.,/.
       <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -208,10 +215,17 @@
     <ClInclude Include="C:\arm_Myrio_2017\include\zbar\zbargtk.h">
       <Filter>Header files\zbar</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="VL53L0X.h">
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="slam.h">
+=======
+    <ClInclude Include="goTo.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="alignment.h">
+>>>>>>> parent of 3241663... ,/.,/.
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

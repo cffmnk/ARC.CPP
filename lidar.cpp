@@ -15,7 +15,6 @@ Lidar::Lidar()
 	uint8_t writeData = 'b';
 	status_ = Uart_Write(&uart_, &writeData, 1);
 	ranges = std::vector<float>(360);
-	points = std::vector<std::pair<double, double>>(360);
 }
 
 Lidar::~Lidar()
@@ -69,7 +68,7 @@ void Lidar::poll()
 				// scan->range_max = 3.5;
 				// scan->ranges.resize(360);
 				// scan->intensities.resize(360);
-				
+
 				//read data in sets of 6
 				for(uint16_t i = 0 ; i < raw_bytes.size() ; i = i + 42)
 				{
@@ -99,14 +98,7 @@ void Lidar::poll()
 								// scan->ranges[359-index] = range / 1000.0;
 								// scan->intensities[359-index] = intensity;
 								//printf("r[%d]=%f,", 359 - index, range / 10.0);
-								index = (index + 270) % 360;
-								if (range < 150)
-									range = 0;
-								ranges[index] = range / 10.;
-								printf("%d - %d\n", index, range);
-								points[index].first = 350 + range / 10. * cos(index / 180. * M_PI);
-								points[index].second = 350 + range / 10. * sin(index / 180. * M_PI);
-								
+								ranges[359 - index] = range;
 							}
 						}
 				}

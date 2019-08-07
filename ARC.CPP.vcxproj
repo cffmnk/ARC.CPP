@@ -72,8 +72,12 @@
     <ClCompile Include="path.cpp" />
     <ClCompile Include="QR.cpp" />
     <ClCompile Include="servo.cpp" />
+<<<<<<< HEAD
     <ClCompile Include="slam.cpp" />
     <ClCompile Include="VL53L0X.cpp" />
+=======
+    <ClInclude Include="alignment.h" />
+>>>>>>> parent of 3241663... ,/.,/.
     <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Decoder.h" />
     <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Exception.h" />
     <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Image.h" />
@@ -90,8 +94,6 @@
     <ClInclude Include="path.h" />
     <ClInclude Include="QR.h" />
     <ClInclude Include="servo.h" />
-    <ClInclude Include="slam.h" />
-    <ClInclude Include="VL53L0X.h" />
     <ClInclude Include="zbar.h" />
     <None Include="ARC.CPP-Debug.vgdbsettings" />
     <None Include="ARC.CPP-Release.vgdbsettings" />
