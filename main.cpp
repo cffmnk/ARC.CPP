@@ -21,13 +21,13 @@ using namespace std;
 #include "moveRobot.h"
 #include "path.h"
 #include "QR.h"
+#include "goTo.h"
+#include "alignment.h"
 
 const int N = 23;
 std::vector<std::vector<int16_t>> field(N, std::vector<int16_t>(N));
 
 // cam light port 29
-
-
 
 int main()
 {
@@ -41,6 +41,8 @@ int main()
 	MotorController mc1(&i2cA, 1);
 	MotorController mc2(&i2cA, 2);
 	ServoController s1(&i2cA, 3);
+	Lidar l1;
+	
 	
 	mc1.resetEncoders();
 	mc2.resetEncoders();
@@ -49,42 +51,50 @@ int main()
 	s1.closeLeft();
 	s1.closeRight();
 	s1.down();
+	std::cout << mc1.batteryVoltage() << std::endl;
 	delay(2000);
 	
-	V start(3, 3);
-	V goal(10, 7);
+	Position pos(0, 0, 0);
+	alignment(&i2cA, l1, mc1, mc2);
+	
+	return 0;
 	
 	
 	
-	std::vector<PairI> res = aStar(start, goal, field);
 	
-	Position pos(0, -400, 0);
+	pos = moveShift(pos, &i2cA, mc1, mc2, 0, -400, 250, 20);
 	
-	cv::VideoCapture cap(0);
-	cv::Mat im;
-	cap >> im;
-
-decode(im);
-	//QR(pos, field, qr);
-	//pos = moveShift(pos, &i2cA, mc1, mc2, 0, 345, 250, 2);
-	//delay(1000);
-	//std::cout << "\n";
-	//pos = moveShift(pos, &i2cA, mc1, mc2, 230, 0, 250, 2);
+	std::vector<Dot> dots = QR(pos, field);
 	
 	
-	
-	//QR(pos);
-	
-	/*
-	std::cout << "path: \n";
-	
-	for (int i = 0; i < res.size(); ++i)
+	cout << "\n";
+	for (int i = 0; i < 4; ++i)
 	{
-		std::cout << (int)res[i].x << " " << (int)res[i].y << '\n';
+		std::cout << dots[i].x <<  " " << dots[i].y << " " << dots[i].theta << std::endl;
 	}
-	*/
-
+	cout << "\n";
+	
+	print_map(field);
+	for (int k = 1; k < 4; ++k)
+	{
+		pii start(dots[k - 1].x, dots[k - 1].y);
+		pii goal(dots[k].x, dots[k].y);
+		std::cout << '\n';
+		std::cout << start.first << " " << start.second << "\n";
+		std::cout << goal.first << " " << goal.second << "\n";
+		std::cout << '\n';
+		std::vector<pii> points = aStar(start, goal, field);
+		std::cout << "path: \n";
+		for (int i = 0; i < points.size(); ++i)
+			std::cout << (int)points[i].first << " " << (int)points[i].second << '\n';
+		
+		
+		pos = goTo(points, pos, dots[k].theta, &i2cA, mc1, mc2);
+		
+		delay(2000);
+	}
 	//delay(1000);	
+	
 	
 	mc1.reset();
 	mc2.reset();

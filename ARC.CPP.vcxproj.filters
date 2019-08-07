@@ -137,6 +137,12 @@
     <ClCompile Include="QR.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="goTo.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="alignment.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Config.h">
@@ -201,6 +207,12 @@
     </ClInclude>
     <ClInclude Include="C:\arm_Myrio_2017\include\zbar\zbargtk.h">
       <Filter>Header files\zbar</Filter>
+    </ClInclude>
+    <ClInclude Include="goTo.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="alignment.h">
+      <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

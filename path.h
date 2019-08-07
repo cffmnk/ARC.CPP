@@ -5,31 +5,8 @@
 #include <iostream>
 #include <set>
 
+#define pii std::pair<int, int>
 
+double dis(pii, pii);
 
-struct V
-{
-	int8_t x;
-	int8_t y;
-
-	V(int8_t , int8_t );
-	V();
-	
-	bool operator <(const V & ) const;
-	
-	bool operator ==(const V &) const;
-	
-	bool operator >(const V &) const;
-};
-
-struct PairI
-{
-	int16_t x;
-	int16_t y;
-	PairI(int16_t, int16_t);
-	
-};
-
-double dis(V, V);
-
-std::vector<PairI> aStar(V, V, std::vector<std::vector<int16_t>> &);
+std::vector<std::pair<int, int>> aStar(pii, pii, std::vector<std::vector<int16_t>> &);
