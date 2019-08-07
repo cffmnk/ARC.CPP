@@ -3,7 +3,7 @@
 void alignment(MyRio_I2c* i2c, Lidar & l1, MotorController & mc1, MotorController & mc2)
 {
     double dy = 20;
-    while (std::abs(dy) > 2)
+    while (std::abs(dy) > 3)
     {
         l1.poll();
         std::vector<int> asd;
@@ -14,13 +14,13 @@ void alignment(MyRio_I2c* i2c, Lidar & l1, MotorController & mc1, MotorControlle
         }
 	    std::sort(asd.begin(), asd.end());
         
-        dy = std::max(std::min((asd[3] - 230) * 2, 50), -50);
-        std::cout << dy << "\n";
+        dy = std::max(std::min((asd[3] - 230) * 2, 40), -40);
+        std::cout << "DY " << dy << "\n";
         move(i2c, mc1, mc2, 0, dy, 0, false);
     }
     mc1.setMotorsSpeed(0, 0);
     mc2.setMotorsSpeed(0, 0);
-    
+	
     double t = 1;
     while (std::fabs(t) > 0.005)
     {
@@ -89,4 +89,5 @@ void alignment(MyRio_I2c* i2c, Lidar & l1, MotorController & mc1, MotorControlle
     }
     mc1.setMotorsSpeed(0, 0);
     mc2.setMotorsSpeed(0, 0);
+    
 }

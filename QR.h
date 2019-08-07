@@ -34,4 +34,6 @@ typedef struct
 
 std::string decode(cv::Mat &im);
 
+void print_map(std::vector<std::vector<int16_t>> &);
+
 

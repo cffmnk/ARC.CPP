@@ -23,6 +23,7 @@ using namespace std;
 #include "QR.h"
 #include "goTo.h"
 #include "alignment.h"
+#include "takeCube.h"
 
 const int N = 23;
 std::vector<std::vector<int16_t>> field(N, std::vector<int16_t>(N));
@@ -55,17 +56,19 @@ int main()
 	delay(2000);
 	
 	Position pos(0, 0, 0);
-	alignment(&i2cA, l1, mc1, mc2);
-	
-	return 0;
-	
-	
 	
 	
 	pos = moveShift(pos, &i2cA, mc1, mc2, 0, -400, 250, 20);
 	
+	s1.openLeft();
+	s1.openRight();
+	
 	std::vector<Dot> dots = QR(pos, field);
 	
+	Position ST = pos;
+	
+	
+	dots.push_back(dots[0]);
 	
 	cout << "\n";
 	for (int i = 0; i < 4; ++i)
@@ -74,7 +77,8 @@ int main()
 	}
 	cout << "\n";
 	
-	//print_map(field);
+	print_map(field);
+	
 	for (int k = 1; k < 4; ++k)
 	{
 		pii start(dots[k - 1].x, dots[k - 1].y);
@@ -88,12 +92,18 @@ int main()
 		for (int i = 0; i < points.size(); ++i)
 			std::cout << (int)points[i].first << " " << (int)points[i].second << '\n';
 		
-		
 		pos = goTo(points, pos, dots[k].theta, &i2cA, mc1, mc2);
+		alignment(&i2cA, l1, mc1, mc2);
+		
+		bool left = (k == 2);
+		bool change = (k > 1);
+		
+		pos = takeCube(pos, &i2cA, mc1, mc2, s1, left, change);
 		
 		delay(2000);
 	}
-	//delay(1000);	
+	
+	
 	
 	
 	mc1.reset();

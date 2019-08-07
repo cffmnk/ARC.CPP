@@ -143,6 +143,9 @@
     <ClCompile Include="alignment.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="takeCube.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Config.h">
@@ -212,6 +215,9 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="alignment.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="takeCube.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>
