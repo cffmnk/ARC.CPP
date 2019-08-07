@@ -6,56 +6,19 @@ double f[N][N];
 int16_t ddx[8] = {-1, -1, -1, 0, 1, 1, 1, 0};
 int16_t ddy[8] = {-1, 0, 1, 1, 1, 0, -1, -1};
 
-
-
-V::V(int8_t x_, int8_t y_)
+double dis(pii a, pii b)
 {
-    x = x_;
-    y = y_;
+	return std::hypot(a.first - b.first, a.second - b.second);
 }
 
-V::V()	
+std::vector<pii> aStar(pii start, pii goal, std::vector<std::vector<int16_t>> & field)
 {
-	x = 0;
-	y = 0;
-}
-
-PairI::PairI(int16_t x_, int16_t y_)
-{
-	x = x_;
-	y = y_;
-}
-
-bool V::operator < (const V & oth) const
-{
-    return f[x][y] < f[oth.x][oth.y];
-}
-
-bool V::operator ==(const V & oth) const
-{
-	return f[x][y] == f[oth.x][oth.y];
-}
-
-bool V::operator >(const V & oth) const
-{
-	return f[x][y] > f[oth.x][oth.y];
-}
-
-
-double dis(V a, V b)
-{
-	return std::hypot(a.x - b.x, a.y - b.y);
-}
-
-
-std::vector<PairI> aStar(V start, V goal, std::vector<std::vector<int16_t>> & field)
-{
-    std::vector<PairI> res;
+    std::vector<pii> res;
 
     double h[N][N];
     double d[N][N];
 
-    V prev[N][N];
+	pii prev[N][N];
     
     bool used[N][N];
     for (int i = 0; i < N; ++i)
@@ -63,67 +26,85 @@ std::vector<PairI> aStar(V start, V goal, std::vector<std::vector<int16_t>> & fi
         for (int j = 0; j < N; ++j)
         {
             d[i][j] = INF;
-            h[i][j] = std ::max(std::abs(i - goal.y), std::abs(j - goal.x));
+            h[i][j] = std::max(std::abs(i - goal.second), std::abs(j - goal.first));
             f[i][j] = d[i][j] + h[i][j];
             used[i][j] = false;
-            prev[i][j] = V(-2, -2);
+            prev[i][j] = std::make_pair(-2, -2);
         }
     }
 
-    d[start.y][start.x] = 0;
-    f[start.y][start.x] = d[start.y][start.x] + h[start.y][start.x];
-    prev[start.y][start.x] = V(-1, -1);
-
-    while (!used[goal.y][goal.x])
+    d[start.second][start.first] = 0;
+    f[start.second][start.first] = d[start.second][start.first] + h[start.second][start.first];
+    prev[start.second][start.first] = std::make_pair(-1, -1);
+	
+    while (!used[goal.second][goal.first])
     {
-	    V cur(-1, -1);
+	    pii cur(-1, -1);
 	    
 	    for (int i = 0; i < N; ++i)
 	    {
 		    for (int j = 0; j < N; ++j) 
 		    {
-			    if (!used[i][j] && (cur == V(-1, -1) || f[i][j] < f[cur.y][cur.x]))
+			    if (!used[i][j] && (cur == pii(-1, -1) || f[i][j] < f[cur.second][cur.first]))
 			    {
-				    cur = V(j, i);
+				    cur = pii(j, i);
 			    }
 		    }
 	    }
+	    
+	    //std::cout << cur.first << " " << cur.second << " " << f[cur.second][cur.first] << "\n";
 	   
-        used[cur.y][cur.x] = true;
+        used[cur.second][cur.first] = true;
 	    
 		//std::cout << "Cur " << (int)cur.x << " " << (int)cur.y << " <- " << (int)prev[cur.y][cur.x].x << " " << (int)prev[cur.y][cur.x].y << "\n"
 		//std::cout << d[cur.y][cur.x] << " " << h[cur.y][cur.x] << " " << f[cur.y][cur.x] << "\n" << "\n";
 
         for (int i = 0; i < 8; ++i)
         {
-	        V u(cur.x + ddx[i], cur.y + ddy[i]);
+	        pii u(cur.first + ddx[i], cur.second + ddy[i]);
 
-            if (u.x < 0 || u.x >= N || u.y < 0 || u.y >= N) continue;
-	        if (used[u.y][u.x] || field[u.y][u.x] == 6) continue;
+            if (u.first < 0 || u.first >= N || u.second < 0 || u.second >= N) continue;
+	        if (used[u.second][u.first] || field[u.second + 1][u.first + 1] == 6) continue;
 
-            double newd = d[cur.y][cur.x] + dis(cur, u);
+            double newd = d[cur.second][cur.first] + dis(cur, u);
 	        
 	       // std::cout << "U " << (int)u.x << " " << (int)u.y << " " << newd << " " <<  d[u.y][u.x] << "\n";
 
-            if (newd < d[u.y][u.x])
+            if (newd < d[u.second][u.first])
             {
-                prev[u.y][u.x] = cur;
-                d[u.y][u.x] = newd;
-                f[u.y][u.x] = d[u.y][u.x] + h[u.y][u.x];
+                prev[u.second][u.first] = cur;
+                d[u.second][u.first] = newd;
+                f[u.second][u.first] = d[u.second][u.first] + h[u.second][u.first];
             }
         }
     }
+	std::cout << "\n";
 
-    V cur = goal;
-    while (cur.x >= 0 || cur.y >= 0)
+    pii cur = goal;
+    while (cur.first >= 0 || cur.second >= 0)
     {
-	    res.push_back(PairI(cur.x, cur.y));
-        cur = prev[cur.y][cur.x];
+	    res.push_back(std::make_pair(cur.first, cur.second));
+        cur = prev[cur.second][cur.first];
     }
 
     reverse(res.begin(), res.end());
+	
+	std::vector<bool> use((int)res.size(), true);
+	for (int i = 1; i + 1 < (int)res.size(); ++i)
+	{
+		if (res[i].first == res[i + 1].first && res[i].first == res[i - 1].first)
+			use[i] = false;
+		if (res[i].second == res[i + 1].second && res[i].second == res[i - 1].second)
+			use[i] = false;
+	}
+	std::vector<pii> ans;
+	for (int i = 0; i < (int)res.size(); ++i)
+	{
+		if (use[i])
+			ans.push_back(res[i]);
+	}
 
-    return res;
+    return ans;
 }
 
 
