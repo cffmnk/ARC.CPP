@@ -55,6 +55,18 @@ int main()
 	std::cout << mc1.batteryVoltage() << std::endl;
 	delay(2000);
 	
+	NiFpga_Bool dio_A31 = 1;
+	
+	MyRio_Dio A29;
+	
+	A29.dir = DIOA_70DIR;
+	A29.out = DIOA_70OUT;
+	A29.in = DIOA_70IN;
+	A29.bit = 29;
+	
+	//alignment(&i2cA, l1, mc1, mc2);
+	//return 0;
+	
 	Position pos(0, 0, 0);
 	
 	
@@ -93,10 +105,15 @@ int main()
 			std::cout << (int)points[i].first << " " << (int)points[i].second << '\n';
 		
 		pos = goTo(points, pos, dots[k].theta, &i2cA, mc1, mc2);
+		
+		delay(5000);
+		
 		alignment(&i2cA, l1, mc1, mc2);
 		
 		bool left = (k == 2);
 		bool change = (k > 1);
+		
+		delay(2000);
 		
 		pos = takeCube(pos, &i2cA, mc1, mc2, s1, left, change);
 		

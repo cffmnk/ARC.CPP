@@ -188,7 +188,7 @@ void MotorController::setMotorsSpeed(int16_t speed1, int16_t speed2)
 	writeData[3] = speed2 >> 8;
 	writeData[4] = speed2 & 0xFF;
 	I2c_Write(i2c_, address_, writeData, 5);
-	delay(10);
+	delay(13);
 }
     
 void MotorController::setMotorTarget(uint8_t motor, int16_t speed, int32_t target)
