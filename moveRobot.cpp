@@ -96,6 +96,8 @@ Position moveShift(Position &cur, MyRio_I2c* i2c, MotorController & mc1, MotorCo
 	std::pair<double, double> c1 = rotate(x_shift, y_shift, -pos.theta);
 	std::pair<double, double> c2 = std::make_pair(cur.x + c1.first, cur.y + c1.second);
 	pos = cur;
+	
+	std::cout << " C2 " << c2.first << " " << c2.second << "\n";
 
 	double x_speed = std::max(std::min((c2.first - pos.x) * 3, max_speed), -max_speed); 
 	double y_speed = std::max(std::min((c2.second - pos.y) * 3, max_speed), -max_speed);
@@ -105,6 +107,8 @@ Position moveShift(Position &cur, MyRio_I2c* i2c, MotorController & mc1, MotorCo
 		x_speed = std::max(std::min((c2.first - pos.x) * 3, max_speed), -max_speed);
 		y_speed = std::max(std::min((c2.second - pos.y) * 3, max_speed), -max_speed);
 		pos = moveRobot(pos, i2c, mc1, mc2, x_speed, y_speed, 0, false, true);
+		std::cout << "sp " << x_speed << " " << y_speed << "\n";
+		std::cout << "pos " << pos.x << " " << pos.y << "\n";
 	}
 	
 	mc1.setMotorsSpeed(0, 0);

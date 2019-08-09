@@ -12,11 +12,12 @@ Position takeCube(Position &cur, MyRio_I2c* i2c, MotorController & mc1, MotorCon
     }
     else
     {
-        dx1 = -55;
+        dx1 = -60;
         dx2 = 92;
     }
 
-    pos = moveShift(pos, i2c, mc1, mc2, dx1, 20, 100, 20);
+    pos = moveShift(pos, i2c, mc1, mc2, dx1, 30, 100, 10);
+	delay(1000);
 
 
     s1.up();
@@ -47,8 +48,8 @@ Position takeCube(Position &cur, MyRio_I2c* i2c, MotorController & mc1, MotorCon
 	}
 	
 	s1.down();
+	pos = moveShift(pos, i2c, mc1, mc2, 0, -30, 100, 10);
 	delay(1000);
 	
 	return pos;
-	
 }
