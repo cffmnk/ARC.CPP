@@ -146,6 +146,12 @@
     <ClCompile Include="takeCube.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="glebMain.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorsDetection.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Config.h">
@@ -218,6 +224,9 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="takeCube.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorDetection.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

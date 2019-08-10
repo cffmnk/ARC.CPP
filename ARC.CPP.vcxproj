@@ -67,6 +67,8 @@
   </ImportGroup>
   <ItemGroup>
     <ClCompile Include="alignment.cpp" />
+    <ClCompile Include="ColorsDetection.cpp" />
+    <ClCompile Include="glebMain.cpp" />
     <ClCompile Include="goTo.cpp" />
     <ClCompile Include="initialization.cpp" />
     <ClCompile Include="motors.cpp" />
@@ -88,6 +90,7 @@
     <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Video.h" />
     <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Window.h" />
     <ClInclude Include="C:\arm_Myrio_2017\include\zbar\zbargtk.h" />
+    <ClInclude Include="ColorDetection.h" />
     <ClInclude Include="goTo.h" />
     <ClInclude Include="motors.h" />
     <ClInclude Include="path.h" />
