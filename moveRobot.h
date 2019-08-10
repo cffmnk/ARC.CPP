@@ -35,7 +35,7 @@ std::pair<double, double> rotate(double, double, double);
 
 std::pair<double, double> shift(double, double, double, double);
 
-Position moveRobot(Position pos, MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2, double x, double y, double theta, bool, bool);
+Position moveRobot(Position pos, MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2, double x, double y, double theta, bool reset, bool frame);
 
 Position moveShift(Position & pos, MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2, double x, double y, double max_speed, double precision);
 

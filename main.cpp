@@ -43,11 +43,9 @@ int main()
 	MotorController mc2(&i2cA, 2);
 	ServoController s1(&i2cA, 3);
 	
-	
 	mc1.resetEncoders();
 	mc2.resetEncoders();
 	s1.setSpeed(70, 60, 60, 70, 0, 0);
-	
 	s1.closeLeft();
 	s1.closeRight();
 	s1.down();
@@ -55,7 +53,6 @@ int main()
 	delay(2000);
 	
 	Position pos(0, 0, 0);
-
 	pos = moveShift(pos, &i2cA, mc1, mc2, 0, -400, 250, 20);
 	
 	s1.openLeft();
@@ -65,11 +62,11 @@ int main()
 	
 	Position ST = pos;
 	
-	
 	dots.push_back(dots[0]);
+	dots[4].theta = dots[3].theta;
 	
 	cout << "\n";
-	for (int i = 0; i < 4; ++i)
+	for (int i = 0; i < 5; ++i)
 	{
 		std::cout << dots[i].x <<  " " << dots[i].y << " " << dots[i].theta << std::endl;
 	}
@@ -77,30 +74,99 @@ int main()
 	
 	print_map(field);
 	
-	for (int k = 1; k < 4; ++k)
+	pii current = pii(dots[0].x, dots[0].y);
+	
+	int cube_color[6];
+	int object_color[6];
+	
+	for (int i = 0; i < 6; ++i)
 	{
-		pii start(dots[k - 1].x, dots[k - 1].y);
-		pii goal(dots[k].x, dots[k].y);
-		std::vector<pii> points = aStar(start, goal, field);
+		cube_color[i] = -1;
+		object_color[i] = -1;
+	}
+	int k = 1;
+	
+	int needed = -1;//2;
+	
+	while (k < 5)
+	{
+		pii start = current; // start point
+		pii goal(dots[k].x, dots[k].y); // finish point
+		std::vector<pii> points = aStar(start, goal, field); // build the path
 		
-		pos = goTo(points, pos, dots[k].theta, &i2cA, mc1, mc2);
+		std::cout << "path: " << k << "\n";
+		for(int i = 0; i < points.size() ; ++i)
+			std::cout << (int)points[i].first << " " << (int)points[i].second << '\n';
+		std::cout << "\n";
 		
-		delay(3000);
+		pos = goTo(points, pos, dots[k].theta, &i2cA, mc1, mc2); // get to the point
+		
+		delay(1000);
+		
+		if (k == 4) // last point (finish)
+		{
+			++k;
+			continue;
+		}
 		
 		Lidar l1;
+		alignment(&i2cA, l1, mc1, mc2); 
+		pos = moveRobot(pos, &i2cA, mc1, mc2, 0, 0, 0, true, true); // motors reset
+		pos = Position(dots[k].x * 115, dots[k].y * 115, dots[k].theta); // reset position
 		
-		alignment(&i2cA, l1, mc1, mc2);
-		moveRobot(pos, &i2cA, mc1, mc2, 0, 0, 0, true, true);
+		//cube_color[k] = ;
+		//object_color[k] = ;
 		
-		//pos = Position(dots[k].x * 115, dots[k].y * 115, dots[k].theta);
-
+		if (cube_color[k] != needed)
+		{
+			if (object_color[k + 1] < 0)
+			{
+				std::swap(dots[k], dots[k + 1]);
+				std::swap(object_color[k], object_color[k + 1]);
+				std::swap(cube_color[k], cube_color[k + 1]);
+			}
+			else
+			{
+				std::swap(dots[k], dots[k + 2]);
+				std::swap(object_color[k], object_color[k + 2]);
+				std::swap(cube_color[k], cube_color[k + 2]);
+			}
+			continue;
+		}
+		else
+		{
+			needed = object_color[k];
+			if (cube_color[k + 1] > 0 && cube_color[k + 1] != needed)
+			{
+				std::swap(dots[k + 1], dots[k + 2]);
+				std::swap(object_color[k + 1], object_color[k + 2]);
+				std::swap(cube_color[k + 1], cube_color[k + 2]);
+			}
+		}
+		
+		 
 		bool left = (k == 2);
 		bool change = (k > 1);
 		
-		pos = takeCube(pos, &i2cA, mc1, mc2, s1, left, change);
+		pos = takeCube(pos, &i2cA, mc1, mc2, s1, left, change); // collect object
+		
+		current = goal;
+		++k;
 		
 		delay(2000);
 	}
+	cout << pos.x << " " << pos.y << "\n";
+	cout << ST.x << " " << ST.y << "\n";
+	
+	pos = cellShift(&i2cA, mc1, mc2, pos, ST, true);
+	
+	s1.closeLeft();
+	s1.closeRight();
+	
+	pos = moveRobot(pos, &i2cA, mc1, mc2, 0, 0, 0, true, true);  // motors reset
+	pos = moveShift(pos, &i2cA, mc1, mc2, 0, 400, 200, 10);
+	
+	
 	
 	
 	
