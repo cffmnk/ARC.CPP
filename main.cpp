@@ -24,6 +24,7 @@ using namespace std;
 #include "goTo.h"
 #include "alignment.h"
 #include "takeCube.h"
+#include "ColorDetection.h"
 
 const int N = 23;
 std::vector<std::vector<int16_t>> field(N, std::vector<int16_t>(N));
@@ -43,6 +44,8 @@ int main()
 	MotorController mc2(&i2cA, 2);
 	ServoController s1(&i2cA, 3);
 	
+	cv::VideoCapture cap(0);
+	
 	mc1.resetEncoders();
 	mc2.resetEncoders();
 	s1.setSpeed(70, 60, 60, 70, 0, 0);
@@ -58,7 +61,7 @@ int main()
 	s1.openLeft();
 	s1.openRight();
 	
-	std::vector<Dot> dots = QR(pos, field);
+	std::vector<Dot> dots = QR(pos, field, cap);
 	
 	Position ST = pos;
 	
@@ -86,10 +89,19 @@ int main()
 	}
 	int k = 1;
 	
-	int needed = -1;//2;
+	int needed = 2;
+	
+	if (abs(dots[2].x - dots[0].x) + abs(dots[2].y - dots[0].x) < abs(dots[0].x - dots[1].x) + abs(dots[0].y - dots[1].x))
+		std::swap(dots[1], dots[2]);
+	if (abs(dots[3].x - dots[0].x) + abs(dots[3].y - dots[0].x) < abs(dots[0].x - dots[1].x) + abs(dots[0].y - dots[1].x))
+		std::swap(dots[1], dots[3]);
+	if (abs(dots[3].x - dots[1].x) + abs(dots[3].y - dots[1].x) < abs(dots[2].x - dots[1].x) + abs(dots[2].y - dots[1].x))
+		std::swap(dots[2], dots[3]);
 	
 	while (k < 5)
 	{
+		if (k == 4)
+			dots[4].theta = dots[3].theta;
 		pii start = current; // start point
 		pii goal(dots[k].x, dots[k].y); // finish point
 		std::vector<pii> points = aStar(start, goal, field); // build the path
@@ -101,7 +113,9 @@ int main()
 		
 		pos = goTo(points, pos, dots[k].theta, &i2cA, mc1, mc2); // get to the point
 		
-		delay(1000);
+		//delay(1000);
+		
+		current = goal;
 		
 		if (k == 4) // last point (finish)
 		{
@@ -114,8 +128,11 @@ int main()
 		pos = moveRobot(pos, &i2cA, mc1, mc2, 0, 0, 0, true, true); // motors reset
 		pos = Position(dots[k].x * 115, dots[k].y * 115, dots[k].theta); // reset position
 		
-		//cube_color[k] = ;
-		//object_color[k] = ;
+		cube_color[k] = checkCube(&cap);
+		object_color[k] = checkObject(&cap);
+		std::cout << "\n";
+		std::cout << "colors : " << k << " | " << cube_color[k] << " " << object_color[k] << "\n";
+		std::cout << "\n";
 		
 		if (cube_color[k] != needed)
 		{
@@ -145,15 +162,15 @@ int main()
 		}
 		
 		 
-		bool left = (k == 2);
+		bool left = (k == 1) || (k == 3);
 		bool change = (k > 1);
 		
 		pos = takeCube(pos, &i2cA, mc1, mc2, s1, left, change); // collect object
 		
-		current = goal;
+		
 		++k;
 		
-		delay(2000);
+		//delay(2000);
 	}
 	cout << pos.x << " " << pos.y << "\n";
 	cout << ST.x << " " << ST.y << "\n";
@@ -165,9 +182,6 @@ int main()
 	
 	pos = moveRobot(pos, &i2cA, mc1, mc2, 0, 0, 0, true, true);  // motors reset
 	pos = moveShift(pos, &i2cA, mc1, mc2, 0, 400, 200, 10);
-	
-	
-	
 	
 	
 	

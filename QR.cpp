@@ -87,22 +87,27 @@ Dot::Dot(int x_, int y_, double theta_)
 	theta = theta_;
 }
 
-std::vector<Dot> QR(Position & pos, std::vector<std::vector<int16_t>> & field)
+std::vector<Dot> QR(Position & pos, std::vector<std::vector<int16_t>> & field, cv::VideoCapture & cap)
 {
     fill(field);
     
-	std::string qr;
+	std::string qr = "";
     std::vector<int> ddx = {-1, -1, -1, 0, 1, 1, 1, 0};
     std::vector<int> ddy = {-1, 0, 1, 1, 1, 0, -1, -1};
     
 	//data = qr.read();
 	//qr = "(M,O,L,R)(U,L,S,N)(E,K,C,M)(J,D,H,F)";
 	
-	cv ::VideoCapture cap(0);
+	
 	cv :: Mat im;
 	cap >> im;
+	imwrite("1000000.jpg", im);
 	
-	qr = decode(im);
+	while (qr == "")
+	{
+		qr = decode(im);
+	}
+	
     
     int16_t start_x1 = (qr[1] - 'A') * CELL;
     int16_t start_y1 = ('U' - qr[3]) * CELL;

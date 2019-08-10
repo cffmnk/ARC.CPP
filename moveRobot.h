@@ -16,7 +16,7 @@
 #include "Config.h"
 #include "servo.h"
 
-const double ROBOT_RADIUS = 147;
+const double ROBOT_RADIUS = 146.5;
 const double WHEEL_RADIUS = 50.8;
 const double CONSTANT = 1440;
 

@@ -5,9 +5,9 @@ const int16_t CELL = 115;
 Position cellShift(MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2, Position cur, Position goal, bool derevo)
 {
 	Position pos = cur;
-	int16_t a = 30; //30;
+	int16_t a = 45; //30;
 	int16_t c = 5; //5;
-	double b = 0.03;
+	double b = 0.04;
 	if (derevo)
 	{
 		a = 1;
@@ -15,11 +15,11 @@ Position cellShift(MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2,
 		b = 0.01;
 	}
 	    
-	std::cout << pos.x << " " << pos.y << " " << pos.theta << "\n";
+	//std::cout << pos.x << " " << pos.y << " " << pos.theta << "\n";
 	//std::cout << points[i].first << " "  <<  points[i].second << "\n";
 	//std::cout << points[i].first * CELL << " " << points[i].second * CELL << "\n";
 
-	int border = 180;
+	int border = 210;
 
 	int dx = goal.x - pos.x;
 	int dy = goal.y - pos.y;
