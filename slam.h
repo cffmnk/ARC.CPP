@@ -4,16 +4,13 @@
 #include <vector>
 #include "opencv2/opencv.hpp"
 #include "lidar.h"
-#include "moveRobot.h"
 #include <algorithm>
 
-#define POINTS_THRES 15
-#define POINTS_LINE_DIST 0.7
+#define POINTS_THRES 5
+#define POINTS_LINE_DIST 0.05
 
 using namespace std;
 using namespace cv;
-
-Position pos(0, 0, 0);
 
 struct Line
 {

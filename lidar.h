@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <cmath>
 #include <vector>
 
 #include "MyRio_lib/UART.h"
@@ -18,6 +19,7 @@ public:
 	void poll();
 	void close() { shutting_down_ = true; }
 	std::vector<float> ranges;
+	std::vector<std::pair<float, float>> points;
 	
 private:
 	uint32_t baud_rate_;
