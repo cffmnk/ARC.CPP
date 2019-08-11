@@ -41,3 +41,4 @@ Position moveShift(Position & pos, MyRio_I2c* i2c, MotorController & mc1, MotorC
 
 void move(MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2, double x, double y, double theta, bool reset = false);
 
+void taskMain(MyRio_I2c & i2cA, MotorController & mc1, MotorController & mc2, ServoController & s1, cv::VideoCapture & cap, std::vector<std::vector<int16_t>> field);

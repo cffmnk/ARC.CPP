@@ -5,6 +5,8 @@
 
 #include "MyRio_lib/UART.h"
 #include "Config.h"
+#include <iostream>
+#include <algorithm>
 
 #define BaudRate 230400
 #define DataBit 8
@@ -18,6 +20,7 @@ public:
 	void poll();
 	void close() { shutting_down_ = true; }
 	std::vector<float> ranges;
+	int medianInRange(int left, int right);
 	
 private:
 	uint32_t baud_rate_;

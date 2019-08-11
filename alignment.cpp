@@ -2,27 +2,22 @@
 
 void alignment(MyRio_I2c* i2c, Lidar & l1, MotorController & mc1, MotorController & mc2)
 {
+	
+	///*
 	double dy = 20;
     while (std::abs(dy) > 15)
     {
         l1.poll();
-	    //for (int i = 0; i < 360; ++i)
-		  //  std::cout << " " << l1.ranges[i] << " ";
-		//std::cout << std::endl;
         std::vector<int> asd;
         for (int i = 0; i < 3; ++i)
         {
             asd.push_back(l1.ranges[i]);
             asd.push_back(l1.ranges[359 - i]);
-	        //std::cout << " " << l1.ranges[i] << " " <<  l1.ranges[359 - i];
         }
 	    std::cout << std::endl;
 	    std::sort(asd.begin(), asd.end());
         
 	    dy = std::max(std::min((asd[3] - 230) * 1.0, (double)50), (double)-50);
-		//dy = (asd[3] - 230) * 2;//0.95;
-	    
-	//    std::cout << "DY " << asd[3] << " | " << dy << "\n";
 	    move(i2c, mc1, mc2, 0, dy, 0, false);
     }
     mc1.setMotorsSpeed(0, 0);
@@ -48,13 +43,9 @@ void alignment(MyRio_I2c* i2c, Lidar & l1, MotorController & mc1, MotorControlle
 
         dx = (mid - al) * 3;
         move(i2c, mc1, mc2, dx, 0, 0, false);
-	    
-	   // Position pos(0, 0, 0);
-       // pos = moveShift(pos, i2c, mc1, mc2, dx, 0, 15, 1);
     }
     mc1.setMotorsSpeed(0, 0);
     mc2.setMotorsSpeed(0, 0);
-    
     //*/
 	
 	///*
@@ -64,9 +55,7 @@ void alignment(MyRio_I2c* i2c, Lidar & l1, MotorController & mc1, MotorControlle
 		l1.poll();
 		int i1 = 1;
 		int i2 = 358;
-		//for (int i = 0; i < 360; ++i)
-		//	std::cout << "I " << i << ": " << l1.ranges[i] << "\n"; 
-    
+		
 		while ((l1.ranges[i1 + 1] != 0) && (l1.ranges[i1 + 1] < 700) && i1 < 90)
 			++i1;
     
@@ -108,22 +97,14 @@ void alignment(MyRio_I2c* i2c, Lidar & l1, MotorController & mc1, MotorControlle
 	{
 		l1.poll();
 		std::vector<int> asd;
-		//for (int i = 0; i < 360; ++i)
-		  //  std::cout << " " << l1.ranges[i] << " ";
-	    //std::cout << std::endl;
         for(int i = 0 ; i < 3 ; ++i)
 		{
 			asd.push_back(l1.ranges[i]);
 			asd.push_back(l1.ranges[359 - i]);
-			//std::cout << " " << l1.ranges[i] << " " <<  l1.ranges[359 - i];
 		}
-	//	std::cout << std::endl;
 		std::sort(asd.begin(), asd.end());
         
 		dy = std::max(std::min((asd[3] - 230) * 1.0, (double)40), (double) - 40);
-		//dy = (asd[3] - 230) * 2;//0.95;
-	    
-	   // std::cout << "DY " << asd[3] << " | " << dy << "\n";
 		move(i2c, mc1, mc2, 0, dy, 0, false);
 	}
 	mc1.setMotorsSpeed(0, 0);
