@@ -120,5 +120,20 @@ void Lidar::poll()
 	}
 }
 
+int Lidar::medianInRange(int left, int right)
+{
+//	for (int i = left; i <= right; ++i)
+//		std::cout << ranges[i] << " ";
+//	std::cout << "\n";
+		
+	std::vector<int> dsa = { 1000 };
+	for (int i = left; i <= right; ++i)
+		if (ranges[i] != 0)
+			dsa.push_back(ranges[i]);
+		
+	std::sort(dsa.begin(), dsa.end());
+	return dsa[((int)dsa.size() - 1) / 2];
+}
+
 
 

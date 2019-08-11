@@ -21,7 +21,7 @@ struct Dot
 	Dot(int, int, double);
 	
 };
-std::vector<Dot> QR(Position &, std::vector<std::vector<int16_t>> &);
+std::vector<Dot> QR(Position &, std::vector<std::vector<int16_t>> &, cv::VideoCapture & cap);
 
 using namespace zbar;
 

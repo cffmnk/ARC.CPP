@@ -16,7 +16,7 @@
 #include "Config.h"
 #include "servo.h"
 
-const double ROBOT_RADIUS = 147;
+const double ROBOT_RADIUS = 146.5;
 const double WHEEL_RADIUS = 50.8;
 const double CONSTANT = 1440;
 
@@ -35,9 +35,10 @@ std::pair<double, double> rotate(double, double, double);
 
 std::pair<double, double> shift(double, double, double, double);
 
-Position moveRobot(Position pos, MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2, double x, double y, double theta, bool, bool);
+Position moveRobot(Position pos, MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2, double x, double y, double theta, bool reset, bool frame);
 
 Position moveShift(Position & pos, MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2, double x, double y, double max_speed, double precision);
 
 void move(MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2, double x, double y, double theta, bool reset = false);
 
+void taskMain(MyRio_I2c & i2cA, MotorController & mc1, MotorController & mc2, ServoController & s1, cv::VideoCapture & cap, std::vector<std::vector<int16_t>> field);

@@ -71,6 +71,7 @@
     <ClCompile Include="glebMain.cpp" />
     <ClCompile Include="goTo.cpp" />
     <ClCompile Include="initialization.cpp" />
+    <ClCompile Include="localization.cpp" />
     <ClCompile Include="motors.cpp" />
     <ClCompile Include="moveRobot.cpp" />
     <ClCompile Include="path.cpp" />
@@ -93,6 +94,7 @@
     <ClInclude Include="C:\arm_Myrio_2017\include\zbar\zbargtk.h" />
     <ClInclude Include="ColorDetection.h" />
     <ClInclude Include="goTo.h" />
+    <ClInclude Include="localization.h" />
     <ClInclude Include="motors.h" />
     <ClInclude Include="path.h" />
     <ClInclude Include="QR.h" />
