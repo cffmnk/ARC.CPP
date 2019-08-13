@@ -35,15 +35,15 @@ std::vector<std::vector<int16_t>> field(N, std::vector<int16_t>(N));
 int main()
 {
 	NiFpga_Status status;
-	MyRio_I2c i2cA;
+	MyRio_I2c i2c;
 	NiFpga_Bool buttonState;
 	MyRio_Dio Button;
 	
-	initHardware(&status, &i2cA, &Button);
+	initHardware(&i2c);
 	
-	MotorController mc1(&i2cA, 1);
-	MotorController mc2(&i2cA, 2);
-	ServoController s1(&i2cA, 3);
+	MotorController mc1(&i2c, 1);
+	MotorController mc2(&i2c, 2);
+	ServoController s1(&i2c, 3);
 	
 	//cv::VideoCapture cap(0);
 	
@@ -58,7 +58,7 @@ int main()
 	
 	//taskMain(i2cA, mc1, mc2, s1, cap, field);
 	
-	std::vector<Position> ptr = localization(i2cA, mc1, mc2);
+	std::vector<Position> ptr = localization(i2c, mc1, mc2);
 
 	mc1.reset();
 	mc2.reset();
