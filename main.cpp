@@ -45,7 +45,7 @@ int main()
 	MotorController mc2(&i2c, 2);
 	ServoController s1(&i2c, 3);
 	
-	//cv::VideoCapture cap(0);
+	cv::VideoCapture cap(0);
 	
 	mc1.resetEncoders();
 	mc2.resetEncoders();
@@ -56,9 +56,9 @@ int main()
 	std::cout << mc1.batteryVoltage() << std::endl;
 	delay(2000);
 	
-	//taskMain(i2cA, mc1, mc2, s1, cap, field);
+	//taskMain(i2c, mc1, mc2, s1, cap, field);
 	
-	std::vector<Position> ptr = localization(i2c, mc1, mc2);
+	//std::vector<Position> ptr = localization(i2c, mc1, mc2);
 
 	mc1.reset();
 	mc2.reset();
