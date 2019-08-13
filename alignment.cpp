@@ -1,11 +1,11 @@
 #include "alignment.h"
 
-void alignment(MyRio_I2c* i2c, Lidar & l1, MotorController & mc1, MotorController & mc2)
+void alignment(MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2)
 {
-	
+	Lidar l1;
 	///*
 	double dy = 20;
-    while (std::abs(dy) > 15)
+    while (std::abs(dy) > 5)
     {
         l1.poll();
         std::vector<int> asd;
@@ -14,78 +14,95 @@ void alignment(MyRio_I2c* i2c, Lidar & l1, MotorController & mc1, MotorControlle
             asd.push_back(l1.ranges[i]);
             asd.push_back(l1.ranges[359 - i]);
         }
-	    std::cout << std::endl;
+	   // std::cout << std::endl;
 	    std::sort(asd.begin(), asd.end());
+	    
+	    std::cout << asd[3] << " " << dy  << "\n";
         
-	    dy = std::max(std::min((asd[3] - 230) * 1.0, (double)50), (double)-50);
+	    dy = std::max(std::min((asd[3] - 23) * 10.0, (double)50), (double)-50);
 	    move(i2c, mc1, mc2, 0, dy, 0, false);
     }
     mc1.setMotorsSpeed(0, 0);
     mc2.setMotorsSpeed(0, 0);
-	///*
+	//*/
     
+	//return;
     ///*
     int mid = 24;
     int dx = mid;
-    while (std::abs(dx) > 10)
+    while (std::abs(dx) >7)
     {
         l1.poll();
         int al = mid;
-        for (int i = 10; i < 40; ++i)
+        for (int i = 5; i < 40; ++i)
         {
-            if (l1.ranges[i] > 400 || l1.ranges[i] == 0)
+            if (l1.ranges[i] > 40 || l1.ranges[i] == 0)
             {
                 al = i;
                 break;
             }       
         }
-       // std::cout <<"al " << al << "\n";
+        std::cout <<"al " << al << "\n";
 
-        dx = (mid - al) * 3;
+        dx = -(mid - al) * 6;
         move(i2c, mc1, mc2, dx, 0, 0, false);
     }
     mc1.setMotorsSpeed(0, 0);
     mc2.setMotorsSpeed(0, 0);
+	delay(1000);
     //*/
 	
 	///*
 	double t = 1;
-	while (std::fabs(t) > 0.003)
+	while (std::fabs(t) > 0.015)
 	{
 		l1.poll();
 		int i1 = 1;
-		int i2 = 358;
+		int i2 = 359;
 		
-		while ((l1.ranges[i1 + 1] != 0) && (l1.ranges[i1 + 1] < 700) && i1 < 90)
+		while ((l1.ranges[i1 + 1] != 0) && (l1.ranges[i1 + 1] < 70) && i1 < 270)
 			++i1;
     
-		while ((l1.ranges[i2 - 1] != 0) && (l1.ranges[i2 - 1] < 700) && i2 > 2)
+		while ((l1.ranges[i2 - 1] != 0) && (l1.ranges[i2 - 1] < 70) && i2 > 90)
 			--i2;
-        
-		--i1;
-		++i2;
-    
-		//std::cout << i1 << " " << i2 << "\n";
-		//std::cout << l1.ranges[i1] << " " << l1.ranges[i2] << "\n";
-    
+		
+		while (((l1.ranges[i1] == 0) || (l1.ranges[i1] >= 70)))
+		{
+			--i1;
+			if (i1 < 0)
+				i1 += 360;
+		}	
+		
+		while (((l1.ranges[i2] == 0) || (l1.ranges[i2] >= 70)))
+		{
+			++i2;
+			if (i2 >= 360)
+				i2 -= 360;
+		}
+			
+   
+		std::cout << i2 << " " << i1 << "\n";
+		std::cout << l1.ranges[i2] << " " << l1.ranges[i1] << "\n";
+				
+		//for (int i = i2; i <= i1; ++i)
+			//std::cout << l1.ranges[i] << " ";
+		//std::cout << "\n";
+		
 		double a2_x = l1.ranges[i2] * cos(i2 * M_PI / 180);
 		double a2_y = l1.ranges[i2] * sin(i2 * M_PI / 180);
-
 		double a1_x = l1.ranges[i1] * cos(i1 * M_PI / 180);
 		double a1_y = l1.ranges[i1] * sin(i1 * M_PI / 180);
-    
 		double A_X = (a2_x - a1_x);
 		double A_Y = (a2_y - a1_y);
-		//std::cout << A_X << " " << A_Y << std::endl;
         
-		if((A_X) * (A_X) + (A_Y) * (A_Y) == 0 || std::fabs(((A_X) / sqrt((A_X) * (A_X) + (A_Y) * (A_Y))) > 1))
-		    t = 0;
+		if ((A_X) * (A_X) + (A_Y) * (A_Y) == 0 || std::fabs(((A_X) / sqrt((A_X) * (A_X) + (A_Y) * (A_Y))) > 1))
+			t = 0;
 		else
-		    t = std::acos((A_X) / sqrt((A_X) * (A_X) + (A_Y) * (A_Y))) - M_PI / 2 - 0.07;
+			t = std::acos((A_X) / sqrt((A_X) * (A_X) + (A_Y) * (A_Y))) - M_PI / 2 + 0.07;
 		t = std::max(std::min(t, 0.7), -0.7);
         
 		std::cout << "angle " << t * 57.3 << std::endl << std::endl;
-		move(i2c, mc1, mc2, 0, 0, -1 * t, false);
+		move(i2c, mc1, mc2, 0, 0, 0.5 * t, false);
 	}
 	mc1.setMotorsSpeed(0, 0);
 	mc2.setMotorsSpeed(0, 0);
@@ -104,15 +121,15 @@ void alignment(MyRio_I2c* i2c, Lidar & l1, MotorController & mc1, MotorControlle
 		}
 		std::sort(asd.begin(), asd.end());
         
-		dy = std::max(std::min((asd[3] - 230) * 1.0, (double)40), (double) - 40);
+		dy = std::max(std::min((asd[3] - 23) * 11.0, (double)40), (double) - 40);
 		move(i2c, mc1, mc2, 0, dy, 0, false);
 	}
 	mc1.setMotorsSpeed(0, 0);
 	mc2.setMotorsSpeed(0, 0);
 	//*/
     
-    ///*
-    mid = 24;
+  //  /*
+    mid = 25;
 	dx = mid;
 	while (std::abs(dx) > 5)
 	{
@@ -120,7 +137,7 @@ void alignment(MyRio_I2c* i2c, Lidar & l1, MotorController & mc1, MotorControlle
 		int al = mid;
 		for (int i = 10; i < 40; ++i)
 		{
-			if (l1.ranges[i] > 400 || l1.ranges[i] == 0)
+			if (l1.ranges[i] > 40 || l1.ranges[i] == 0)
 			{
 				al = i;
 				break;
@@ -128,7 +145,7 @@ void alignment(MyRio_I2c* i2c, Lidar & l1, MotorController & mc1, MotorControlle
 		}
 		//std::cout << "al " << al << "\n";
 
-		dx = (mid - al) * 3;
+		dx = -(mid - al) * 5;
 		move(i2c, mc1, mc2, dx, 0, 0, false);
 	    
 		// Position pos(0, 0, 0);
@@ -136,6 +153,6 @@ void alignment(MyRio_I2c* i2c, Lidar & l1, MotorController & mc1, MotorControlle
 	}
 	mc1.setMotorsSpeed(0, 0);
 	mc2.setMotorsSpeed(0, 0);
-    //*/
+   // */
 	
 }

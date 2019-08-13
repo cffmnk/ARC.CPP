@@ -1,29 +1,43 @@
 #include "initialization.h"
 
-NiFpga_Status initHardware(MyRio_I2c* i2c) {
-
-	NiFpga_Status status;
-
+NiFpga_Status initHardware(NiFpga_Status* status, MyRio_I2c* i2cA, MyRio_Dio* Button, MyRio_Dio* LED1, MyRio_Dio* LED2)
+{
 	uint8_t selectReg;
 
 	/*
-	 * Initialize the I2C struct with registers from the FPGA personality.
-	 */
-	i2c->addr = NiFpga_MyRio1900Fpga30_ControlU8_I2CAADDR; //I2CAADDR;
-	i2c->cnfg = NiFpga_MyRio1900Fpga30_ControlU8_I2CACNFG; //I2CBCNFG;
-	i2c->cntl = NiFpga_MyRio1900Fpga30_ControlU8_I2CACNTL; //I2CBCNTL;
-	i2c->cntr = NiFpga_MyRio1900Fpga30_ControlU8_I2CACNTR; //I2CBCNTR;
-	i2c->dati = NiFpga_MyRio1900Fpga30_IndicatorU8_I2CADATI; //I2CBDATI;
-	i2c->dato = NiFpga_MyRio1900Fpga30_ControlU8_I2CADATO; //I2CBDATO;
-	i2c->go = NiFpga_MyRio1900Fpga30_ControlBool_I2CAGO; //I2CBGO;
-	i2c->stat = NiFpga_MyRio1900Fpga30_IndicatorU8_I2CASTAT; //I2CBSTAT;
-
+     * Initialize the I2C struct with registers from the FPGA personality.
+     */
+	i2cA->addr = I2CAADDR;
+	i2cA->cnfg = I2CACNFG;
+	i2cA->cntl = I2CACNTL;
+	i2cA->cntr = I2CACNTR;
+	i2cA->dati = I2CADATI;
+	i2cA->dato = I2CADATO;
+	i2cA->go = I2CAGO;
+	i2cA->stat = I2CASTAT;
+	
 	/*
-	 * Enable the I2C functionality on Connector B
-	 * Read the value of the SELECTB register.
-	 */
-	status = NiFpga_ReadU8(myrio_session, NiFpga_MyRio1900Fpga30_ControlU8_SYSSELECTB, &selectReg);
-	MyRio_ReturnValueIfNotSuccess(status, status, "Could not read from the SYSSELECTB register!");
+     * Open the myRIO NiFpga Session.
+     * This function MUST be called before all other functions. After this call
+     * is complete the FPGA will be loaded and the myRIO target will be ready
+     * to be used.
+     */
+	*status = MyRio_Open();
+	if (MyRio_IsNotSuccess(*status))
+	{
+		return *status;
+	}
+	
+	/*
+     * Enable the I2C functionality on Connector A
+     *
+     * Read the value of the SELECTA register.
+     */
+	*status = NiFpga_ReadU8(myrio_session, SYSSELECTA, &selectReg);
+
+	MyRio_ReturnValueIfNotSuccess(*status,
+		*status,
+		"Could not read from the SYSSELECTA register!");
 
 	/*
 	 * Set bit7 of the SELECT register to enable the I2C functionality. The
@@ -34,21 +48,54 @@ NiFpga_Status initHardware(MyRio_I2c* i2c) {
 	/*
 	 * Write the updated value of the SELECT register.
 	 */
-	status = NiFpga_WriteU8(myrio_session, NiFpga_MyRio1900Fpga30_ControlU8_SYSSELECTB, selectReg);
-	MyRio_ReturnValueIfNotSuccess(status, status, "Could not write to the SYSSELECTB register!");
+	*status = NiFpga_WriteU8(myrio_session, SYSSELECTA, selectReg);
+
+	MyRio_ReturnValueIfNotSuccess(*status,
+		*status,
+		"Could not write to the SYSSELECTA register!");
 
 	/*
 	 * Set the speed of the I2C block.
 	 *
-	 * Standard mode (100 kbps) = 213.
-	 * Fast mode (400 kbps) = 63.
+	 * Standard mode (100 kbps) = 187.
+	 * Fast mode (400 kbps) = 51.
+	 *
+	 * These values are calculated using the formula:
+	 *   f_SCL = f_clk / (2 * CNTR) - 4
+	 *
+	 * where:
+	 *   f_SCL = the desired frequency of the I2C transmission
+	 *   f_clk = the frequency of the myRIO FPGA clock (40 Mhz default)
+	 *
+	 * This formula and its rationale can be found in the documentation.
 	 */
-	I2c_Counter(i2c, 213);
+	if (I2C_CLOCK == 400)
+		I2c_Counter(i2cA, 51);
+	else
+		I2c_Counter(i2cA, 187);
 
 	/*
 	 * Enable the I2C block.
 	 */
-	I2c_Configure(i2c, I2c_Enabled);
-
-	return status;
+	I2c_Configure(i2cA, I2c_Enabled);
+	//printf("I2C init succeed!\n");
+	
+	
+	Button->dir = DIOC_70DIR;
+	Button->out = DIOC_70OUT;
+	Button->in = DIOC_70IN;
+	Button->bit = 7;
+	
+	LED1->dir = DIOA_158DIR;
+	LED1->out = DIOA_158OUT;
+	LED1->in = DIOA_158IN;
+	LED1->bit = 2;
+	
+	LED2->dir = DIOA_158DIR;
+	LED2->out = DIOA_158OUT;
+	LED2->in = DIOA_158IN;
+	LED2->bit = 1;
+	//printf("DIO init succeed!\n");
+	
+	return *status;
 }

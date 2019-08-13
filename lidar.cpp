@@ -100,7 +100,7 @@ void Lidar::poll()
 								// scan->intensities[359-index] = intensity;
 								if(range < 140)
 									range = 0;
-								printf("r[%d]=%f,", index, range / 10.0);
+								//printf("r[%d]=%f,", index, range / 10.0);
 								float r = range / 10.;
 								ranges[index] = r;
 								double ang = index * M_PI / 180.;
@@ -126,12 +126,14 @@ int Lidar::medianInRange(int left, int right)
 //		std::cout << ranges[i] << " ";
 //	std::cout << "\n";
 		
-	std::vector<int> dsa = { 1000 };
+	std::vector<double> dsa = {200};
 	for (int i = left; i <= right; ++i)
 		if (ranges[i] != 0)
 			dsa.push_back(ranges[i]);
 		
 	std::sort(dsa.begin(), dsa.end());
+	if (dsa.size() == 1)
+		return 0;
 	return dsa[((int)dsa.size() - 1) / 2];
 }
 

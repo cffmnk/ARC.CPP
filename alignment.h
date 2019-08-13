@@ -9,4 +9,4 @@
 
 void lidarRread(Lidar & l1);
 
-void alignment(MyRio_I2c* i2c, Lidar & l1, MotorController & mc1, MotorController & mc2);
+void alignment(MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2);

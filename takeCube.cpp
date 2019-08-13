@@ -16,7 +16,7 @@ Position takeCube(Position &cur, MyRio_I2c* i2c, MotorController & mc1, MotorCon
         dx2 = 92;
     }
 
-    pos = moveShift(pos, i2c, mc1, mc2, dx1, 22, 100, 10);
+    pos = moveShift(pos, i2c, mc1, mc2, dx1, 20, 90, 5);
 	delay(1000);
 
 
@@ -25,11 +25,25 @@ Position takeCube(Position &cur, MyRio_I2c* i2c, MotorController & mc1, MotorCon
 	
 	if (leftArm)
 	{
+		auto begin = std::chrono::high_resolution_clock::now();
+		auto end = std::chrono::high_resolution_clock::now();
+		auto time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+		while (time < 1200)
+		{
+			pos = moveRobot(pos, i2c, mc1, mc2, -20, 10, 0, false, true);
+			end = std::chrono::high_resolution_clock::now();
+			time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+			
+		}
+		
 		s1.closeLeft();
+		pos = moveShift(pos, i2c, mc1, mc2, 0, 0, 30, 3);
+		
 	}
 	else
 	{
 		s1.closeRight();
+		pos = moveShift(pos, i2c, mc1, mc2, 20, 20, 30, 5);
 	}
 	delay(400);
 	

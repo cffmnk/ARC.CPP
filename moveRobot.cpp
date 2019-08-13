@@ -155,10 +155,10 @@ void move(MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2, double x
 	return;
 }
 
-void taskMain(MyRio_I2c & i2cA, MotorController & mc1, MotorController & mc2, ServoController & s1, cv::VideoCapture & cap, std::vector<std::vector<int16_t>> field)
+void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, ServoController & s1, cv::VideoCapture & cap, std::vector<std::vector<int16_t>> field)
 {
 	Position pos(0, 0, 0);
-	pos = moveShift(pos, &i2cA, mc1, mc2, 0, -400, 250, 20);
+	pos = moveShift(pos, &i2c, mc1, mc2, 0, -400, 250, 20);
 	
 	s1.openLeft();
 	s1.openRight();
@@ -168,7 +168,6 @@ void taskMain(MyRio_I2c & i2cA, MotorController & mc1, MotorController & mc2, Se
 	Position ST = pos;
 	
 	dots.push_back(dots[0]);
-	dots[4].theta = dots[3].theta;
 	
 	cout << "\n";
 	for (int i = 0; i < 5; ++i)
@@ -213,21 +212,21 @@ void taskMain(MyRio_I2c & i2cA, MotorController & mc1, MotorController & mc2, Se
 			std::cout << (int)points[i].first << " " << (int)points[i].second << '\n';
 		std::cout << "\n";
 		
-		pos = goTo(points, pos, dots[k].theta, &i2cA, mc1, mc2);  // get to the point
+		pos = goTo(points, pos, dots[k].theta, &i2c, mc1, mc2);  // get to the point
 		
-		//delay(1000);
+		delay(1000);
 		
 		current = goal;
 		
 		if (k == 4) // last point (finish)
-			{
-				++k;
-				continue;
-			}
+		{
+			++k;
+			continue;
+		}
 		
-		Lidar l1;
-		alignment(&i2cA, l1, mc1, mc2); 
-		pos = moveRobot(pos, &i2cA, mc1, mc2, 0, 0, 0, true, true);  // motors reset
+		
+		alignment(&i2c, mc1, mc2); 
+		pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, true, true);  // motors reset
 		pos = Position(dots[k].x * 115, dots[k].y * 115, dots[k].theta);  // reset position
 		
 		cube_color[k] = checkCube(&cap);
@@ -267,23 +266,23 @@ void taskMain(MyRio_I2c & i2cA, MotorController & mc1, MotorController & mc2, Se
 		bool left = (k == 1) || (k == 3);
 		bool change = (k > 1);
 		
-		pos = takeCube(pos, &i2cA, mc1, mc2, s1, left, change);  // collect object
+		pos = takeCube(pos, &i2c, mc1, mc2, s1, left, change);  // collect object
 		
 		
 		++k;
 		
-		//delay(2000);
+		delay(1000);
 	}
 	std::cout << pos.x << " " << pos.y << "\n";
 	std::cout << ST.x << " " << ST.y << "\n";
 	
-	pos = cellShift(&i2cA, mc1, mc2, pos, ST, true);
+	pos = cellShift(&i2c, mc1, mc2, pos, ST, true);
 	
 	s1.closeLeft();
 	s1.closeRight();
 	
-	pos = moveRobot(pos, &i2cA, mc1, mc2, 0, 0, 0, true, true);   // motors reset
-	pos = moveShift(pos, &i2cA, mc1, mc2, 0, 400, 200, 10);
+	pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, true, true);   // motors reset
+	pos = moveShift(pos, &i2c, mc1, mc2, 0, 400, 200, 10);
 	
 	
 	

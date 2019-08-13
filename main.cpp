@@ -38,8 +38,9 @@ int main()
 	MyRio_I2c i2c;
 	NiFpga_Bool buttonState;
 	MyRio_Dio Button;
+	MyRio_Dio LED1, LED2, LED3;
 	
-	initHardware(&i2c);
+	initHardware(&status, &i2c, &Button, &LED1, &LED2);
 	
 	MotorController mc1(&i2c, 1);
 	MotorController mc2(&i2c, 2);
@@ -56,9 +57,23 @@ int main()
 	std::cout << mc1.batteryVoltage() << std::endl;
 	delay(2000);
 	
+	Position pos(0, 0, 0);
+	//while (true)
+	//{
+	//	pos = moveRobot(pos, &i2c, mc1, mc2, 0, -80, 0, false, false);
+	//}
+	
+	s1.openLeft();
+	s1.openRight();
+	
+	
+	alignment(&i2c, mc1, mc2);
+	pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, true, true); 
+	pos = takeCube(pos, &i2c, mc1, mc2, s1, true, false);
+	
 	//taskMain(i2c, mc1, mc2, s1, cap, field);
 	
-	//std::vector<Position> ptr = localization(i2c, mc1, mc2);
+	//std::vector<Position> ptr = localization(i2c, mc1, mc2, LED1);
 
 	mc1.reset();
 	mc2.reset();

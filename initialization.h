@@ -1,14 +1,11 @@
 #pragma once
 
-#include <stdio.h>
 #include "MyRio_lib/MyRio.h"
-#include "MyRio_lib/NiFpga_MyRio1900Fpga30.h"
 #include "MyRio_lib/I2C.h"
-#include <time.h>
+#include "MyRio_lib/DIO.h"
 #include <iostream>
-
 #include "Config.h"
 
 extern NiFpga_Session myrio_session;
 
-NiFpga_Status initHardware(MyRio_I2c* i2c);
+NiFpga_Status initHardware(NiFpga_Status* status, MyRio_I2c* i2cA, MyRio_Dio* Button, MyRio_Dio* LED1, MyRio_Dio* LED2);
