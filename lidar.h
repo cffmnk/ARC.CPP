@@ -3,7 +3,7 @@
 #include <string>
 #include <cmath>
 #include <vector>
-
+#include <algorithm>
 #include "MyRio_lib/UART.h"
 #include "Config.h"
 
@@ -20,7 +20,7 @@ public:
 	void close() { shutting_down_ = true; }
 	std::vector<float> ranges;
 	std::vector<std::pair<float, float>> points;
-	
+	int medianInRange(int left, int right);
 private:
 	uint32_t baud_rate_;
 	bool shutting_down_;
