@@ -25,7 +25,7 @@ using namespace std;
 #include "alignment.h"
 #include "takeCube.h"
 #include "ColorDetection.h"
-//#include "localization.h"
+#include "localization.h"
 
 const int N = 23;
 std::vector<std::vector<int16_t>> field(N, std::vector<int16_t>(N));
@@ -36,21 +36,30 @@ int main()
 {
 	NiFpga_Status status;
 	MyRio_I2c i2c;
-
+	NiFpga_Bool buttonState;
+	MyRio_Dio Button;
+	
 	initHardware(&i2c);
 	
 	MotorController mc1(&i2c, 1);
-		MotorController mc2(&i2c, 2);
-		ServoController s1(&i2c, 3);
+	MotorController mc2(&i2c, 2);
+	ServoController s1(&i2c, 3);
 	
+	//cv::VideoCapture cap(0);
+	
+	mc1.resetEncoders();
+	mc2.resetEncoders();
+	s1.setSpeed(70, 60, 60, 70, 0, 0);
 	s1.closeLeft();
 	s1.closeRight();
 	s1.down();
-	
-	
-	Position pos(0, 0, 0);
-	pos = moveRobot(pos, &i2c, mc1, mc2, 0, 200, 0, 0, 0);
+	std::cout << mc1.batteryVoltage() << std::endl;
 	delay(2000);
+	
+	//taskMain(i2cA, mc1, mc2, s1, cap, field);
+	
+	std::vector<Position> ptr = localization(i2c, mc1, mc2);
+
 	mc1.reset();
 	mc2.reset();
 	s1.reset();

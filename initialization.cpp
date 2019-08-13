@@ -3,8 +3,6 @@
 NiFpga_Status initHardware(MyRio_I2c* i2c) {
 
 	NiFpga_Status status;
-	
-	status = MyRio_Open();
 
 	uint8_t selectReg;
 
@@ -24,7 +22,7 @@ NiFpga_Status initHardware(MyRio_I2c* i2c) {
 	 * Enable the I2C functionality on Connector B
 	 * Read the value of the SELECTB register.
 	 */
-	status = NiFpga_ReadU8(myrio_session, NiFpga_MyRio1900Fpga30_ControlU8_SYSSELECTA, &selectReg);
+	status = NiFpga_ReadU8(myrio_session, NiFpga_MyRio1900Fpga30_ControlU8_SYSSELECTB, &selectReg);
 	MyRio_ReturnValueIfNotSuccess(status, status, "Could not read from the SYSSELECTB register!");
 
 	/*
@@ -36,7 +34,7 @@ NiFpga_Status initHardware(MyRio_I2c* i2c) {
 	/*
 	 * Write the updated value of the SELECT register.
 	 */
-	status = NiFpga_WriteU8(myrio_session, NiFpga_MyRio1900Fpga30_ControlU8_SYSSELECTA, selectReg);
+	status = NiFpga_WriteU8(myrio_session, NiFpga_MyRio1900Fpga30_ControlU8_SYSSELECTB, selectReg);
 	MyRio_ReturnValueIfNotSuccess(status, status, "Could not write to the SYSSELECTB register!");
 
 	/*
