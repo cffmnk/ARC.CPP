@@ -26,7 +26,7 @@ std::vector<pii> aStar(pii start, pii goal, std::vector<std::vector<int16_t>> & 
         for (int j = 0; j < N; ++j)
         {
             d[i][j] = INF;
-            h[i][j] = std::max(std::abs(i - goal.second), std::abs(j - goal.first));
+	        h[i][j] = hypotl((i - goal.second), (j - goal.first));//std::max(std::abs(i - goal.second), std::abs(j - goal.first));
             f[i][j] = d[i][j] + h[i][j];
             used[i][j] = false;
             prev[i][j] = std::make_pair(-2, -2);
@@ -95,6 +95,8 @@ std::vector<pii> aStar(pii start, pii goal, std::vector<std::vector<int16_t>> & 
 		if (res[i].first == res[i + 1].first && res[i].first == res[i - 1].first)
 			use[i] = false;
 		if (res[i].second == res[i + 1].second && res[i].second == res[i - 1].second)
+			use[i] = false;
+		if (i + 1 < (int)res.size() && res[i + 1].second - res[i].second == res[i].second - res[i - 1].second && res[i + 1].first - res[i].first == res[i].first - res[i - 1].first)
 			use[i] = false;
 	}
 	std::vector<pii> ans;
