@@ -204,16 +204,16 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 	{
 		if (k == 4)
 			dots[4].theta = dots[3].theta;
-		pii start = current;   // start point
-		pii goal(dots[k].x, dots[k].y);   // finish point
-		std::vector<pii> points = aStar(start, goal, field);   // build the path
+		pii start = current;    // start point
+		pii goal(dots[k].x, dots[k].y);    // finish point
+		std::vector<pii> points = aStar(start, goal, field);    // build the path
 		
 		std::cout << "path: " << k << "\n";
 		for (int i = 0; i < points.size(); ++i)
 			std::cout << (int)points[i].first << " " << (int)points[i].second << '\n';
 		std::cout << "\n";
 		
-		pos = goTo(points, pos, dots[k].theta, &i2c, mc1, mc2);   // get to the point
+		pos = goTo(points, pos, dots[k].theta, &i2c, mc1, mc2);    // get to the point
 		
 		
 		current = goal;
@@ -227,8 +227,8 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 		Lidar lidar;
 		shtuka(&i2c, mc1, mc2, &lidar); 
 	
-		pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, true, true);   // motors reset
-		pos = Position(dots[k].x * 115, dots[k].y * 115, dots[k].theta);   // reset position
+		pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, true, true);    // motors reset
+		pos = Position(dots[k].x * 115, dots[k].y * 115, dots[k].theta);    // reset position
 		
 		cube_color[k] = checkCube(&cap);
 		object_color[k] = checkObject(&cap);
@@ -268,7 +268,7 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 		bool change = (k > 1);
 		
 		pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, true, true); 
-		pos = takeCube(pos, &i2c, mc1, mc2, s1, left, change);   // collect object
+		pos = takeCube(pos, &i2c, mc1, mc2, s1, left, change);    // collect object
 		
 		
 		++k;
@@ -282,7 +282,7 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 	s1.closeLeft();
 	s1.closeRight();
 	
-	pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, true, true);    // motors reset
-	pos = moveShift(pos, &i2c, mc1, mc2, 0, 400, 200, 10);	
-	
+	pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, true, true);     // motors reset
+	Lidar lidar;
+	toWall(15, 5, 0, &i2c, mc1, mc2, &lidar);
 }

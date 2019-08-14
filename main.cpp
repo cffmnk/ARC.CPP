@@ -115,21 +115,24 @@ int main()
 	
 	
 	Position pos(0, 0, 0);
+	s1.openRight();
 	
+	//	taskMain(i2c, mc1, mc2, s1, cap, field);
+		//task one
+		//taskOne(pos, mc1, mc2, s1, i2c, LED1, ButtonL, ButtonR);
 	
-	taskMain(i2c, mc1, mc2, s1, cap, field);
-	//task one
-	//taskOne(pos, mc1, mc2, s1, i2c, LED1, ButtonL, ButtonR);
+		//taskTwo(cap);
+		//s1.openRight();
+		//taskThree(cap);
+		//alignment(&i2c, mc1, mc2);
 	
-	//taskTwo(cap);
-	//s1.openRight();
-	//taskThree(cap);
-	//alignment(&i2c, mc1, mc2);
+		//taskMain(i2c, mc1, mc2, s1, cap, field);
 	
-	//taskMain(i2c, mc1, mc2, s1, cap, field);
+		//std::vector<Position> ptr = localization(i2c, mc1, mc2, LED1);
+		Lidar lidar;
+	shtuka(&i2c, mc1, mc2, &lidar);
 	
-	//std::vector<Position> ptr = localization(i2c, mc1, mc2, LED1);
-
+	takeCube(pos, &i2c, mc1, mc2, s1, false, true);
 	
 	mc1.reset();
 	mc2.reset();
