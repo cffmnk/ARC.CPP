@@ -127,7 +127,7 @@ int Lidar::medianInRange(int left, int right)
 //	std::cout << "\n";
 		
 	std::vector<double> dsa = {200};
-	for (int i = left; i <= right; ++i)
+	for (int i = left; i != right + 1; i = (i + 1) % 360)
 		if (ranges[i] != 0)
 			dsa.push_back(ranges[i]);
 		

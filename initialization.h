@@ -8,4 +8,4 @@
 
 extern NiFpga_Session myrio_session;
 
-NiFpga_Status initHardware(NiFpga_Status* status, MyRio_I2c* i2cA, MyRio_Dio* Button, MyRio_Dio* LED1, MyRio_Dio* LED2);
+NiFpga_Status initHardware(NiFpga_Status* status, MyRio_I2c* i2c, MyRio_Dio* ButtonR, MyRio_Dio* ButtonL, MyRio_Dio* LED1, MyRio_Dio* LED2);

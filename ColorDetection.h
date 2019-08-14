@@ -26,3 +26,5 @@ struct Color
 int checkCube(VideoCapture* cap);
 
 int checkObject(VideoCapture* cap);
+
+bool isWall(VideoCapture* cap);

@@ -1,6 +1,6 @@
 #include "initialization.h"
 
-NiFpga_Status initHardware(NiFpga_Status* status, MyRio_I2c* i2cA, MyRio_Dio* Button, MyRio_Dio* LED1, MyRio_Dio* LED2)
+NiFpga_Status initHardware(NiFpga_Status* status, MyRio_I2c* i2cA, MyRio_Dio* ButtonL, MyRio_Dio* ButtonR, MyRio_Dio* LED1, MyRio_Dio* LED2)
 {
 	uint8_t selectReg;
 
@@ -81,10 +81,15 @@ NiFpga_Status initHardware(NiFpga_Status* status, MyRio_I2c* i2cA, MyRio_Dio* Bu
 	//printf("I2C init succeed!\n");
 	
 	
-	Button->dir = DIOC_70DIR;
-	Button->out = DIOC_70OUT;
-	Button->in = DIOC_70IN;
-	Button->bit = 7;
+	ButtonR->dir = DIOC_70DIR;
+	ButtonR->out = DIOC_70OUT;
+	ButtonR->in = DIOC_70IN;
+	ButtonR->bit = 7;
+	
+	ButtonL->dir = DIOC_70DIR;
+	ButtonL->out = DIOC_70OUT;
+	ButtonL->in = DIOC_70IN;
+	ButtonL->bit = 6;
 	
 	LED1->dir = DIOA_158DIR;
 	LED1->out = DIOA_158OUT;

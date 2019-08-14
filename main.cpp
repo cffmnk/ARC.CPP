@@ -39,8 +39,10 @@ int main()
 	NiFpga_Bool buttonState;
 	MyRio_Dio Button;
 	MyRio_Dio LED1, LED2, LED3;
+	MyRio_Dio ButtonL;
+	MyRio_Dio ButtonR;
 	
-	initHardware(&status, &i2c, &Button, &LED1, &LED2);
+	initHardware(&status, &i2c, &ButtonL, &ButtonR, &LED1, &LED2);
 	
 	MotorController mc1(&i2c, 1);
 	MotorController mc2(&i2c, 2);
@@ -57,19 +59,31 @@ int main()
 	std::cout << mc1.batteryVoltage() << std::endl;
 	delay(2000);
 	
-	Position pos(0, 0, 0);
-	//while (true)
-	//{
-	//	pos = moveRobot(pos, &i2c, mc1, mc2, 0, -80, 0, false, false);
-	//}
 	
+	
+	Position pos(0, 0, 0);
+	
+	//task one
+	Dio_WriteBit(&LED1, false);
 	s1.openLeft();
 	s1.openRight();
+	pos = takeCube(pos, &i2c, mc1, mc2, s1, false, false);
+	
+	pos = cellShift(&i2c, mc1, mc2, pos, Position(0, 0, 0), true);
+	
+	mc1.setMotorsSpeed(0, 0);
+	mc2.setMotorsSpeed(0, 0);
+
 	
 	
-	alignment(&i2c, mc1, mc2);
-	pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, true, true); 
-	pos = takeCube(pos, &i2c, mc1, mc2, s1, true, false);
+	while (!Dio_ReadBit(&ButtonL) && !Dio_ReadBit(&ButtonR)) {}
+	Dio_WriteBit(&LED1, true);
+	
+	pos = takeCube(pos, &i2c, mc1, mc2, s1, true, true);
+	
+	delay(5000);
+	
+	//alignment(&i2c, mc1, mc2);
 	
 	//taskMain(i2c, mc1, mc2, s1, cap, field);
 	

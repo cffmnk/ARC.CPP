@@ -1,29 +1,36 @@
 #include "alignment.h"
 
+void toWall(double dis, double precition, int idx, MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2)
+{
+	Lidar l1;
+	///*
+	double dy = precition + 1;
+	while (std::abs(dy) > precition)
+	{
+		l1.poll();
+		std::vector<int> asd;
+		for (int i = 0; i < 3; ++i)
+		{
+			asd.push_back(l1.ranges[i + idx]);
+			asd.push_back(l1.ranges[(idx + 359 - i) % 360]);
+		}
+		// std::cout << std::endl;
+		 std::sort(asd.begin(), asd.end());
+	    
+		std::cout << asd[3] << " " << dy  << "\n";
+        
+		dy = std::max(std::min((asd[3] - dis) * 10.0, (double)50), (double) - 50);
+		move(i2c, mc1, mc2, 0, dy, 0, false);
+	}
+	mc1.setMotorsSpeed(0, 0);
+	mc2.setMotorsSpeed(0, 0);
+}
+
 void alignment(MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2)
 {
 	Lidar l1;
 	///*
-	double dy = 20;
-    while (std::abs(dy) > 5)
-    {
-        l1.poll();
-        std::vector<int> asd;
-        for (int i = 0; i < 3; ++i)
-        {
-            asd.push_back(l1.ranges[i]);
-            asd.push_back(l1.ranges[359 - i]);
-        }
-	   // std::cout << std::endl;
-	    std::sort(asd.begin(), asd.end());
-	    
-	    std::cout << asd[3] << " " << dy  << "\n";
-        
-	    dy = std::max(std::min((asd[3] - 23) * 10.0, (double)50), (double)-50);
-	    move(i2c, mc1, mc2, 0, dy, 0, false);
-    }
-    mc1.setMotorsSpeed(0, 0);
-    mc2.setMotorsSpeed(0, 0);
+	toWall(23, 5, 0, i2c, mc1, mc2);
 	//*/
     
 	//return;
@@ -109,23 +116,7 @@ void alignment(MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2)
 	//*/
 	
 	///*
-	dy = 20;
-	while (std::abs(dy) > 5)
-	{
-		l1.poll();
-		std::vector<int> asd;
-        for(int i = 0 ; i < 3 ; ++i)
-		{
-			asd.push_back(l1.ranges[i]);
-			asd.push_back(l1.ranges[359 - i]);
-		}
-		std::sort(asd.begin(), asd.end());
-        
-		dy = std::max(std::min((asd[3] - 23) * 11.0, (double)40), (double) - 40);
-		move(i2c, mc1, mc2, 0, dy, 0, false);
-	}
-	mc1.setMotorsSpeed(0, 0);
-	mc2.setMotorsSpeed(0, 0);
+	toWall(23, 5, 0, i2c, mc1, mc2);
 	//*/
     
   //  /*
@@ -135,7 +126,7 @@ void alignment(MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2)
 	{
 		l1.poll();
 		int al = mid;
-		for (int i = 10; i < 40; ++i)
+		for (int i = 5; i < 40; ++i)
 		{
 			if (l1.ranges[i] > 40 || l1.ranges[i] == 0)
 			{

@@ -1,6 +1,6 @@
 #include "localization.h"
 
-std::vector<Position> localization(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, MyRio_Dio & LED1)
+std::vector<Position> localization(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, MyRio_Dio & LED1, cv::VideoCapture & cap)
 {
 	std::vector<Position> res;
 	
@@ -90,63 +90,59 @@ std::vector<Position> localization(MyRio_I2c & i2c, MotorController & mc1, Motor
 	 *a bit closer to the wall
 	 */
 	///*
-	double dy = 20;
-	while (std::abs(dy) > 15)
-	{
-		l1.poll();
-		std::vector<int> asd;
-		for (int i = 0; i < 3; ++i)
-		{
-			asd.push_back(l1.ranges[180 + i]);
-			asd.push_back(l1.ranges[180 - i]);
-		}
-		//std::cout << std::endl;
-		std::sort(asd.begin(), asd.end());
-        
-		dy = std::max(std::min((asd[3] - 27) * -10.0, (double)50), (double) - 50);
-		pos = moveRobot(pos, &i2c, mc1, mc2, 0, dy, 0, false, false);
-	}
-	mc1.setMotorsSpeed(0, 0);
-	mc2.setMotorsSpeed(0, 0);
+	toWall(27, 10, 180, &i2c, mc1, mc2);
+	
 	///*
 	Dio_WriteBit(&LED1, false);
 	
-	Position cut = pos;
-	std::cout << "\n Position "  << pos.x << " " << pos.y << " " << pos.theta << "\n";
-	
 	Position mine(0, l1.medianInRange(170, 190) * 10, 0);
-    
 	std::pair<double, double> p2 = rotate(pos.x, pos.y, pos.theta);
-	std::cout << " p2 " << p2.first << " " << p2.second << "\n";
-	
 	std::pair<double, double> p1 = shift(mine.x, mine.y, p2.first, p2.second);
-	
 	Position start(p1.first, p1.second, -pos.theta);
 	
-	l1.poll();
-	std::cout << "right " << l1.medianInRange(80, 100) << "\n";
-	std::cout << "left " << l1.medianInRange(260, 280) << "\n";	
-	std::cout << "back " << l1.medianInRange(170, 190) << "\n";
-
-	while(l1.medianInRange(260, 280) + l1.medianInRange(80, 100) < 175)
+	std::cout << " p2 " << p2.first << " " << p2.second << "\n";
+	
+	Position cut = mine;
+	
+	if (l1.medianInRange(80, 100) < l1.medianInRange(260, 280))
 	{
-		l1.poll();
-		mine = moveRobot(mine, &i2c, mc1, mc2, 0, 80, 0, false, false); 
-		std::cout << "right " << l1.medianInRange(260, 280) << "\n";
-		std::cout << "left " << l1.medianInRange(80, 100) << "\n" <<"\n";
-		std::cout << "back " << l1.medianInRange(170, 190) << "\n";
+		cut.theta += M_PI / 2;
+		mine = cellShift(&i2c, mc1, mc2, mine, cut, true);
+		toWall(27, 10, 0, &i2c, mc1, mc2);
+	
+		while (!isWall(&cap))
+		{
+			mine = moveRobot(mine, &i2c, mc1, mc2, -50, 0, 0, false, false);
+		}
+		mc1.setMotorsSpeed(0, 0);
+		mc2.setMotorsSpeed(0, 0);
+	
+		mine.x += 2300 - l1.medianInRange(350, 10) * 10;
+		start.x += mine.x;
 	}
-	mc1.setMotorsSpeed(0, 0);
-	mc2.setMotorsSpeed(0, 0);
-	
-	if (l1.medianInRange(260, 280) < l1.medianInRange(80, 100))
-		mine.x += l1.medianInRange(260, 280) * 10;
 	else
-		mine.x += 2300 - l1.medianInRange(80, 100) * 10;
+	{
+		cut.theta -= M_PI / 2;
+		mine = cellShift(&i2c, mc1, mc2, mine, cut, true);
+		toWall(27, 10, 0, &i2c, mc1, mc2);
 	
-	start.x += mine.x;
+		while (!isWall(&cap))
+		{
+			mine = moveRobot(mine, &i2c, mc1, mc2, 50, 0, 0, false, false);
+		}
+		mc1.setMotorsSpeed(0, 0);
+		mc2.setMotorsSpeed(0, 0);
 	
-	pos = cut;
+		mine.x += l1.medianInRange(350, 10) * 10;
+		start.x += mine.x;
+	}
+	
+	
+	std::cout << "right " << l1.medianInRange(260, 280) << "\n";
+	std::cout << "left " << l1.medianInRange(80, 100) << "\n" << "\n";
+	std::cout << "back " << l1.medianInRange(170, 190) << "\n";
+	
+
 	
 	std::cout << "current position " << mine.x << " " << mine.y << " " << mine.theta << "\n";
 	std::cout << "start positiion " << start.x << " " << start.y << " " << start.theta << "\n";
