@@ -55,9 +55,7 @@ Position goTo(std::vector<std::pair<int, int>> & points, Position cur, double th
     {
 	    bool derevo = (i + 1 == (int)points.size() || i == 0);
 	    pos = cellShift(i2c, mc1, mc2, pos, Position(points[i].first * CELL, points[i].second * CELL, theta), derevo);
-	    mc1.setMotorsSpeed(0, 0);
-	    mc2.setMotorsSpeed(0, 0);
-	    delay(1000);
+
 	    
     }
 	mc1.setMotorsSpeed(0, 0);

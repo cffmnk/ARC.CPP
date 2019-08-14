@@ -32,38 +32,8 @@ std::vector<std::vector<int16_t>> field(N, std::vector<int16_t>(N));
 
 // cam light port 29
 
-int main()
+void taskOne(Position& pos, MotorController& mc1, MotorController& mc2, ServoController& s1, MyRio_I2c& i2c, MyRio_Dio& LED1, MyRio_Dio& ButtonL, MyRio_Dio& ButtonR)
 {
-	NiFpga_Status status;
-	MyRio_I2c i2c;
-	NiFpga_Bool buttonState;
-	MyRio_Dio Button;
-	MyRio_Dio LED1, LED2, LED3;
-	MyRio_Dio ButtonL;
-	MyRio_Dio ButtonR;
-	
-	initHardware(&status, &i2c, &ButtonL, &ButtonR, &LED1, &LED2);
-	
-	MotorController mc1(&i2c, 1);
-	MotorController mc2(&i2c, 2);
-	ServoController s1(&i2c, 3);
-	
-	cv::VideoCapture cap(0);
-	
-	mc1.resetEncoders();
-	mc2.resetEncoders();
-	s1.setSpeed(70, 60, 60, 70, 0, 0);
-	s1.closeLeft();
-	s1.closeRight();
-	s1.down();
-	std::cout << mc1.batteryVoltage() << std::endl;
-	delay(2000);
-	
-	
-	
-	Position pos(0, 0, 0);
-	
-	//task one
 	Dio_WriteBit(&LED1, false);
 	s1.openLeft();
 	s1.openRight();
@@ -81,14 +51,86 @@ int main()
 	
 	pos = takeCube(pos, &i2c, mc1, mc2, s1, true, true);
 	
-	delay(5000);
+	delay(8000);
+}
+
+void taskTwo(VideoCapture& cap)
+{
+	Mat frame;
+	cap >> frame;
+	decode(frame);
+}
+
+string colorToText(int num)
+{
+	switch (num)
+	{
+	case 1:
+		return "orange"; break;
+	case 2:
+		return "blue";break;
+	case 3:
+		return "green";break;
+	case 4: 
+		return "red"; break;
+	case 5: 
+		return "yellow"; break;
+	default:
+		return "none"; break;
+	}
+}
+
+void taskThree(VideoCapture& cap)
+{
+	cout << "Flower: " << colorToText(checkObject(&cap)) << "\n";
+	cout << "Box: " << colorToText(checkCube(&cap)) << "\n" ;
+}
+
+int main()
+{
+	NiFpga_Status status;
+	MyRio_I2c i2c;
+	NiFpga_Bool buttonState;
+	MyRio_Dio Button;
+	MyRio_Dio LED1, LED2, LED3;
+	MyRio_Dio ButtonL;
+	MyRio_Dio ButtonR;
 	
+	initHardware(&status, &i2c, &ButtonL, &ButtonR, &LED1, &LED2);
+	
+	VideoCapture cap(0);
+	
+	MotorController mc1(&i2c, 1);
+	MotorController mc2(&i2c, 2);
+	ServoController s1(&i2c, 3);
+	
+	mc1.resetEncoders();
+	mc2.resetEncoders();
+	s1.setSpeed(70, 60, 60, 70, 0, 0);
+	s1.closeLeft();
+	s1.closeRight();
+	s1.down();
+	std::cout << mc1.batteryVoltage() << std::endl;
+
+	
+	
+	Position pos(0, 0, 0);
+	
+	
+	taskMain(i2c, mc1, mc2, s1, cap, field);
+	//task one
+	//taskOne(pos, mc1, mc2, s1, i2c, LED1, ButtonL, ButtonR);
+	
+	//taskTwo(cap);
+	//s1.openRight();
+	//taskThree(cap);
 	//alignment(&i2c, mc1, mc2);
 	
 	//taskMain(i2c, mc1, mc2, s1, cap, field);
 	
 	//std::vector<Position> ptr = localization(i2c, mc1, mc2, LED1);
 
+	
 	mc1.reset();
 	mc2.reset();
 	s1.reset();

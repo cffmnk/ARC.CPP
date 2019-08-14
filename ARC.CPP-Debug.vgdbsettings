@@ -7,7 +7,7 @@
       <PathStyle>Unknown</PathStyle>
     </CustomSourceDirectories>
     <DeploymentHost>
-      <HostName>172.22.11.2</HostName>
+      <HostName>172.16.0.1</HostName>
       <Transport>SSH</Transport>
       <UserName>admin</UserName>
     </DeploymentHost>

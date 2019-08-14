@@ -90,7 +90,7 @@ std::vector<Position> localization(MyRio_I2c & i2c, MotorController & mc1, Motor
 	 *a bit closer to the wall
 	 */
 	///*
-	toWall(27, 10, 180, &i2c, mc1, mc2);
+	//toWall(27, 10, 180, &i2c, mc1, mc2, lidar);
 	
 	///*
 	Dio_WriteBit(&LED1, false);
@@ -108,7 +108,7 @@ std::vector<Position> localization(MyRio_I2c & i2c, MotorController & mc1, Motor
 	{
 		cut.theta += M_PI / 2;
 		mine = cellShift(&i2c, mc1, mc2, mine, cut, true);
-		toWall(27, 10, 0, &i2c, mc1, mc2);
+	//	toWall(27, 10, 0, &i2c, mc1, mc2);
 	
 		while (!isWall(&cap))
 		{
@@ -124,7 +124,7 @@ std::vector<Position> localization(MyRio_I2c & i2c, MotorController & mc1, Motor
 	{
 		cut.theta -= M_PI / 2;
 		mine = cellShift(&i2c, mc1, mc2, mine, cut, true);
-		toWall(27, 10, 0, &i2c, mc1, mc2);
+		//toWall(27, 10, 0, &i2c, mc1, mc2);
 	
 		while (!isWall(&cap))
 		{

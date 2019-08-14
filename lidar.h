@@ -22,7 +22,7 @@ public:
 	std::vector<float> ranges;
 	std::vector<std::pair<float, float>> points;
 	int medianInRange(int left, int right);
-	
+	void clear();
 private:
 	uint32_t baud_rate_;
 	bool shutting_down_;

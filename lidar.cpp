@@ -26,6 +26,11 @@ Lidar::~Lidar()
 	status_ = Uart_Close(&uart_);
 }
 
+void Lidar::clear()
+{
+	Uart_Clear(&uart_);
+}
+
 void Lidar::poll()
 {
 	uint8_t temp_char;

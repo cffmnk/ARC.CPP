@@ -12,8 +12,8 @@ int checkCube(VideoCapture* cap)
 	Color orange(10, 100, 100, 20, 255, 255);
 	Color red_lower(0, 120, 70, 7, 255, 255);
 	Color red_upper(170, 120, 70, 180, 255, 255);
-	Color blue(90, 20, 100, 150, 255, 255);
-	Color green(40, 40, 40, 70, 255, 255);
+	Color blue(90, 50, 100, 150, 255, 255);
+	Color green(25, 20, 20, 85, 255, 255);
 	Color yellow(20, 100, 100, 30, 255, 255);
 	cvtColor(CubeROI, hsv, CV_BGR2HSV);
 	inRange(hsv, Scalar(orange.lower_h, orange.lower_s, orange.lower_v), Scalar(orange.upper_h, orange.upper_s, orange.upper_v), orange_mask);
@@ -105,7 +105,7 @@ int checkObject(VideoCapture* cap)
 	Color red_lower(0, 120, 70, 7, 255, 255);
 	Color red_upper(170, 120, 70, 180, 255, 255);
 	Color blue(90, 20, 100, 150, 255, 255);
-	Color green(40, 20, 30, 70, 255, 255);
+	Color green(25, 20, 20, 85, 255, 255);
 	Color yellow(20, 100, 100, 30, 255, 255);
 	cvtColor(CubeROI, hsv, CV_BGR2HSV);
 	inRange(hsv, Scalar(orange.lower_h, orange.lower_s, orange.lower_v), Scalar(orange.upper_h, orange.upper_s, orange.upper_v), orange_mask);
@@ -182,7 +182,7 @@ int checkObject(VideoCapture* cap)
 			}
 		}
 	
-	imwrite("00000004.jpg", result);
+	imwrite("lol4.jpg", result);
 	
 	return largest_color;
 }

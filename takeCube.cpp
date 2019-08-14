@@ -11,7 +11,7 @@ Position takeCube(Position &cur, MyRio_I2c* i2c, MotorController & mc1, MotorCon
     {
         dx1 = 55;
         dx2 = -80;
-	    dy = 20;
+	    dy = 22;
     }
     else
     {
@@ -21,7 +21,6 @@ Position takeCube(Position &cur, MyRio_I2c* i2c, MotorController & mc1, MotorCon
     }
 
     pos = moveShift(pos, i2c, mc1, mc2, dx1, dy, 90, 4);
-	delay(1000);
 
     s1.up();
 	delay(1000);
@@ -33,7 +32,7 @@ Position takeCube(Position &cur, MyRio_I2c* i2c, MotorController & mc1, MotorCon
 		auto time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
 		while (time < 1200)
 		{
-			pos = moveRobot(pos, i2c, mc1, mc2, -20, 5, 0, false, true);
+			pos = moveRobot(pos, i2c, mc1, mc2, -20, 6, 0, false, false);
 			end = std::chrono::high_resolution_clock::now();
 			time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
 		}
@@ -47,7 +46,7 @@ Position takeCube(Position &cur, MyRio_I2c* i2c, MotorController & mc1, MotorCon
 		auto time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
 		while (time < 1200)
 		{
-			pos = moveRobot(pos, i2c, mc1, mc2, 20, 5, 0, false, true);
+			pos = moveRobot(pos, i2c, mc1, mc2, 20, 5, 0, false, false);
 			end = std::chrono::high_resolution_clock::now();
 			time = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
 		}
