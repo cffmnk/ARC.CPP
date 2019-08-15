@@ -155,6 +155,12 @@
     <ClCompile Include="slam.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="localization.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="taskMain.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Config.h">
@@ -233,6 +239,12 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="slam.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="localization.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="taskMain.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

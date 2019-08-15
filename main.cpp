@@ -26,6 +26,7 @@ using namespace std;
 #include "takeCube.h"
 #include "ColorDetection.h"
 #include "localization.h"
+#include "taskMain.h"
 
 const int N = 23;
 std::vector<std::vector<int16_t>> field(N, std::vector<int16_t>(N));
