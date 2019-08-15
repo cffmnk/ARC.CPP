@@ -189,7 +189,7 @@ void alignment(MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2, Lid
 		t = std::max(std::min(t, 0.7), -0.7);
         
 		std::cout << "angle " << t * 57.3 << std::endl << std::endl;
-		move(i2c, mc1, mc2, 0, 0,  t, false);
+		move(i2c, mc1, mc2, 0, 0, t, false);
 	}
 	mc1.setMotorsSpeed(0, 0);
 	mc2.setMotorsSpeed(0, 0);
@@ -201,8 +201,8 @@ void alignment(MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2, Lid
 	
 	center(5, i2c, mc1, mc2, lidar);
     
-    /*
-    mid = 27;
+	/*
+	mid = 27;
 	dx = mid;
 	while (std::abs(dx) > 5)
 	{
@@ -217,7 +217,6 @@ void alignment(MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2, Lid
 			}       
 		}
 		//std::cout << "al " << al << "\n";
-
 		 dx = -(mid - al) * 10;
 		dx = std::min(70, std::max(dx, -70));
 		move(i2c, mc1, mc2, dx, 0, 0, false);

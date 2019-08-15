@@ -62,7 +62,6 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 		
 		
 		current = goal;
-		
 		if (k == 4) // last point (finish)
 			{
 				++k;
@@ -75,8 +74,13 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 		pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, true, true);     // motors reset
 		pos = Position(dots[k].x * 115, dots[k].y * 115, dots[k].theta);     // reset position
 		
-		cube_color[k] = checkCube(&cap);
-		object_color[k] = checkObject(&cap);
+		if(k == 3)
+			cube_color[k] = needed;
+		
+		if (cube_color[k] < 1)
+			cube_color[k] = checkCube(&cap);
+		if (object_color[k] < 1)
+			object_color[k] = checkObject(&cap);
 		std::cout << "\n";
 		std::cout << "colors : " << k << " | " << cube_color[k] << " " << object_color[k] << "\n";
 		std::cout << "\n";
@@ -117,17 +121,21 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 		
 		
 		++k;
-		
+		if (k == 4)
+		{
+			s1.closeLeft();
+			s1.closeRight();
+		}
 	}
+	s1.closeLeft();
+	s1.closeRight();
 	std::cout << pos.x << " " << pos.y << "\n";
 	std::cout << ST.x << " " << ST.y << "\n";
 	
 	pos = cellShift(&i2c, mc1, mc2, pos, ST, true);
-	
-	s1.closeLeft();
-	s1.closeRight();
+
 	
 	pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, true, true);      // motors reset
 	Lidar lidar;
-	toWall(15, 5, 0, &i2c, mc1, mc2, &lidar);
+	toWall(17, 5, 0, &i2c, mc1, mc2, &lidar);
 }
