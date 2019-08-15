@@ -86,7 +86,14 @@ string colorToText(int num)
 void taskThree(VideoCapture& cap)
 {
 	cout << "Flower: " << colorToText(checkObject(&cap)) << "\n";
-	cout << "Box: " << colorToText(checkCube(&cap)) << "\n" ;
+	cout << "Box: " << colorToText(checkCube(&cap)) << "\n";
+}
+
+double sharpRange(MyRio_Aio* sharp)
+{
+	double volts;
+	volts = Aio_Read(sharp);
+	return 1 / volts * 27.5;
 }
 
 int main()
@@ -98,39 +105,44 @@ int main()
 	MyRio_Dio LED1, LED2, LED3;
 	MyRio_Dio ButtonL;
 	MyRio_Dio ButtonR;
-	
-	double ai_A0;
 
-	MyRio_Aio A0;
+	MyRio_Aio sharpL, sharpR;
 	
-	A0.val = AIA_0VAL;
-	A0.wght = AIA_0WGHT;
-	A0.ofst = AIA_0OFST;
-	A0.is_signed = NiFpga_False;
-	Aio_Scaling(&A0);
+	sharpR.val = AIA_0VAL;
+	sharpR.wght = AIA_0WGHT;
+	sharpR.ofst = AIA_0OFST;
+	sharpR.is_signed = NiFpga_False;
+	Aio_Scaling(&sharpR);
+	
+	sharpL.val = AIA_1VAL;
+	sharpL.wght = AIA_1WGHT;
+	sharpL.ofst = AIA_1OFST;
+	sharpL.is_signed = NiFpga_False;
+	Aio_Scaling(&sharpL);
 	
 	initHardware(&status, &i2c, &ButtonL, &ButtonR, &LED1, &LED2);
-//	
-	while (true)
-	{
-		ai_A0 = Aio_Read(&A0);
-		float cm = 1 / ai_A0 * 27.5;
-		printf("dist = %f\n", cm);
-		delay(300);
-	}
-//	
-//	VL53L0X laser(&i2c);
-//	
-//	laser.init();
-//	laser.setTimeout(500);
-//	laser.startContinuous();
-//	
-//	while (true)
-//	{
-//		cout << laser.readRangeContinuousMillimeters() << "\n";
-//	}
+	//	
+	//	while (true)
+	//	{
+	//		ai_A0 = Aio_Read(&A0);
+	//		float cm = 1 / ai_A0 * 27.5;
+	//		printf("dist = %f\n", cm);
+	//		delay(300);
+	//	}
+	//	
+	//	VL53L0X laser(&i2c);
+	//	
+	//	laser.init();
+	//	laser.setTimeout(500);
+	//	laser.startContinuous();
+	//	
+	//	while (true)
+	//	{
+	//		cout << laser.readRangeContinuousMillimeters() << "\n";
+	//	}
+
 	
-	VideoCapture cap(0);
+		VideoCapture cap(0);
 	
 	MotorController mc1(&i2c, 1);
 	MotorController mc2(&i2c, 2);
@@ -143,12 +155,19 @@ int main()
 	s1.closeRight();
 	s1.down();
 	std::cout << mc1.batteryVoltage() << std::endl;
-//
-//	
+	//
 	
-	Position pos(0, 0, 0);
+		while(!(bool)Dio_ReadBit(&ButtonL)) {}
 	
-		//taskMain(i2c, mc1, mc2, s1, cap, field);
+	mc1.resetEncoders();
+	mc2.resetEncoders();
+	//	
+	
+		Position pos(0, 0, 0);
+	
+	//	taskMain(i2c, mc1, mc2, s1, cap, field);
+	
+	
 		//task one
 		//taskOne(pos, mc1, mc2, s1, i2c, LED1, ButtonL, ButtonR);
 	

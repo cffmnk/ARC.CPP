@@ -5,6 +5,7 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 	
 	Position pos(0, 0, 0);
 	pos = moveShift(pos, &i2c, mc1, mc2, 0, -400, 250, 20);
+	int cnt = 0;
 	
 	s1.openLeft();
 	s1.openRight();
@@ -74,11 +75,36 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 		pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, true, true);     // motors reset
 		pos = Position(dots[k].x * 115, dots[k].y * 115, dots[k].theta);     // reset position
 		
-		if(k == 3)
+		if(cnt == 2)
+		{
 			cube_color[k] = needed;
+			if (k == 1)
+			{
+				if (cube_color[2] == object_color[3])
+					object_color[k] = cube_color[3];
+				if (cube_color[3] == object_color[2])
+					object_color[k] = cube_color[2];
+			}
+			else if (k == 2)
+			{
+				if (cube_color[3] == object_color[1])
+					object_color[k] = cube_color[1];
+				if (cube_color[1] == object_color[3])
+					object_color[k] = cube_color[1];
+			}
+			else
+			{
+				object_color[k] = 2;
+			}
+		}
+			
 		
 		if (cube_color[k] < 1)
+		{
 			cube_color[k] = checkCube(&cap);
+			++cnt;
+		}
+			
 		if (object_color[k] < 1)
 			object_color[k] = checkObject(&cap);
 		std::cout << "\n";
