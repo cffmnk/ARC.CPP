@@ -39,11 +39,11 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 	
 	int needed = 2;
 	
-	if (abs(dots[2].x - dots[0].x) + abs(dots[2].y - dots[0].x) < abs(dots[0].x - dots[1].x) + abs(dots[0].y - dots[1].x))
+	if (hypotl((dots[2].x - dots[0].x), (dots[2].y - dots[0].x)) < hypotl((dots[0].x - dots[1].x),(dots[0].y - dots[1].x)))
 		std::swap(dots[1], dots[2]);
-	if (abs(dots[3].x - dots[0].x) + abs(dots[3].y - dots[0].x) < abs(dots[0].x - dots[1].x) + abs(dots[0].y - dots[1].x))
+	if (hypotl((dots[3].x - dots[0].x), (dots[3].y - dots[0].x)) < hypotl((dots[0].x - dots[1].x), (dots[0].y - dots[1].x)))
 		std::swap(dots[1], dots[3]);
-	if (abs(dots[3].x - dots[1].x) + abs(dots[3].y - dots[1].x) < abs(dots[2].x - dots[1].x) + abs(dots[2].y - dots[1].x))
+	if (hypotl((dots[3].x - dots[1].x), (dots[3].y - dots[1].x)) < hypotl((dots[2].x - dots[1].x), (dots[2].y - dots[1].x)))
 		std::swap(dots[2], dots[3]);
 	
 	while (k < 5)
@@ -64,10 +64,10 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 		
 		current = goal;
 		if (k == 4) // last point (finish)
-			{
-				++k;
-				continue;
-			}
+		{
+			++k;
+			continue;
+		}
 		
 		Lidar lidar;
 		shtuka(&i2c, mc1, mc2, &lidar); 
@@ -75,7 +75,7 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 		pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, true, true);     // motors reset
 		pos = Position(dots[k].x * 115, dots[k].y * 115, dots[k].theta);     // reset position
 		
-		if(cnt == 2)
+		if(cnt == 2 || k == 3)
 		{
 			cube_color[k] = needed;
 			if (k == 1)
@@ -102,11 +102,13 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 		if (cube_color[k] < 1)
 		{
 			cube_color[k] = checkCube(&cap);
-			++cnt;
+			if (cube_color[k] > 0)
+				++cnt;
 		}
 			
 		if (object_color[k] < 1)
 			object_color[k] = checkObject(&cap);
+		
 		std::cout << "\n";
 		std::cout << "colors : " << k << " | " << cube_color[k] << " " << object_color[k] << "\n";
 		std::cout << "\n";
@@ -119,7 +121,7 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 				std::swap(object_color[k], object_color[k + 1]);
 				std::swap(cube_color[k], cube_color[k + 1]);
 			}
-			else
+			else if (k + 2 != 4)
 			{
 				std::swap(dots[k], dots[k + 2]);
 				std::swap(object_color[k], object_color[k + 2]);
@@ -130,7 +132,7 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 		else
 		{
 			needed = object_color[k];
-			if (cube_color[k + 1] > 0 && cube_color[k + 1] != needed)
+			if (cube_color[k + 1] > 0 && cube_color[k + 1] != needed && k == 1)
 			{
 				std::swap(dots[k + 1], dots[k + 2]);
 				std::swap(object_color[k + 1], object_color[k + 2]);
@@ -144,7 +146,6 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 		
 		pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, true, true); 
 		pos = takeCube(pos, &i2c, mc1, mc2, s1, left, change);     // collect object
-		
 		
 		++k;
 		if (k == 4)
