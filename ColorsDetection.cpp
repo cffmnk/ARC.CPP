@@ -196,7 +196,7 @@ bool isWall(VideoCapture* cap)
 	*cap >> frame;
 	
 	
-	Mat CubeROI = frame(Rect(250, 120, 50, 50));// Change!
+	Mat CubeROI = frame(Rect(215, 130, 60, 30));
 	
 
 	Color orange(10, 100, 100, 20, 255, 255);
