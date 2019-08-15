@@ -101,7 +101,6 @@ std::vector<Dot> QR(Position & pos, std::vector<std::vector<int16_t>> & field, c
 	
 	cv :: Mat im;
 	cap >> im;
-	imwrite("1000000.jpg", im);
 	
 	while (qr == "")
 	{

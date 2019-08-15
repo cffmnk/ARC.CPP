@@ -69,10 +69,12 @@ NiFpga_Status initHardware(NiFpga_Status* status, MyRio_I2c* i2cA, MyRio_Dio* Bu
 	 *
 	 * This formula and its rationale can be found in the documentation.
 	 */
-	if (I2C_CLOCK == 400)
-		I2c_Counter(i2cA, 51);
-	else
-		I2c_Counter(i2cA, 187);
+//	if (I2C_CLOCK == 400)
+//		I2c_Counter(i2cA, 51);
+//	else
+//		I2c_Counter(i2cA, 187);
+	
+	I2c_Counter(i2cA, 213);
 
 	/*
 	 * Enable the I2C block.
