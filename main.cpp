@@ -13,7 +13,9 @@
 #include "MyRio_lib/MyRio.h"
 #include "MyRio_lib/I2C.h"
 #include "MyRio_lib/DIO.h"
+#include "MyRio_lib/AIO.h"
 #include <opencv2/opencv.hpp>
+#include "VL53L0X.h"
 
 using namespace cv;
 using namespace std;
@@ -96,7 +98,36 @@ int main()
 	MyRio_Dio ButtonL;
 	MyRio_Dio ButtonR;
 	
+	double ai_A0;
+
+	MyRio_Aio A0;
+	
+	A0.val = AIA_0VAL;
+	A0.wght = AIA_0WGHT;
+	A0.ofst = AIA_0OFST;
+	A0.is_signed = NiFpga_False;
+	Aio_Scaling(&A0);
+	
 	initHardware(&status, &i2c, &ButtonL, &ButtonR, &LED1, &LED2);
+//	
+	while (true)
+	{
+		ai_A0 = Aio_Read(&A0);
+		float cm = 1 / ai_A0 * 27.5;
+		printf("dist = %f\n", cm);
+		delay(300);
+	}
+//	
+//	VL53L0X laser(&i2c);
+//	
+//	laser.init();
+//	laser.setTimeout(500);
+//	laser.startContinuous();
+//	
+//	while (true)
+//	{
+//		cout << laser.readRangeContinuousMillimeters() << "\n";
+//	}
 	
 	VideoCapture cap(0);
 	
@@ -111,13 +142,12 @@ int main()
 	s1.closeRight();
 	s1.down();
 	std::cout << mc1.batteryVoltage() << std::endl;
-
-	
+//
+//	
 	
 	Position pos(0, 0, 0);
-	s1.openRight();
 	
-	//	taskMain(i2c, mc1, mc2, s1, cap, field);
+		//taskMain(i2c, mc1, mc2, s1, cap, field);
 		//task one
 		//taskOne(pos, mc1, mc2, s1, i2c, LED1, ButtonL, ButtonR);
 	
@@ -129,11 +159,8 @@ int main()
 		//taskMain(i2c, mc1, mc2, s1, cap, field);
 	
 		//std::vector<Position> ptr = localization(i2c, mc1, mc2, LED1);
-		Lidar lidar;
-	shtuka(&i2c, mc1, mc2, &lidar);
-	
-	takeCube(pos, &i2c, mc1, mc2, s1, false, true);
-	
+//
+//	
 	mc1.reset();
 	mc2.reset();
 	s1.reset();

@@ -52,7 +52,7 @@ void Aio_Write_uint16_t(MyRio_Aio* channel, uint16_t value);
 /**
  * Read the value of a single channel.
  */
-int Aio_Read(MyRio_Aio* channel);
+double Aio_Read(MyRio_Aio* channel);
 
 
 /**

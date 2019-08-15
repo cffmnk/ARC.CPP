@@ -12,10 +12,10 @@
 #define ADDRESS_DEFAULT 0b0101001
 
 // Record the current time to check an upcoming timeout against
-#define startTimeout() (timeout_start_ms = millis())
+#define startTimeout() (timeout_start_ms = std::chrono::high_resolution_clock::now())
 
 // Check if timeout is enabled (set to nonzero value) and has expired
-#define checkTimeoutExpired() (io_timeout > 0 && ((uint16_t)millis() - timeout_start_ms) > io_timeout)
+#define checkTimeoutExpired() (io_timeout > 0 && (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - timeout_start_ms).count() > io_timeout))
 
 // Decode VCSEL (vertical cavity surface emitting laser) pulse period in PCLKs
 // from register value
@@ -25,7 +25,6 @@
 // Encode VCSEL pulse period register value from period in PCLKs
 // based on VL53L0X_encode_vcsel_period()
 #define encodeVcselPeriod(period_pclks) (((period_pclks) >> 1) - 1)
-
 // Calculate macro period in *nanoseconds* from VCSEL period in PCLKs
 // based on VL53L0X_calc_macro_period_ps()
 // PLL_period_ps = 1655; macro_period_vclks = 2304
@@ -65,7 +64,7 @@ bool VL53L0X::init(bool io_2v8)
 	if(io_2v8)
 	{
 		writeReg(VHV_CONFIG_PAD_SCL_SDA__EXTSUP_HV,
-			readReg(VHV_CONFIG_PAD_SCL_SDA__EXTSUP_HV) | 0x01);  // set bit 0
+			readReg(VHV_CONFIG_PAD_SCL_SDA__EXTSUP_HV) | 0x01);     // set bit 0
 	}
 
 	// "Set I2C standard mode"
@@ -109,7 +108,7 @@ bool VL53L0X::init(bool io_2v8)
 	writeReg(0xFF, 0x00);
 	writeReg(GLOBAL_CONFIG_REF_EN_START_SELECT, 0xB4);
 
-	uint8_t first_spad_to_enable = spad_type_is_aperture ? 12 : 0;  // 12 is the first aperture spad
+	uint8_t first_spad_to_enable = spad_type_is_aperture ? 12 : 0;     // 12 is the first aperture spad
 	uint8_t spads_enabled = 0;
 
 	for (uint8_t i = 0; i < 48; i++)
@@ -233,7 +232,7 @@ bool VL53L0X::init(bool io_2v8)
 	// -- VL53L0X_SetGpioConfig() begin
 
 	writeReg(SYSTEM_INTERRUPT_CONFIG_GPIO, 0x04);
-	writeReg(GPIO_HV_MUX_ACTIVE_HIGH, readReg(GPIO_HV_MUX_ACTIVE_HIGH) & ~0x10);  // active low
+	writeReg(GPIO_HV_MUX_ACTIVE_HIGH, readReg(GPIO_HV_MUX_ACTIVE_HIGH) & ~0x10);     // active low
 	writeReg(SYSTEM_INTERRUPT_CLEAR, 0x01);
 
 	// -- VL53L0X_SetGpioConfig() end
@@ -281,76 +280,70 @@ bool VL53L0X::init(bool io_2v8)
 // Write an 8-bit register
 void VL53L0X::writeReg(uint8_t reg, uint8_t value)
 {
-	uint8_t writeData[2] = { reg, value };
-	I2c_Write(i2c, address, writeData, 2);
+	uint8_t data[2] = { reg, value };
+	I2c_Write(i2c, address, data, 2);
 }
 
 // Write a 16-bit register
 void VL53L0X::writeReg16Bit(uint8_t reg, uint16_t value)
 {
-
-	uint8_t writeData[3];
-	writeData[0] = reg;
-	writeData[1] = (value >> 8) & 0xFF;
-	writeData[2] = value & 0xFF;
-	I2c_Write(i2c, address, writeData, 3);
+	uint8_t v1 = (value >> 8) & 0xFF;
+	uint8_t v2 = value & 0xFF;
+	uint8_t data[3] = { reg, v1, v2 };
+	I2c_Write(i2c, address, data, 3);
 }
 
 // Write a 32-bit register
 void VL53L0X::writeReg32Bit(uint8_t reg, uint32_t value)
 {
-	uint8_t writeData[5];
-	writeData[0] = reg;
-	writeData[1] = (value >> 24) & 0xFF;
-	writeData[2] = (value >> 16) & 0xFF;
-	writeData[3] = (value >> 8) & 0xFF;
-	writeData[4] = value & 0xFF;
-	I2c_Write(i2c, address, writeData, 5);
+	uint8_t v1 = (value >> 24) & 0xFF;
+	uint8_t v2 = (value >> 16) & 0xFF;
+	uint8_t v3 = (value >> 8) & 0xFF;
+	uint8_t v4 = value & 0xFF;
+	uint8_t data[5] = { reg, v1, v2, v3, v4 };
+	I2c_Write(i2c, address, data, 3);
 }
 
 // Read an 8-bit register
 uint8_t VL53L0X::readReg(uint8_t reg)
 {
-	uint16_t value;
-	uint8_t writeData = reg;
-	I2c_Write(i2c, address, &writeData, 1);
+	uint8_t value;
 
+	uint8_t data[1] = { reg };
+	I2c_Write(i2c, address, data, 1);
 	uint8_t readData[1];
-	I2c_Read(i2c, address, readData, 1);
-	value  = (uint8_t)readData[0];
-
+	I2c_Read(i2c, address, data, 1);
+	value = readData[0];
 	return value;
 }
 
 // Read a 16-bit register
 uint16_t VL53L0X::readReg16Bit(uint8_t reg)
 {
-	uint16_t value;
-	uint8_t writeData = reg;
-	I2c_Write(i2c, address, &writeData, 1);
+	uint8_t value;
 
+	uint8_t data[1] = { reg };
+	I2c_Write(i2c, address, data, 1);
 	uint8_t readData[2];
-	I2c_Read(i2c, address, readData, 2);
-	value  = (uint16_t)readData[0] << 8;  // value high byte
-	value |=           readData[1];       // value low byte
-
+	I2c_Read(i2c, address, data, 2);
+	value = (uint16_t)readData[0] << 8;
+	value |= readData[1];
 	return value;
 }
 
 // Read a 32-bit register
 uint32_t VL53L0X::readReg32Bit(uint8_t reg)
 {
-	uint16_t value;
-	uint8_t writeData = reg;
-	I2c_Write(i2c, address, &writeData, 1);
+	uint32_t value;
 
+	uint8_t data[1] = { reg };
+	I2c_Write(i2c, address, data, 1);
 	uint8_t readData[4];
-	I2c_Read(i2c, address, readData, 4);
-	value  = (uint32_t)readData[0] << 24;    // value highest byte
+	I2c_Read(i2c, address, data, 4);
+	value = (uint32_t)readData[0] << 24;
 	value |= (uint32_t)readData[1] << 16;
-	value |= (uint16_t)readData[2] << 8;   // value high byte
-	value |=           readData[3];        // value low byte
-
+	value |= (uint16_t)readData[2] << 8;
+	value |= readData[3];
 	return value;
 }
 
@@ -359,7 +352,6 @@ uint32_t VL53L0X::readReg32Bit(uint8_t reg)
 void VL53L0X::writeMulti(uint8_t reg, uint8_t * src, uint8_t count)
 {
 	I2c_Write(i2c, address, &reg, 1);
-
 	I2c_Write(i2c, address, src, count);
 }
 
@@ -368,7 +360,6 @@ void VL53L0X::writeMulti(uint8_t reg, uint8_t * src, uint8_t count)
 void VL53L0X::readMulti(uint8_t reg, uint8_t * dst, uint8_t count)
 {
 	I2c_Write(i2c, address, &reg, 1);
-	
 	I2c_Read(i2c, address, dst, count);
 }
 
@@ -407,7 +398,7 @@ bool VL53L0X::setMeasurementTimingBudget(uint32_t budget_us)
 	SequenceStepEnables enables;
 	SequenceStepTimeouts timeouts;
 
-	uint16_t const StartOverhead      = 1320;  // note that this is different than the value in get_
+	uint16_t const StartOverhead      = 1320;     // note that this is different than the value in get_
 	uint16_t const EndOverhead        = 960;
 	uint16_t const MsrcOverhead       = 660;
 	uint16_t const TccOverhead        = 590;
@@ -483,7 +474,7 @@ bool VL53L0X::setMeasurementTimingBudget(uint32_t budget_us)
 
 		// set_sequence_step_timeout() end
 
-		measurement_timing_budget_us = budget_us;  // store for internal reuse
+		measurement_timing_budget_us = budget_us;     // store for internal reuse
 	}
 	return true;
 }
@@ -496,7 +487,7 @@ uint32_t VL53L0X::getMeasurementTimingBudget(void)
 	SequenceStepEnables enables;
 	SequenceStepTimeouts timeouts;
 
-	uint16_t const StartOverhead     = 1910;  // note that this is different than the value in set_
+	uint16_t const StartOverhead     = 1910;     // note that this is different than the value in set_
 	uint16_t const EndOverhead        = 960;
 	uint16_t const MsrcOverhead       = 660;
 	uint16_t const TccOverhead        = 590;
@@ -534,7 +525,7 @@ uint32_t VL53L0X::getMeasurementTimingBudget(void)
 		budget_us += (timeouts.final_range_us + FinalRangeOverhead);
 	}
 
-	measurement_timing_budget_us = budget_us;  // store for internal reuse
+	measurement_timing_budget_us = budget_us;     // store for internal reuse
 	return budget_us;
 }
 
@@ -768,12 +759,12 @@ void VL53L0X::startContinuous(uint32_t period_ms)
 
 		// VL53L0X_SetInterMeasurementPeriodMilliSeconds() end
 
-		writeReg(SYSRANGE_START, 0x04);  // VL53L0X_REG_SYSRANGE_MODE_TIMED
+		writeReg(SYSRANGE_START, 0x04);     // VL53L0X_REG_SYSRANGE_MODE_TIMED
 	}
 	else
 	{
 		// continuous back-to-back mode
-		writeReg(SYSRANGE_START, 0x02);  // VL53L0X_REG_SYSRANGE_MODE_BACKTOBACK
+		writeReg(SYSRANGE_START, 0x02);     // VL53L0X_REG_SYSRANGE_MODE_BACKTOBACK
 	}
 }
 
@@ -781,7 +772,7 @@ void VL53L0X::startContinuous(uint32_t period_ms)
 // based on VL53L0X_StopMeasurement()
 void VL53L0X::stopContinuous(void)
 {
-	writeReg(SYSRANGE_START, 0x01);  // VL53L0X_REG_SYSRANGE_MODE_SINGLESHOT
+	writeReg(SYSRANGE_START, 0x01);     // VL53L0X_REG_SYSRANGE_MODE_SINGLESHOT
 
 	writeReg(0xFF, 0x01);
 	writeReg(0x00, 0x00);
@@ -795,22 +786,22 @@ void VL53L0X::stopContinuous(void)
 // single-shot range measurement)
 uint16_t VL53L0X::readRangeContinuousMillimeters(void)
 {
-	//	startTimeout();
-	//	while ((readReg(RESULT_INTERRUPT_STATUS) & 0x07) == 0)
-	//	{
-	//		if (checkTimeoutExpired())
-	//		{
-	//			did_timeout = true;
-	//			return 65535;
-	//		}
-	//	}
+	startTimeout();
+	while ((readReg(RESULT_INTERRUPT_STATUS) & 0x07) == 0)
+	{
+		if (checkTimeoutExpired())
+		{
+			did_timeout = true;
+			return 65535;
+		}
+	}
 
-		// assumptions: Linearity Corrective Gain is 1000 (default);
-		// fractional ranging is not enabled
-		//	uint16_t range = readReg16Bit(RESULT_RANGE_STATUS + 10);
+	// assumptions: Linearity Corrective Gain is 1000 (default);
+	// fractional ranging is not enabled
+	uint16_t range = readReg16Bit(RESULT_RANGE_STATUS + 10);
 
-		//	writeReg(SYSTEM_INTERRUPT_CLEAR, 0x01);
-		uint16_t range = 0;
+	writeReg(SYSTEM_INTERRUPT_CLEAR, 0x01);
+
 	return range;
 }
 
@@ -830,15 +821,15 @@ uint16_t VL53L0X::readRangeSingleMillimeters(void)
 	writeReg(SYSRANGE_START, 0x01);
 
 	// "Wait until start bit has been cleared"
-//	startTimeout();
-//	while (readReg(SYSRANGE_START) & 0x01)
-//	{
-//		if (checkTimeoutExpired())
-//		{
-//			did_timeout = true;
-//			return 65535;
-//		}
-//	}
+	startTimeout();
+	while (readReg(SYSRANGE_START) & 0x01)
+	{
+		if (checkTimeoutExpired())
+		{
+			did_timeout = true;
+			return 65535;
+		}
+	}
 
 	return readRangeContinuousMillimeters();
 }
@@ -874,11 +865,11 @@ bool VL53L0X::getSpadInfo(uint8_t * count, bool * type_is_aperture)
 
 	writeReg(0x94, 0x6b);
 	writeReg(0x83, 0x00);
-//	startTimeout();
-//	while (readReg(0x83) == 0x00)
-//	{
-//		if (checkTimeoutExpired()) { return false; }
-//	}
+	startTimeout();
+	while (readReg(0x83) == 0x00)
+	{
+		if (checkTimeoutExpired()) { return false; }
+	}
 	writeReg(0x83, 0x01);
 	tmp = readReg(0x92);
 
@@ -1003,13 +994,13 @@ uint32_t VL53L0X::timeoutMicrosecondsToMclks(uint32_t timeout_period_us, uint8_t
 // based on VL53L0X_perform_single_ref_calibration()
 bool VL53L0X::performSingleRefCalibration(uint8_t vhv_init_byte)
 {
-	writeReg(SYSRANGE_START, 0x01 | vhv_init_byte);  // VL53L0X_REG_SYSRANGE_MODE_START_STOP
+	writeReg(SYSRANGE_START, 0x01 | vhv_init_byte);     // VL53L0X_REG_SYSRANGE_MODE_START_STOP
 
-//	startTimeout();
-//	while ((readReg(RESULT_INTERRUPT_STATUS) & 0x07) == 0)
-//	{
-//		if (checkTimeoutExpired()) { return false; }
-//	}
+	startTimeout();
+	while ((readReg(RESULT_INTERRUPT_STATUS) & 0x07) == 0)
+	{
+		if (checkTimeoutExpired()) { return false; }
+	}
 
 	writeReg(SYSTEM_INTERRUPT_CLEAR, 0x01);
 
