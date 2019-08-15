@@ -64,9 +64,12 @@ std::vector<pii> aStar(pii start, pii goal, std::vector<std::vector<int16_t>> & 
 	        pii u(cur.first + ddx[i], cur.second + ddy[i]);
 
             if (u.first < 0 || u.first >= N || u.second < 0 || u.second >= N) continue;
-	        if (used[u.second][u.first] || field[u.second + 1][u.first + 1] == 6) continue;
+	        if (used[u.second][u.first]) continue;
 
             double newd = d[cur.second][cur.first] + dis(cur, u);
+	        
+	        if (field[u.second + 1][u.first + 1] == 6)
+		        newd += 3000;
 	        
 	       // std::cout << "U " << (int)u.x << " " << (int)u.y << " " << newd << " " <<  d[u.y][u.x] << "\n";
 

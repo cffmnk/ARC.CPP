@@ -41,9 +41,16 @@ void Lidar::poll()
 	uint32_t motor_speed = 0;
 	rpms = 0;
 	int index;
+	auto t = std::chrono::high_resolution_clock::now();
 
 	while (!shutting_down_ && !got_scan)
 	{
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - t).count() > 3000)
+		{
+			uint8_t writeData = 'b';
+			Uart_Write(&uart_, &writeData, 1);
+			t = std::chrono::high_resolution_clock::now();
+		}
 		// Wait until first data sync of frame: 0xFA, 0xA0
 		status_ = Uart_Read(&uart_, &raw_bytes[start_count], 1);
 

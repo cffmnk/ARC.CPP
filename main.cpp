@@ -29,6 +29,7 @@ using namespace std;
 #include "ColorDetection.h"
 #include "localization.h"
 #include "taskMain.h"
+#include "taskFinal.h"
 
 const int N = 23;
 std::vector<std::vector<int16_t>> field(N, std::vector<int16_t>(N));
@@ -142,8 +143,9 @@ int main()
 	mc2.resetEncoders();
 	
 	Position pos(0, 0, 0);
-	
-	//	taskMain(i2c, mc1, mc2, s1, cap, field);
+
+//taskFinal(i2c, mc1, mc2, s1, cap);
+	taskMain(i2c, mc1, mc2, s1, cap, field);
 	
 	
 		//task one

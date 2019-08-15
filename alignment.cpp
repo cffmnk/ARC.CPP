@@ -81,7 +81,7 @@ void shtuka(MyRio_I2c* i2c, MotorController& mc1, MotorController& mc2, Lidar* l
 		move(i2c, mc1, mc2, (pm.second - 0) * 10, (pm.first - 23.5) * 10, 1 * t, 0);
 		if (fabs(pm.second - 0) < 0.5 && fabs(pm.first - 23.5) < 0.5 && fabs(t) < 0.01)
 			break;
-		std::cout << pm.first - 23.7 << " " << pm.second - 1.8 << "\n";
+	//	std::cout << pm.first - 23.7 << " " << pm.second - 1.8 << "\n";
 	}
 }
 

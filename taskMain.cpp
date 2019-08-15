@@ -4,7 +4,7 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 {
 	
 	Position pos(0, 0, 0);
-	pos = moveShift(pos, &i2c, mc1, mc2, 0, -400, 250, 20);
+	pos = moveShift(pos, &i2c, mc1, mc2, 0, -450, 250, 20);
 	int cnt = 0;
 	
 	s1.openLeft();
