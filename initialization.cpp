@@ -74,7 +74,7 @@ NiFpga_Status initHardware(NiFpga_Status* status, MyRio_I2c* i2cA, MyRio_Dio* Bu
 //	else
 //		I2c_Counter(i2cA, 187);
 	
-	I2c_Counter(i2cA, 213);
+	I2c_Counter(i2cA, 187);
 
 	/*
 	 * Enable the I2C block.

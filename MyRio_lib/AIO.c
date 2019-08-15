@@ -194,7 +194,7 @@ void Aio_Write_uint16_t(MyRio_Aio* channel, uint16_t value)
  *                      channel to be read from
  * @return the voltage value in volts
  */
-int Aio_Read(MyRio_Aio* channel)
+double Aio_Read(MyRio_Aio* channel)
 {
     NiFpga_Status status;
     uint16_t value = 0;
