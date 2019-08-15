@@ -121,28 +121,8 @@ int main()
 	Aio_Scaling(&sharpL);
 	
 	initHardware(&status, &i2c, &ButtonL, &ButtonR, &LED1, &LED2);
-	//	
-	//	while (true)
-	//	{
-	//		ai_A0 = Aio_Read(&A0);
-	//		float cm = 1 / ai_A0 * 27.5;
-	//		printf("dist = %f\n", cm);
-	//		delay(300);
-	//	}
-	//	
-	//	VL53L0X laser(&i2c);
-	//	
-	//	laser.init();
-	//	laser.setTimeout(500);
-	//	laser.startContinuous();
-	//	
-	//	while (true)
-	//	{
-	//		cout << laser.readRangeContinuousMillimeters() << "\n";
-	//	}
-
 	
-		VideoCapture cap(0);
+	VideoCapture cap(0);
 	
 	MotorController mc1(&i2c, 1);
 	MotorController mc2(&i2c, 2);
@@ -155,15 +135,13 @@ int main()
 	s1.closeRight();
 	s1.down();
 	std::cout << mc1.batteryVoltage() << std::endl;
-	//
 	
-		while(!(bool)Dio_ReadBit(&ButtonL)) {}
+	while (!(bool)Dio_ReadBit(&ButtonL)) {}
 	
 	mc1.resetEncoders();
 	mc2.resetEncoders();
-	//	
 	
-		Position pos(0, 0, 0);
+	Position pos(0, 0, 0);
 	
 	//	taskMain(i2c, mc1, mc2, s1, cap, field);
 	
