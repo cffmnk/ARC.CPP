@@ -18,6 +18,7 @@
 #include "takeCube.h"
 #include "ColorDetection.h"
 #include "localization.h"
+#include "slam.h"
 
 
 void taskMain(MyRio_I2c & i2cA, MotorController & mc1, MotorController & mc2, ServoController & s1, cv::VideoCapture & cap, std::vector<std::vector<int16_t>> field);

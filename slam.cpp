@@ -22,7 +22,7 @@ void lsf(vector<pair<float, float>>* points, Line* line)
 	line->rho = line->Xn * cos(line->theta) + line->Yn * sin(line->theta);
 }
 
-void grid(Lidar* lidar, vector<vector<int>>* f, Position* pos)
+void grid(Lidar* lidar, vector<vector<int16_t>>* f, Position* pos)
 {
 	lidar->poll();
 	for (int i = 1; i < lidar->ranges.size() - 1; ++i)
@@ -43,8 +43,9 @@ void grid(Lidar* lidar, vector<vector<int>>* f, Position* pos)
 			cout << x << " " << y << "\n";
 			if (x > 0 && x < f->size() && y > 0 && y < f->size())
 			{
+				if (f->at(y).at(22 - x) == 0)
+					f->at(y).at(22 - x) = 7;
 				
-				f->at(y).at(22 - x) = 1;
 			}
 		}
 	}

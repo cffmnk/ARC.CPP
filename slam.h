@@ -27,7 +27,7 @@ struct Line
 	float rho;
 };
 
-void grid(Lidar* lidar, vector<vector<int>>* f, Position* pos);
+void grid(Lidar* lidar, vector<vector<int16_t>>* f, Position* pos);
 
 void lsf(vector<pair<int, int>>* points, Line* line);
 

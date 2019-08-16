@@ -2,7 +2,6 @@
 
 void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, ServoController & s1, cv::VideoCapture & cap, std::vector<std::vector<int16_t>> field)
 {
-	
 	Position pos(0, 0, 0);
 	pos = moveShift(pos, &i2c, mc1, mc2, 0, -450, 250, 20);
 	int cnt = 0;
@@ -46,8 +45,13 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 	if (hypotl((dots[3].x - dots[1].x), (dots[3].y - dots[1].y)) < hypotl((dots[2].x - dots[1].x), (dots[2].y - dots[1].y)))
 		std::swap(dots[2], dots[3]);
 	
+	std::vector<pii> points = aStar(current, current, field);       // build the path
+	pos = goTo(points, pos, dots[k].theta, &i2c, mc1, mc2);      // get to the point
+	
 	while (k < 5)
 	{
+		Lidar lidar;
+		grid(&lidar, &field, &pos);
 		if (k == 4)
 			dots[4].theta = dots[3].theta;
 		pii start = current;     // start point
@@ -69,7 +73,7 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 			continue;
 		}
 		
-		Lidar lidar;
+		
 		shtuka(&i2c, mc1, mc2, &lidar); 
 	
 		pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, true, true);     // motors reset

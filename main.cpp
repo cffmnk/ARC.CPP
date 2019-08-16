@@ -19,7 +19,7 @@
 
 using namespace cv;
 using namespace std;
-#include "slam.h"
+
 #include "moveRobot.h"
 #include "path.h"
 #include "QR.h"
@@ -137,31 +137,15 @@ int main()
 	std::cout << mc1.batteryVoltage() << std::endl;
 	Dio_WriteBit(&LED1, 0);
 	
-	//while (!(bool)Dio_ReadBit(&ButtonL)) {}
+	//	while (!(bool)Dio_ReadBit(&ButtonL)) {}
 	
 	mc1.resetEncoders();
 	mc2.resetEncoders();
 	
-	Position pos(('k' - 'a') * 115, ('u' - 'h') * 115, 0);
-
-	//taskFinal(i2c, mc1, mc2, s1, cap);
-	vector<vector<int>> f(23, vector<int>(23));
-	f.at(round((pos.y) / 115) + 1).at(round(pos.x / 115) + 1) = 2;
-	Lidar lidar;
-	grid(&lidar, &f, &pos);
-	//taskMain(i2c, mc1, mc2, s1, cap, field);
+	Position pos(0, 0, 0);
+	std::cout << "fd\n";
 	
-	//task one
-	//taskOne(pos, mc1, mc2, s1, i2c, LED1, ButtonL, ButtonR);
-	
-//	taskTwo(cap);
-	//s1.openRight();
-	//taskThree(cap);
-	//alignment(&i2c, mc1, mc2);
-	
-	//taskMain(i2c, mc1, mc2, s1, cap, field);
-	
-	//std::vector<Position> ptr = localization(i2c, mc1, mc2, LED1);
+	std::vector<Position> ptr = localization(i2c, mc1, mc2, LED1, cap, s1);
 	
 	mc1.reset();
 	mc2.reset();
