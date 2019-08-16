@@ -8,6 +8,7 @@ int16_t ddy[8] = {-1, 0, 1, 1, 1, 0, -1, -1};//{-1, 0, 1, 0, -1, 0, 1, 0}; //
 
 double dis(pii a, pii b)
 {
+	//return 1;
 	return std::hypot(a.first - b.first, a.second - b.second);
 }
 

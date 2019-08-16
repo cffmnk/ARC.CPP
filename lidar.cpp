@@ -42,7 +42,7 @@ void Lidar::poll()
 	rpms = 0;
 	int index;
 	auto t = std::chrono::high_resolution_clock::now();
-
+	//freopen("scan.txt", "w", stdout);
 	while (!shutting_down_ && !got_scan)
 	{
 		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - t).count() > 3000)
@@ -112,7 +112,7 @@ void Lidar::poll()
 								// scan->intensities[359-index] = intensity;
 								if(range < 140)
 									range = 0;
-								printf("%f\n", range / 10.0);
+								//printf("%f\n", range / 10.0);
 								float r = range / 10.;
 								ranges[index] = r;
 								double ang = index * M_PI / 180.;
@@ -130,6 +130,7 @@ void Lidar::poll()
 			}
 		}
 	}
+	//fclose(stdout);
 }
 
 int Lidar::medianInRange(int left, int right)

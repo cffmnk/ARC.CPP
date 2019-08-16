@@ -39,11 +39,11 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 	
 	int needed = 2;
 	
-	if (hypotl((dots[2].x - dots[0].x), (dots[2].y - dots[0].x)) < hypotl((dots[0].x - dots[1].x),(dots[0].y - dots[1].x)))
+	if (hypotl((dots[2].x - dots[0].x), (dots[2].y - dots[0].y)) < hypotl((dots[0].x - dots[1].x),(dots[0].y - dots[1].y)))
 		std::swap(dots[1], dots[2]);
-	if (hypotl((dots[3].x - dots[0].x), (dots[3].y - dots[0].x)) < hypotl((dots[0].x - dots[1].x), (dots[0].y - dots[1].x)))
+	if (hypotl((dots[3].x - dots[0].x), (dots[3].y - dots[0].y)) < hypotl((dots[0].x - dots[1].x), (dots[0].y - dots[1].y)))
 		std::swap(dots[1], dots[3]);
-	if (hypotl((dots[3].x - dots[1].x), (dots[3].y - dots[1].x)) < hypotl((dots[2].x - dots[1].x), (dots[2].y - dots[1].x)))
+	if (hypotl((dots[3].x - dots[1].x), (dots[3].y - dots[1].y)) < hypotl((dots[2].x - dots[1].x), (dots[2].y - dots[1].y)))
 		std::swap(dots[2], dots[3]);
 	
 	while (k < 5)

@@ -22,6 +22,46 @@ void lsf(vector<pair<float, float>>* points, Line* line)
 	line->rho = line->Xn * cos(line->theta) + line->Yn * sin(line->theta);
 }
 
+void grid(Lidar* lidar, vector<vector<int>>* f, Position* pos)
+{
+	lidar->poll();
+	for (int i = 1; i < lidar->ranges.size() - 1; ++i)
+	{
+		if (abs(lidar->ranges[i - 1] - lidar->ranges[i]) > 5 && abs(lidar->ranges[i] - lidar->ranges[i + 1]) > 5)
+			lidar->ranges[i] = 0;
+	}
+	
+	for (int i = 0; i < lidar->ranges.size(); ++i)
+	{
+		auto raw_p = lidar->points[i];
+		int x = raw_p.first * cos(pos->theta - M_PI / 2) + raw_p.second * sin(pos->theta - M_PI / 2);
+		int y = -raw_p.first * sin(pos->theta - M_PI / 2) + raw_p.second * cos(pos->theta - M_PI / 2);
+		if (lidar->ranges[i] > 10)
+		{
+			x = round(x / 11.5 + pos->x / 115.) + 1;
+			y = round(y / 11.5 + pos->y / 115.) + 1;
+			cout << x << " " << y << "\n";
+			if (x > 0 && x < f->size() && y > 0 && y < f->size())
+			{
+				
+				f->at(y).at(22 - x) = 1;
+			}
+		}
+	}
+	
+	for (char i = 'A' - 2; i <= 'U'; ++i)
+		cout << i << " ";
+	cout  << "\n";
+	char k = 'A' - 1;
+	for (auto i : *f)
+	{
+		cout << k++ << " ";
+		for (auto j : i)
+			cout << j << " ";
+		cout << "\n";
+	}
+}
+
 void slam(Lidar* lidar)
 {
 	Mat map_img = Mat::zeros(700, 700, CV_8UC3);
@@ -58,7 +98,7 @@ void slam(Lidar* lidar)
 					--i;
 					count = 0;
 				}
-			//	cout << lines.back().start << "," << lines.back().end << " " << i <<  " -- " << dist << "\n";
+				//	cout << lines.back().start << "," << lines.back().end << " " << i <<  " -- " << dist << "\n";
 			}
 			else
 			{
@@ -95,8 +135,8 @@ void slam(Lidar* lidar)
 			--i;
 		}
 	}
-//		
-	for (int i = 0; i < lines.size(); ++i)
+	//		
+		for(int i = 0 ; i < lines.size() ; ++i)
 	{
 		cout << i << ": " << lines[i].start << " " << lines[i].end << "\n";
 	}

@@ -5,6 +5,7 @@
 #include "opencv2/opencv.hpp"
 #include "lidar.h"
 #include <algorithm>
+#include "moveRobot.h"
 
 #define POINTS_THRES 10
 #define POINTS_LINE_DIST 0.5
@@ -25,6 +26,8 @@ struct Line
 	float theta;
 	float rho;
 };
+
+void grid(Lidar* lidar, vector<vector<int>>* f, Position* pos);
 
 void lsf(vector<pair<int, int>>* points, Line* line);
 
