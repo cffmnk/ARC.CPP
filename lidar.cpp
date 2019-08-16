@@ -112,7 +112,7 @@ void Lidar::poll()
 								// scan->intensities[359-index] = intensity;
 								if(range < 140)
 									range = 0;
-								//printf("r[%d]=%f,", index, range / 10.0);
+								printf("%f\n", range / 10.0);
 								float r = range / 10.;
 								ranges[index] = r;
 								double ang = index * M_PI / 180.;
