@@ -79,6 +79,7 @@
     <ClCompile Include="servo.cpp" />
     <ClCompile Include="slam.cpp" />
     <ClCompile Include="takeCube.cpp" />
+    <ClCompile Include="taskFinal.cpp" />
     <ClCompile Include="taskMain.cpp" />
     <ClInclude Include="alignment.h" />
     <ClInclude Include="C:\arm_Myrio_2017\include\zbar\Decoder.h" />
@@ -102,6 +103,7 @@
     <ClInclude Include="servo.h" />
     <ClInclude Include="slam.h" />
     <ClInclude Include="takeCube.h" />
+    <ClInclude Include="taskFinal.h" />
     <ClInclude Include="taskMain.h" />
     <ClInclude Include="zbar.h" />
     <None Include="ARC.CPP-Debug.vgdbsettings" />

@@ -41,9 +41,16 @@ void Lidar::poll()
 	uint32_t motor_speed = 0;
 	rpms = 0;
 	int index;
+	auto t = std::chrono::high_resolution_clock::now();
 
 	while (!shutting_down_ && !got_scan)
 	{
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - t).count() > 3000)
+		{
+			uint8_t writeData = 'b';
+			Uart_Write(&uart_, &writeData, 1);
+			t = std::chrono::high_resolution_clock::now();
+		}
 		// Wait until first data sync of frame: 0xFA, 0xA0
 		status_ = Uart_Read(&uart_, &raw_bytes[start_count], 1);
 
@@ -105,7 +112,7 @@ void Lidar::poll()
 								// scan->intensities[359-index] = intensity;
 								if(range < 140)
 									range = 0;
-								//printf("r[%d]=%f,", index, range / 10.0);
+								printf("%f\n", range / 10.0);
 								float r = range / 10.;
 								ranges[index] = r;
 								double ang = index * M_PI / 180.;

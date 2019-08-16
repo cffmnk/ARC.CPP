@@ -96,6 +96,6 @@ Position goTo(std::vector<std::pair<int, int>> & points, Position cur, double th
 	}
 	mc1.setMotorsSpeed(0, 0);
 	mc2.setMotorsSpeed(0, 0);
-	
+	std::cout << "finish\n";
 	return pos;
 }

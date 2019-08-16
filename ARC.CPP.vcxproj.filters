@@ -161,6 +161,9 @@
     <ClCompile Include="taskMain.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="taskFinal.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Config.h">
@@ -245,6 +248,9 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="taskMain.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="taskFinal.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

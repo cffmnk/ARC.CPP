@@ -98,7 +98,7 @@ std::vector<Dot> QR(Position & pos, std::vector<std::vector<int16_t>> & field, c
 	//data = qr.read();
 	//qr = "(M,O,L,R)(U,L,S,N)(E,K,C,M)(J,D,H,F)";
 	
-	
+	///*
 	cv :: Mat im;
 	cap >> im;
 	
@@ -106,6 +106,9 @@ std::vector<Dot> QR(Position & pos, std::vector<std::vector<int16_t>> & field, c
 	{
 		qr = decode(im);
 	}
+	//*/
+	
+	//qr = "(K,K,M,I)(P,R,N,T)(D,H,F,J)(T,N,R,P)";
 	
     
     int16_t start_x1 = (qr[1] - 'A') * CELL;
@@ -140,7 +143,9 @@ std::vector<Dot> QR(Position & pos, std::vector<std::vector<int16_t>> & field, c
     int16_t ax = dx + round(startX * pos.y / CELL);
     int16_t ay = dy + round(startY * pos.y / CELL);
     
-    field[ay][ax] = 12;
+	cout << ay << " " << ax << "\n";
+	field[ay][ax] = 12;
+	
     
     for (int i = 1; i < N - 1; ++i)
     {
@@ -252,6 +257,7 @@ std::vector<Dot> QR(Position & pos, std::vector<std::vector<int16_t>> & field, c
 	{
 		ans[i] = Dot(x[i], y[i], theta[i]);
 	}
+	field[ay][ax] = 12;
 	return ans;
 	
 }

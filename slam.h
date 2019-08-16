@@ -6,8 +6,8 @@
 #include "lidar.h"
 #include <algorithm>
 
-#define POINTS_THRES 5
-#define POINTS_LINE_DIST 0.05
+#define POINTS_THRES 10
+#define POINTS_LINE_DIST 0.5
 
 using namespace std;
 using namespace cv;

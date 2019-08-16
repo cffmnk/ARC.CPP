@@ -70,21 +70,32 @@ void slam(Lidar* lidar)
 	
 	for (int i = 0; i < lines.size() - 1; ++i)
 	{
-		pair<float, float> p1 = lidar->points[lines[i].start], p2 = lidar->points[lines[i].end];
-		float dist1 = abs((p2.second - p1.second) * lidar->points[lines[i + 1].start].first - (p2.first - p1.first) * lidar->points[lines[i + 1].start].second + p2.first * p1.second - p2.second * p1.first) / sqrt(pow((p2.second - p1.second), 2) + pow((p2.first - p1.first), 2));
-		p1 = lidar->points[lines[i + 1].start], p2 = lidar->points[lines[i + 1].end];
-		float dist2 = abs((p2.second - p1.second) * lidar->points[lines[i].end].first - (p2.first - p1.first) * lidar->points[lines[i].end].second + p2.first * p1.second - p2.second * p1.first) / sqrt(pow((p2.second - p1.second), 2) + pow((p2.first - p1.first), 2));
+		pair<float, float> p11 = lidar->points[lines[i].start], p12 = lidar->points[lines[i].end];
+		float dist1 = abs((p12.second - p11.second) * lidar->points[lines[i + 1].start].first - (p12.first - p11.first) * lidar->points[lines[i + 1].start].second + p12.first * p11.second - p12.second * p11.first) / sqrt(pow((p12.second - p11.second), 2) + pow((p12.first - p11.first), 2));
+		pair<float, float> p21 = lidar->points[lines[i + 1].start], p22 = lidar->points[lines[i + 1].end];
+		float dist2 = abs((p22.second - p21.second) * lidar->points[lines[i].end].first - (p22.first - p21.first) * lidar->points[lines[i].end].second + p22.first * p21.second - p22.second * p21.first) / sqrt(pow((p22.second - p21.second), 2) + pow((p22.first - p21.first), 2));
 		float dist = (dist1 + dist2) / 2.;
-		float cos_ang = (p1.first * p2.first + p1.second * p2.second) / sqrt(pow(p1.first, 2) + pow(p1.second, 2)) / sqrt(pow(p2.first, 2) + pow(p2.second, 2));
-		if (dist < 5 && abs(cos_ang - 1) < 0.07)
+		pair<float, float> p = { p12.first - p11.first, p12.second - p11.second };
+		pair<float, float> q = { p22.first - p21.first, p22.second - p21.second };
+		float cos_ang = (p.first * q.first + p.second * q.second) / sqrt(p.first * p.first + p.second * p.second) / sqrt(q.first * q.first + q.second * q.second);
+		if (dist < 5 && abs(cos_ang - 1) < 0.2)
 		{
 			lines[i].end = lines[i + 1].end;
 			lines.erase(lines.begin() + i + 1, lines.begin() + i + 2);
 			--i;
 		}
-		cout << i << " " << i + 1 << " " << dist << "\n";
+		cout << i << " " << i + 1 << " " << dist << " " << cos_ang << "\n";
 	}
-		
+	
+	for (int i = 0; i < lines.size(); ++i)
+	{
+		if (lines[i].end - lines[i].start < 5)
+		{
+			lines.erase(lines.begin() + i, lines.begin() + i + 1);
+			--i;
+		}
+	}
+//		
 	for (int i = 0; i < lines.size(); ++i)
 	{
 		cout << i << ": " << lines[i].start << " " << lines[i].end << "\n";
@@ -105,6 +116,22 @@ void slam(Lidar* lidar)
 			CV_AA);
 	}
 	
-	imwrite("20000015.jpg", map_img);
+	imwrite("scan.jpg", map_img);
+	
+	vector<vector<float>> grid(21, vector<float>(21, 0));
+	
+	for (int i = 0; i < lines.size(); ++i)
+	{
+		auto p1 = lidar->points[lines[i].start];
+		auto p2 = lidar->points[lines[i].end];
+		
+		for (int x = 0; x < 21; ++x)
+		{
+			for (int y = 0; y < 21; ++y)
+			{
+				
+			}
+		}
+	}
 }
 	

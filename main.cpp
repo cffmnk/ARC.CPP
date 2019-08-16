@@ -29,11 +29,10 @@ using namespace std;
 #include "ColorDetection.h"
 #include "localization.h"
 #include "taskMain.h"
+#include "taskFinal.h"
 
 const int N = 23;
 std::vector<std::vector<int16_t>> field(N, std::vector<int16_t>(N));
-
-// cam light port 29
 
 void taskOne(Position& pos, MotorController& mc1, MotorController& mc2, ServoController& s1, MyRio_I2c& i2c, MyRio_Dio& LED1, MyRio_Dio& ButtonL, MyRio_Dio& ButtonR)
 {
@@ -98,6 +97,7 @@ double sharpRange(MyRio_Aio* sharp)
 
 int main()
 {
+	
 	NiFpga_Status status;
 	MyRio_I2c i2c;
 	NiFpga_Bool buttonState;
@@ -135,30 +135,31 @@ int main()
 	s1.closeRight();
 	s1.down();
 	std::cout << mc1.batteryVoltage() << std::endl;
+	Dio_WriteBit(&LED1, 0);
 	
-	while (!(bool)Dio_ReadBit(&ButtonL)) {}
+		while (!(bool)Dio_ReadBit(&ButtonL)) {}
 	
 	mc1.resetEncoders();
 	mc2.resetEncoders();
 	
 	Position pos(0, 0, 0);
+
+	//taskFinal(i2c, mc1, mc2, s1, cap);
 	
-	//	taskMain(i2c, mc1, mc2, s1, cap, field);
+		taskMain(i2c, mc1, mc2, s1, cap, field);
 	
+	//task one
+	//taskOne(pos, mc1, mc2, s1, i2c, LED1, ButtonL, ButtonR);
 	
-		//task one
-		//taskOne(pos, mc1, mc2, s1, i2c, LED1, ButtonL, ButtonR);
+	//taskTwo(cap);
+	//s1.openRight();
+	//taskThree(cap);
+	//alignment(&i2c, mc1, mc2);
 	
-		//taskTwo(cap);
-		//s1.openRight();
-		//taskThree(cap);
-		//alignment(&i2c, mc1, mc2);
+	//taskMain(i2c, mc1, mc2, s1, cap, field);
 	
-		//taskMain(i2c, mc1, mc2, s1, cap, field);
+	//std::vector<Position> ptr = localization(i2c, mc1, mc2, LED1);
 	
-		//std::vector<Position> ptr = localization(i2c, mc1, mc2, LED1);
-//
-//	
 	mc1.reset();
 	mc2.reset();
 	s1.reset();
