@@ -17,9 +17,15 @@ void toWall(double dis, double precition, int idx, MyRio_I2c* i2c, MotorControll
 		// std::cout << std::endl;
 		 std::sort(asd.begin(), asd.end());
 	    
-		std::cout << asd[3] << " " << dy  << "\n";
+		//std::cout << asd[3] << " " << dy  << "\n";
+		
         
 		dy = std::max(std::min((asd[3] - dis) * 10.0, (double)70), (double) - 70);
+		
+		if (idx == 180)
+		{
+			dy *= -1;
+		}
 		move(i2c, mc1, mc2, 0, dy, 0, false);
 	}
 	std::cout << "bbm\n";
@@ -27,11 +33,48 @@ void toWall(double dis, double precition, int idx, MyRio_I2c* i2c, MotorControll
 	mc2.setMotorsSpeed(0, 0);
 }
 
+Position encToWall(Position pos, double dis, double precition, int idx, MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2, Lidar* lidar)
+{
+	///*
+	double dy = precition + 1;
+//	std::cout << "bbm\n";
+	Position cur = pos;
+	while (std::abs(dy) > precition)
+	{
+		lidar->poll();
+		std::vector<int> asd;
+		for (int i = 0; i < 10; ++i)
+		{
+			asd.push_back(lidar->ranges[i + idx]);
+			asd.push_back(lidar->ranges[(idx + 359 - i) % 360]);
+		}
+		// std::cout << std::endl;
+		std::sort(asd.begin(), asd.end());
+	    
+		std::cout << asd[10] << " " << dy  << "\n";
+		
+		dy = std::max(std::min((int)(asd[10] - dis) * 10, 80), -80);
+		
+		if (asd[3] == 0)
+			dy = 80;
+		
+		if (idx == 180)
+		{
+			dy *= -1;
+		}
+		
+		cur = moveRobot(cur, i2c, mc1, mc2, 0, dy, 0, false, false);
+	}
+	//std::cout << "bbm\n";
+	mc1.setMotorsSpeed(0, 0);
+	mc2.setMotorsSpeed(0, 0);
+	return cur;
+}
+
 void shtuka(MyRio_I2c* i2c, MotorController& mc1, MotorController& mc2, Lidar* lidar)
 {
 	while (true)
 	{
-		
 		lidar->poll();
 		int i1 = 0;
 		int i2 = 359;

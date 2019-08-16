@@ -55,11 +55,31 @@ Position cellShift(MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2,
 			dtheta -= 2 * M_PI;
 
 		double theta_speed = std::max(std::min(dtheta, M_PI / 2), -M_PI / 2);
-
 		pos = moveRobot(pos, i2c, mc1, mc2, x_speed, y_speed, theta_speed, false, true);
 	        
 	}
 	
+	return pos;
+}
+
+Position turn(MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2, Position cur, Position goal)
+{
+	Position pos = cur;
+	int16_t a = 1;   //30;
+	int16_t c = 1;   //5;
+	double b = 0.005;
+	 
+	int border = 200;
+	
+	double dtheta = goal.theta - pos.theta;
+
+	while (std::fabs(dtheta) > b)
+	{
+		dtheta = goal.theta - pos.theta;
+		std::cout << goal.theta << " " << pos.theta << "\n";
+		double theta_speed = std::max(std::min(dtheta * 1.3, M_PI / 2), -M_PI / 2);
+		pos = moveRobot(pos, i2c, mc1, mc2, 0, 0, theta_speed, false, false);  
+	}
 	return pos;
 }
 
@@ -72,7 +92,6 @@ Position goTo(std::vector<std::pair<int, int>> & points, Position cur, double th
 		if (i == 0)
 			derevo = 2;
 		pos = cellShift(i2c, mc1, mc2, pos, Position(points[i].first * CELL, points[i].second * CELL, theta), derevo);
-
 	    
 	}
 	mc1.setMotorsSpeed(0, 0);
