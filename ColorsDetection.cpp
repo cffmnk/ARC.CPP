@@ -195,6 +195,8 @@ bool isWall(VideoCapture* cap)
 	Mat frame, hsv, orange_mask, yellow_mask, green_mask, blue_mask, red_mask, red_lower_mask, red_upper_mask, result;
 	*cap >> frame;
 	
+	imwrite("jkfd.jpg", frame);
+	
 	
 	Mat CubeROI = frame(Rect(215, 130, 60, 30));
 	
@@ -277,6 +279,7 @@ bool isWall(VideoCapture* cap)
 			largest_color = 5;
 		}
 	}
+	cout << "color " << largest_color << "\n";
 	
 	return largest_color == 0;
 }
