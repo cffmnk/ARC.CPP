@@ -143,9 +143,6 @@ int main()
 	mc2.resetEncoders();
 	
 	Position pos(0, 0, 0);
-	
-	pos = moveShift(pos, &i2c, mc1, mc2, 0, -450, 250, 20);
-	return 0;
 
 	//taskFinal(i2c, mc1, mc2, s1, cap);
 	/*
@@ -162,8 +159,6 @@ int main()
 	*/
 	{
 		int n = 46;
-		char x = 'n';
-		char y = 'h';
 		Position pos(22 * 115, 22 * 115, 0);
 		vector<vector<int16_t>> f(46, vector<int16_t>(46));
 		//fill(f);
@@ -171,6 +166,9 @@ int main()
 		Lidar lidar;
 		grid(&lidar, &f, &pos);
 		print_map(f);
+		
+		std::vector<Dot> path = cubesCoordinates(&field, &pos);
+		pii current = pii();;
 	}
 	
 	

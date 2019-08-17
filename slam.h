@@ -33,6 +33,7 @@ bool isCubeVer(int i, int j, vector<vector<int16_t>>* f);
 void buildCubes(vector<vector<int16_t>>* f, Position* pos);
 
 void grid(Lidar* lidar, vector<vector<int16_t>>* f, Position* pos);
+std::vector<Dot> cubesCoordinates(vector<vector<int16_t>>* f, Position* pos);
 
 void lsf(vector<pair<int, int>>* points, Line* line);
 

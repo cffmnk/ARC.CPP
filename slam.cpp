@@ -66,25 +66,29 @@ void buildCubes(vector<vector<int16_t>>* f, Position* pos)
 	int n = f->size();
 	int m = f->at(0).size();
 	int cube = 4;
+	std::vector<pii> cubes;
 	for (int i = 0; i < n; ++i)
 	{
 		for (int j = 0; j < m; ++j)
 		{
+			int i_mid = 0;
+			int j_mid = 0;
 			if (isCubeHor(i, j, f))
 			{
 				double y = (n - i - 1) * 115;
 				cout << "pos " << i << " " << pos->y << " " << y << "\n";
 				if (pos->y > y && cor(i + 2, n))
 				{
+					i_mid = i + 1;
+					j_mid = j - 1;
 					for (int i1 = i; i1 <= i + 2; ++i1)
 						for (int j1 = j - 2; j1 <= j; ++j1)
 							f->at(i1).at(j1) = cube;
 				}
 				else if (cor(i - 2, n))
 				{
-					for (int i1 = i - 2; i1 <= i; ++i1)
-						for (int j1 = j - 2; j1 <= j; ++j1)
-							f->at(i1).at(j1) = cube;
+					i_mid = i - 1;
+					j_mid = j - 1;
 				}
 			}
 			if (isCubeVer(i, j, f))
@@ -92,17 +96,34 @@ void buildCubes(vector<vector<int16_t>>* f, Position* pos)
 				double x = j * 115;
 				if (pos->x > x && cor(j - 2, m))
 				{
-					for (int i1 = i - 2; i1 <= i; ++i1)
-						for (int j1 = j - 2; j1 <= j; ++j1)
-							f->at(i1).at(j1) = cube;
-							
+					i_mid = i - 1;
+					j_mid = j - 1;
 				}
 				else if (cor(j + 2, m))
 				{
-					for (int i1 = i - 2; i1 <= i; ++i1)
-						for (int j1 = j; j1 <= j + 2; ++j1)
+					i_mid = i - 1;
+					j_mid = j - 1;
+				}
+			}
+			if (i_mid != 0 && j_mid != 0)
+			{
+				bool ver = cor(i_mid + 2, n) && f->at(i_mid + 2).at(j_mid) == 7 && cor(i_mid - 2, n) && f->at(i_mid - 2).at(j_mid) == 7;
+				bool hor = cor(j_mid + 2, m) && f->at(i_mid).at(j_mid + 2) == 7 && cor(j_mid - 2, m) && f->at(i_mid).at(j_mid - 2) == 7;
+				if (!ver && !hor)
+				{
+					for (int i1 = i_mid - 1; i1 <= i_mid + 1; ++i1)
+						for (int j1 = j_mid - 1; j1 <= j_mid + 1; ++j1)
 							f->at(i1).at(j1) = cube;
 				}
+				else
+				{
+					i_mid = 0;
+					j_mid = 0;
+				}
+			}
+			if (i_mid != 0 && j_mid != 0)
+			{
+				cubes.push_back(make_pair(i_mid, j_mid));
 			}
 		}
 	}
@@ -120,9 +141,7 @@ void buildCubes(vector<vector<int16_t>>* f, Position* pos)
 				int i1 = i + ddy[k];
 				int j1 = j + ddx[k];
 				if (cor(i1, n) && cor(j1, m) && f->at(i1).at(j1) == 0)
-					f->at(i1).at(j1) = 6;
-					
-							
+					f->at(i1).at(j1) = 6;			
 			}
 		}
 	}
@@ -159,12 +178,81 @@ void grid(Lidar* lidar, vector<vector<int16_t>>* f, Position* pos)
 		if (xc > 0 && xc < f->size() && yc > 0 && yc < f->size())
 		{
 			if (f->at(yc).at(xc) == 0 || f->at(yc).at(xc) == 6)
-				f->at(yc).at(xc) = 7;		
+			{
+				f->at(yc).at(xc) = 7;	
+			}		
 		}
 	}
+	
+	int n = f->size();
+	int m = f->at(0).size();
+	std::vector<int> ddx = { -1, -1, -1, 0, 1, 1, 1, 0 };
+	std::vector<int> ddy = { -1, 0, 1, 1, 1, 0, -1, -1 };
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < m; ++j)
+		{
+			if (f->at(i).at(j) != 7) continue;
+			for (int k = 0; k < 8; ++k)
+			{
+				int i1 = i + ddy[k];
+				int j1 = j + ddx[k];
+				if (cor(i1, n) && cor(j1, m) && f->at(i1).at(j1) == 0)
+					f->at(i1).at(j1) = 6;			
+			}
+		}
+	}
+	
 	print_map((*f));
 	cout << "\n";
 	buildCubes(f, pos);
+}
+
+std::vector<Dot> cubesCoordinates(vector<vector<int16_t>>* f, Position* pos)
+{
+	int n = f->size();
+	int m = f->at(0).size();
+	int cube = 4;
+	std::vector<Dot> res;
+	std::vector<int> ddx = { -1, -1, -1, 0, 1, 1, 1, 0 };
+	std::vector<int> ddy = { -1, 0, 1, 1, 1, 0, -1, -1 };
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < m; ++j)
+		{
+			if (f->at(i).at(j) != cube) continue;
+			int cnt = 0;
+			for (int k = 0; k < 8; ++k)
+			{
+				int i1 = i + ddy[k];
+				int j1 = j + ddx[k];
+				if (cor(i1, n) && cor(j1, m) && f->at(i1).at(j1) == cube)
+					cnt++;	
+			}
+			if (cnt == 8)
+			{
+				std::vector<int> dx1 = { 0, 3, 0, -1 };
+				std::vector<int> dy1 = { 3, 0, -3, 0 };
+				std::vector<double> ang = {M_PI, M_PI / 2, 0, -M_PI / 2};
+				int best = 0;
+				double dist = 5000;
+				for (int k = 0; k < 4; ++k)
+				{
+					int x1 = (j + dx1[k]) * 115;
+					int y1 = (n - (i + dy1[k]) - 1) * 115;
+					
+					if (hypotl(x1 - pos->x, y1 - pos->y) < dist)
+					{
+						best = k;
+						dist = hypotl(x1 - pos->x, y1 - pos->y);
+					}
+				}
+				res.push_back(Dot((j + dx1[best]), (i + dy1[best]), ang[best]));
+			}
+		}
+	}
+	
+	return res;
 }
 
 void slam(Lidar* lidar)
