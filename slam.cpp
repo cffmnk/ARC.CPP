@@ -29,37 +29,32 @@ void grid(Lidar* lidar, vector<vector<int16_t>>* f, Position* pos)
 	{
 		if (abs(lidar->ranges[i - 1] - lidar->ranges[i]) > 5 && abs(lidar->ranges[i] - lidar->ranges[i + 1]) > 5)
 			lidar->ranges[i] = 0;
+		std::cout << i <<" " << lidar->ranges[i] << "\n";
 	}
-	
-	for (int i = 0; i < lidar->ranges.size(); ++i)
+	for (int i = 0; i < 360; ++i)
 	{
-		auto raw_p = lidar->points[i];
-		int x = raw_p.first * cos(pos->theta - M_PI / 2) + raw_p.second * sin(pos->theta - M_PI / 2);
-		int y = -raw_p.first * sin(pos->theta - M_PI / 2) + raw_p.second * cos(pos->theta - M_PI / 2);
-		if (lidar->ranges[i] > 10)
+		if (lidar->ranges[i] < 12) continue;
+		int ang = round(pos->theta * 180 / M_PI);
+		int idx = (i + ang + 360) % 360;// ? -ang
+		
+		cout << i << " " << idx << " " << lidar->ranges[idx] << "\n";
+		
+			
+		double x = lidar->ranges[idx] * sin(i * M_PI / 180);
+		double y = lidar->ranges[idx] * cos(i * M_PI / 180);
+		
+		cout << "coords " << x << " " << y << "\n";  
+		
+		int xc = round((pos->x + x * 10) / 115) + 1;
+		int yc = round((pos->y + y * 10) / 115) + 1;
+		
+		cout << "x _ y " << xc << " " << yc << "\n" << "\n";
+		
+		if (xc > 0 && xc < f->size() && yc > 0 && yc < f->size())
 		{
-			x = round(x / 11.5 + pos->x / 115.) + 1;
-			y = round(y / 11.5 + pos->y / 115.) + 1;
-			cout << x << " " << y << "\n";
-			if (x > 0 && x < f->size() && y > 0 && y < f->size())
-			{
-				if (f->at(y).at(22 - x) == 0)
-					f->at(y).at(22 - x) = 7;
-				
-			}
+			if (f->at(yc).at(xc) == 0 || f->at(yc).at(xc) == 6)
+				f->at(yc).at(xc) = 7;		
 		}
-	}
-	
-	for (char i = 'A' - 2; i <= 'U'; ++i)
-		cout << i << " ";
-	cout  << "\n";
-	char k = 'A' - 1;
-	for (auto i : *f)
-	{
-		cout << k++ << " ";
-		for (auto j : i)
-			cout << j << " ";
-		cout << "\n";
 	}
 }
 

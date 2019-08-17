@@ -264,6 +264,7 @@ std::vector<Dot> QR(Position & pos, std::vector<std::vector<int16_t>> & field, c
 
 void print_map(std::vector<std::vector<int16_t>> & field)
 {
+
 	std::cout << (char)(0 + 'A' - 1) << " ";
 	for (int j = 0; j < N; ++j)
 	{
@@ -281,5 +282,12 @@ void print_map(std::vector<std::vector<int16_t>> & field)
 		}
 		std::cout << "\n";
 	}
+	std::cout << (char)(0 + 'A' - 1) << " ";
+	for (int j = 0; j < N; ++j)
+	{
+		std::cout.width(3);
+		std::cout << (char)(j + 'A' - 1);
+	}
+	std::cout << "\n";
 	return;
 }
