@@ -88,12 +88,7 @@ void taskThree(VideoCapture& cap)
 	cout << "Box: " << colorToText(checkCube(&cap)) << "\n";
 }
 
-double sharpRange(MyRio_Aio* sharp)
-{
-	double volts;
-	volts = Aio_Read(sharp);
-	return 1 / volts * 27.5;
-}
+
 
 int main()
 {
@@ -137,25 +132,139 @@ int main()
 	std::cout << mc1.batteryVoltage() << std::endl;
 	Dio_WriteBit(&LED1, 0);
 	
-//	while (!(bool)Dio_ReadBit(&ButtonL)) {}
+	while (!(bool)Dio_ReadBit(&ButtonL)) {}
 	
 	mc1.resetEncoders();
 	mc2.resetEncoders();
-	
 	Position pos(0, 0, 0);
+
+	pos = moveShift(pos, &i2c, mc1, mc2, 0, -450, 250, 20);
+	while (true)
+	{
+		Rect cube(0, 0, 0, 0);
+		findCube(&cap, &cube, red);
+		if (cube.x < 200 && cube.x > 60 && cube.width * cube.height > 2100)
+		{
+			pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, 0, 0);
+			break;
+		}
+		pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0.2, 0, 0);
+	}
+	
+	while (sharpRange(&sharpR) > 20)
+	{
+		Rect cube;
+		findCube(&cap, &cube, blue);
+		cout << (cube.x + cube.width) / 2 << " " << (cube.y + cube.height) / 2 << "\n";
+		pos = moveRobot(pos, &i2c, mc1, mc2, (cube.x + cube.width) / 2 - 140, 50, 0, 0, 0);
+	}
+	pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, 0, 0);
+	{
+		Lidar lidar;
+		shtuka(&i2c, mc1, mc2, &lidar, &sharpR, &sharpL);
+	}
+	s1.openRight();
+	takeCube(pos, &i2c, mc1, mc2, s1, false, false);
+	int col = checkObject(&cap);
+	while (true)
+	{
+		Rect cube(0, 0, 0, 0);
+		findCube(&cap, &cube, col);
+		if (cube.x < 200 && cube.x > 60 && cube.width * cube.height > 2100)
+		{
+			pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, 0, 0);
+			break;
+		}
+		pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0.2, 0, 0);
+	}
+	
+	while (sharpRange(&sharpR) > 20)
+	{
+		Rect cube;
+		findCube(&cap, &cube, col);
+		cout << (cube.x + cube.width) / 2 << " " << (cube.y + cube.height) / 2 << "\n";
+		pos = moveRobot(pos, &i2c, mc1, mc2, (cube.x + cube.width) / 2 - 140, 50, 0, 0, 0);
+	}
+	pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, 0, 0);
+	{
+		Lidar lidar;
+		shtuka(&i2c, mc1, mc2, &lidar, &sharpR, &sharpL);
+	}
+	s1.openLeft();
+	takeCube(pos, &i2c, mc1, mc2, s1, true, true);
+	
+//	
+//	Position pos(0, 0, 0);
+//
+//		pos = moveShift(pos, &i2c, mc1, mc2, 0, -450, 250, 20);
+//		
+//		pos = turn(&i2c, mc1, mc2, pos, Position(pos.x, pos.y, M_PI));
+//		
+//		while (sharpRange(&sharpL) > 20 || sharpRange(&sharpR) > 20)
+//		{
+//			pos = moveRobot(pos, &i2c, mc1, mc2, 0, 150, 0, 0, 0);
+//		}
+//		pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, 0, 0);
+//		{
+//			Lidar lidar;
+//				lidar.poll();
+//				int i1 = 0;
+//				int i2 = 359;
+//			
+//				while ((lidar.ranges[i1 + 1] > 12) && (lidar.ranges[i1 + 1] < 40) && i1 < 270)
+//					++i1;
+//	    
+//				while ((lidar.ranges[i2 - 1] > 12) && (lidar.ranges[i2 - 1] < 40) && i2 > 90)
+//					--i2;
+//			
+//				while (((lidar.ranges[i1] <= 12) || (lidar.ranges[i1] >= 40)))
+//				{
+//					--i1;
+//					if (i1 < 0)
+//						i1 += 360;
+//				}	
+//			
+//				while (((lidar.ranges[i2] <= 12) || (lidar.ranges[i2] >= 40)))
+//				{
+//					++i2;
+//					if (i2 >= 360)
+//						i2 -= 360;
+//				}
+//		
+//				std::pair<float, float> p1 = lidar.points[i1];
+//				std::pair<float, float> p2 = lidar.points[i2];
+//				std::pair<float, float> pm = {
+//					(p1.first + p2.first) / 2.,
+//					(p1.second + p2.second) / 2.
+//				};
+//			
+//				double t;
+//			
+//				double a2_x = lidar.ranges[i2] * cos(i2 * M_PI / 180);
+//				double a2_y = lidar.ranges[i2] * sin(i2 * M_PI / 180);
+//				double a1_x = lidar.ranges[i1] * cos(i1 * M_PI / 180);
+//				double a1_y = lidar.ranges[i1] * sin(i1 * M_PI / 180);
+//				double A_X = (a2_x - a1_x);
+//				double A_Y = (a2_y - a1_y);
+//	        
+//				if ((A_X) * (A_X) + (A_Y) * (A_Y) == 0 || std::fabs(((A_X) / sqrt((A_X) * (A_X) + (A_Y) * (A_Y))) > 1))
+//					t = 0;
+//				else
+//					t = std::acos((A_X) / sqrt((A_X) * (A_X) + (A_Y) * (A_Y))) - M_PI / 2 + 0.07;
+//		
+//				pos = turn(&i2c, mc1, mc2, pos, Position(pos.x, pos.y, pos.theta + t));
+//			pos = moveShift(pos, &i2c, mc1, mc2, 0, (pm.first * 10  - 230), 100, 1);
+//				//	std::cout << pm.first - 23.7 << " " << pm.second - 1.8 << "\n";
+//		}
+//	
+//	Position realPos(0, 230, 0);
+//	cout << pos.y - realPos.y;
 
 	//taskFinal(i2c, mc1, mc2, s1, cap);
 	//vector<vector<int>> f(23, vector<int>(23));
 	//f.at(round((pos.y) / 115) + 1).at(round(pos.x / 115) + 1) = 2;
 	//Lidar lidar;
 	//grid(&lidar, &f, &pos);
-	while(true)
-	{
-		moveRobot(pos, &i2c, mc1, mc2, 300, 150, -1, 0, 1);
-		delay(2000);
-		moveRobot(pos, &i2c, mc1, mc2, -300, -150, 1, 0, 1);
-		delay(2000);
-	}
 	
 	//task one
 	//taskOne(pos, mc1, mc2, s1, i2c, LED1, ButtonL, ButtonR);

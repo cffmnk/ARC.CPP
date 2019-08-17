@@ -1,5 +1,12 @@
 #include "alignment.h"
 
+double sharpRange(MyRio_Aio* sharp)
+{
+	double volts;
+	volts = Aio_Read(sharp);
+	return 1 / volts * 27.5;
+}
+
 void toWall(double dis, double precition, int idx, MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2, Lidar* lidar)
 {
 	///*
@@ -37,8 +44,8 @@ Position encToWall(Position pos, double dis, double precition, int idx, MyRio_I2
 {
 	///*
 	double dy = precition + 1;
-//	std::cout << "bbm\n";
-	Position cur = pos;
+	//	std::cout << "bbm\n";
+		Position cur = pos;
 	while (std::abs(dy) > precition)
 	{
 		lidar->poll();
@@ -71,7 +78,7 @@ Position encToWall(Position pos, double dis, double precition, int idx, MyRio_I2
 	return cur;
 }
 
-void shtuka(MyRio_I2c* i2c, MotorController& mc1, MotorController& mc2, Lidar* lidar)
+void shtuka(MyRio_I2c* i2c, MotorController& mc1, MotorController& mc2, Lidar* lidar, MyRio_Aio* sharpR, MyRio_Aio* sharpL)
 {
 	while (true)
 	{
@@ -79,20 +86,20 @@ void shtuka(MyRio_I2c* i2c, MotorController& mc1, MotorController& mc2, Lidar* l
 		int i1 = 0;
 		int i2 = 359;
 		
-		while ((lidar->ranges[i1 + 1] > 12) && (lidar->ranges[i1 + 1] < 40) && i1 < 270)
+		while ((lidar->ranges[i1 + 1] > 12) && (lidar->ranges[i1 + 1] < 35) && i1 < 270)
 			++i1;
     
-		while ((lidar->ranges[i2 - 1] > 12) && (lidar->ranges[i2 - 1] < 40) && i2 > 90)
+		while ((lidar->ranges[i2 - 1] > 12) && (lidar->ranges[i2 - 1] < 35) && i2 > 90)
 			--i2;
 		
-		while (((lidar->ranges[i1] <= 12) || (lidar->ranges[i1] >= 40)))
+		while (((lidar->ranges[i1] <= 12) || (lidar->ranges[i1] >= 35)))
 		{
 			--i1;
 			if (i1 < 0)
 				i1 += 360;
 		}	
 		
-		while (((lidar->ranges[i2] <= 12) || (lidar->ranges[i2] >= 40)))
+		while (((lidar->ranges[i2] <= 12) || (lidar->ranges[i2] >= 35)))
 		{
 			++i2;
 			if (i2 >= 360)
@@ -121,10 +128,16 @@ void shtuka(MyRio_I2c* i2c, MotorController& mc1, MotorController& mc2, Lidar* l
 			t = std::acos((A_X) / sqrt((A_X) * (A_X) + (A_Y) * (A_Y))) - M_PI / 2 + 0.07;
 		t = std::max(std::min(t, 0.4), -0.4);
 	
-		move(i2c, mc1, mc2, (pm.second - 0) * 10, (pm.first - 23.5) * 10, 1 * t, 0);
-		if (fabs(pm.second - 0) < 0.5 && fabs(pm.first - 23.5) < 0.5 && fabs(t) < 0.01)
+		if (sharpRange(sharpR) < 13)
+			move(i2c, mc1, mc2, -50, -0.2, 0);
+		if (sharpRange(sharpL) < 13)
+			move(i2c, mc1, mc2, -50, 0.2, 0);
+		else
+			move(i2c, mc1, mc2, (pm.second - 0) * 10, (pm.first - 23.5) * 10, 1 * t, 0);
+		//move(i2c, mc1, mc2, 0, 0, 1 * t, 0);
+		if(fabs(pm.second - 0) < 0.5 && fabs(pm.first - 23.5) < 0.5 && fabs(t) < 0.01)
 			break;
-	//	std::cout << pm.first - 23.7 << " " << pm.second - 1.8 << "\n";
+		//	std::cout << pm.first - 23.7 << " " << pm.second - 1.8 << "\n";
 	}
 }
 
