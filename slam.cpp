@@ -22,6 +22,112 @@ void lsf(vector<pair<float, float>>* points, Line* line)
 	line->rho = line->Xn * cos(line->theta) + line->Yn * sin(line->theta);
 }
 
+bool cor(int id, int n)
+{
+	return id >= 0 & id < n;
+}
+
+bool isCubeVer(int i, int j, vector<vector<int16_t>>* f)
+{
+	int n = f->size();
+	int m = f->at(0).size();
+	if (f->at(i).at(j) != 7) 
+		return false;
+	if (!cor(i, n) || !cor(i - 1, n) || !cor(i - 2, n)) 
+		return false;
+	if (f->at(i - 1).at(j) != 7 || f->at(i - 2).at(j) != 7)
+		return false;
+	if (cor(i + 1, n) && f->at(i + 1).at(j) == 7)
+		return false;
+	if (cor(i - 3, n) && f->at(i - 3).at(j) == 7)
+		return false;
+	return true;
+}
+
+bool isCubeHor(int i, int j, vector<vector<int16_t>>* f)
+{
+	int n = f->size();
+	int m = f->at(0).size();
+	if (f->at(i).at(j) != 7) 
+		return false;
+	if (!cor(j, m) || !cor(j - 1, m) || !cor(j - 2, m)) 
+		return false;
+	if (f->at(i).at(j - 1) != 7 || f->at(i).at(j - 2) != 7)
+		return false;
+	if (cor(j + 1, m) && f->at(i).at(j + 1) == 7)
+		return false;
+	if (cor(j - 3, m) && f->at(i).at(j - 3) == 7)
+		return false;
+	return true;
+}
+
+void buildCubes(vector<vector<int16_t>>* f, Position* pos)
+{
+	int n = f->size();
+	int m = f->at(0).size();
+	int cube = 4;
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < m; ++j)
+		{
+			if (isCubeHor(i, j, f))
+			{
+				double y = (n - i - 1) * 115;
+				cout << "pos " << i << " " << pos->y << " " << y << "\n";
+				if (pos->y > y && cor(i + 2, n))
+				{
+					for (int i1 = i; i1 <= i + 2; ++i1)
+						for (int j1 = j - 2; j1 <= j; ++j1)
+							f->at(i1).at(j1) = cube;
+				}
+				else if (cor(i - 2, n))
+				{
+					for (int i1 = i - 2; i1 <= i; ++i1)
+						for (int j1 = j - 2; j1 <= j; ++j1)
+							f->at(i1).at(j1) = cube;
+				}
+			}
+			if (isCubeVer(i, j, f))
+			{
+				double x = j * 115;
+				if (pos->x > x && cor(j - 2, m))
+				{
+					for (int i1 = i - 2; i1 <= i; ++i1)
+						for (int j1 = j - 2; j1 <= j; ++j1)
+							f->at(i1).at(j1) = cube;
+							
+				}
+				else if (cor(j + 2, m))
+				{
+					for (int i1 = i - 2; i1 <= i; ++i1)
+						for (int j1 = j; j1 <= j + 2; ++j1)
+							f->at(i1).at(j1) = cube;
+				}
+			}
+		}
+	}
+	
+	std::vector<int> ddx = { -1, -1, -1, 0, 1, 1, 1, 0 };
+	std::vector<int> ddy = { -1, 0, 1, 1, 1, 0, -1, -1 };
+	
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < m; ++j)
+		{
+			if (f->at(i).at(j) != cube) continue;
+			for (int k = 0; k < 8; ++k)
+			{
+				int i1 = i + ddy[k];
+				int j1 = j + ddx[k];
+				if (cor(i1, n) && cor(j1, m) && f->at(i1).at(j1) == 0)
+					f->at(i1).at(j1) = 6;
+					
+							
+			}
+		}
+	}
+}
+
 void grid(Lidar* lidar, vector<vector<int16_t>>* f, Position* pos)
 {
 	lidar->poll();
@@ -29,26 +135,26 @@ void grid(Lidar* lidar, vector<vector<int16_t>>* f, Position* pos)
 	{
 		if (abs(lidar->ranges[i - 1] - lidar->ranges[i]) > 5 && abs(lidar->ranges[i] - lidar->ranges[i + 1]) > 5)
 			lidar->ranges[i] = 0;
-		std::cout << i <<" " << lidar->ranges[i] << "\n";
+		//std::cout << i <<" " << lidar->ranges[i] << "\n";
 	}
+	
 	for (int i = 0; i < 360; ++i)
 	{
 		if (lidar->ranges[i] < 12) continue;
 		int ang = round(pos->theta * 180 / M_PI);
-		int idx = (i + ang + 360) % 360;// ? -ang
+		int idx = (i + ang + 360) % 360;
 		
-		cout << i << " " << idx << " " << lidar->ranges[idx] << "\n";
-		
+		//cout << i << " " << idx << " " << lidar->ranges[idx] << "\n";	
 			
 		double x = lidar->ranges[idx] * sin(i * M_PI / 180);
 		double y = lidar->ranges[idx] * cos(i * M_PI / 180);
 		
-		cout << "coords " << x << " " << y << "\n";  
+		//cout << "coords " << x << " " << y << "\n";  
 		
 		int xc = round((pos->x + x * 10) / 115) + 1;
 		int yc = round((pos->y + y * 10) / 115) + 1;
 		
-		cout << "x _ y " << xc << " " << yc << "\n" << "\n";
+		//cout << "x _ y " << xc << " " << yc << "\n" << "\n";
 		
 		if (xc > 0 && xc < f->size() && yc > 0 && yc < f->size())
 		{
@@ -56,6 +162,9 @@ void grid(Lidar* lidar, vector<vector<int16_t>>* f, Position* pos)
 				f->at(yc).at(xc) = 7;		
 		}
 	}
+	print_map((*f));
+	cout << "\n";
+	buildCubes(f, pos);
 }
 
 void slam(Lidar* lidar)

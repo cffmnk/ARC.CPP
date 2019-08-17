@@ -6,6 +6,7 @@
 #include "lidar.h"
 #include <algorithm>
 #include "moveRobot.h"
+#include "QR.h"
 
 #define POINTS_THRES 10
 #define POINTS_LINE_DIST 0.5
@@ -26,6 +27,10 @@ struct Line
 	float theta;
 	float rho;
 };
+bool cor(int id, int n);
+bool isCubeVer(int i, int j, vector<vector<int16_t>>* f);
+
+void buildCubes(vector<vector<int16_t>>* f, Position* pos);
 
 void grid(Lidar* lidar, vector<vector<int16_t>>* f, Position* pos);
 

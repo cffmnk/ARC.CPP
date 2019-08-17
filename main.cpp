@@ -137,25 +137,42 @@ int main()
 	std::cout << mc1.batteryVoltage() << std::endl;
 	Dio_WriteBit(&LED1, 0);
 	
-//	while (!(bool)Dio_ReadBit(&ButtonL)) {}
+	//while (!(bool)Dio_ReadBit(&ButtonL)) {}
 	
 	mc1.resetEncoders();
 	mc2.resetEncoders();
 	
 	Position pos(0, 0, 0);
+	
+	pos = moveShift(pos, &i2c, mc1, mc2, 0, -450, 250, 20);
+	return 0;
 
 	//taskFinal(i2c, mc1, mc2, s1, cap);
-	//vector<vector<int>> f(23, vector<int>(23));
-	//f.at(round((pos.y) / 115) + 1).at(round(pos.x / 115) + 1) = 2;
-	//Lidar lidar;
-	//grid(&lidar, &f, &pos);
-	while(true)
+	/*
+	char x = 'n';
+	char y = 'h';
+	Position pos((x - 'a') * 115, ('u' - y) * 115, -M_PI / 2);
+	vector<vector<int16_t>> f(23, vector<int16_t>(23));
+	fill(f);
+	f.at(round((pos.y) / 115) + 1).at(round(pos.x / 115) + 1) = 2;
+	Lidar lidar;
+	grid(&lidar, &f, &pos);
+	print_map(f);
+	//taskMain(i2c, mc1, mc2, s1, cap, field);
+	*/
 	{
-		moveRobot(pos, &i2c, mc1, mc2, 300, 150, -1, 0, 1);
-		delay(2000);
-		moveRobot(pos, &i2c, mc1, mc2, -300, -150, 1, 0, 1);
-		delay(2000);
+		int n = 46;
+		char x = 'n';
+		char y = 'h';
+		Position pos(22 * 115, 22 * 115, 0);
+		vector<vector<int16_t>> f(46, vector<int16_t>(46));
+		//fill(f);
+		f.at(round((pos.y) / 115) + 1).at(round(pos.x / 115) + 1) = 2;
+		Lidar lidar;
+		grid(&lidar, &f, &pos);
+		print_map(f);
 	}
+	
 	
 	//task one
 	//taskOne(pos, mc1, mc2, s1, i2c, LED1, ButtonL, ButtonR);

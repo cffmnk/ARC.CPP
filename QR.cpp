@@ -266,24 +266,24 @@ void print_map(std::vector<std::vector<int16_t>> & field)
 {
 
 	std::cout << (char)(0 + 'A' - 1) << " ";
-	for (int j = 0; j < N; ++j)
+	for (int j = 0; j < field[0].size(); ++j)
 	{
 		std::cout.width(3);
 		std::cout << (char)(j + 'A' - 1);
 	}
 	std::cout << "\n";
-	for (int i = 0; i < N; ++i)
+	for (int i = 0; i < field.size(); ++i)
 	{
 		std::cout << (char)(i + 'A' - 1) << " ";
-		for (int j = 0; j < N; ++j)
+		for (int j = 0; j < field[0].size(); ++j)
 		{
 			std::cout.width(3);
-			std::cout << field[N - 1 - i][j];
+			std::cout << field[field[0].size() - 1 - i][j];
 		}
 		std::cout << "\n";
 	}
 	std::cout << (char)(0 + 'A' - 1) << " ";
-	for (int j = 0; j < N; ++j)
+	for (int j = 0; j < field[0].size(); ++j)
 	{
 		std::cout.width(3);
 		std::cout << (char)(j + 'A' - 1);
