@@ -137,7 +137,7 @@ int main()
 	std::cout << mc1.batteryVoltage() << std::endl;
 	Dio_WriteBit(&LED1, 0);
 	
-	while (!(bool)Dio_ReadBit(&ButtonL)) {}
+//	while (!(bool)Dio_ReadBit(&ButtonL)) {}
 	
 	mc1.resetEncoders();
 	mc2.resetEncoders();
@@ -149,7 +149,13 @@ int main()
 	//f.at(round((pos.y) / 115) + 1).at(round(pos.x / 115) + 1) = 2;
 	//Lidar lidar;
 	//grid(&lidar, &f, &pos);
-	//taskMain(i2c, mc1, mc2, s1, cap, field);
+	while(true)
+	{
+		moveRobot(pos, &i2c, mc1, mc2, 300, 150, -1, 0, 1);
+		delay(2000);
+		moveRobot(pos, &i2c, mc1, mc2, -300, -150, 1, 0, 1);
+		delay(2000);
+	}
 	
 	//task one
 	//taskOne(pos, mc1, mc2, s1, i2c, LED1, ButtonL, ButtonR);
@@ -159,7 +165,7 @@ int main()
 	//taskThree(cap);
 	//alignment(&i2c, mc1, mc2);
 	
-	taskMain(i2c, mc1, mc2, s1, cap, field);
+	//taskMain(i2c, mc1, mc2, s1, cap, field);
 	
 	//std::vector<Position> ptr = localization(i2c, mc1, mc2, LED1);
 	
