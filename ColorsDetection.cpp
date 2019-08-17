@@ -1,5 +1,76 @@
 #include "ColorDetection.h"
 
+void findCube(VideoCapture* cap, Rect* bounding_rect, int col)
+{
+	cap->set(CAP_PROP_FRAME_HEIGHT, 240);
+	cap->set(CAP_PROP_FRAME_WIDTH, 320);
+	
+	Mat frame, hsv, orange_mask, yellow_mask, green_mask, blue_mask, red_mask, red_lower_mask, red_upper_mask, result;
+	*cap >> frame;
+
+	//imwrite("photo.jpg", frame);
+	
+	Color orange(10, 100, 100, 20, 255, 255);
+	Color red_lower(0, 120, 70, 7, 255, 255);
+	Color red_upper(170, 120, 70, 180, 255, 255);
+	Color blue(90, 50, 100, 150, 255, 255);
+	Color green(31, 20, 20, 85, 255, 255);
+	Color yellow(20, 100, 100, 30, 255, 255);
+	
+	Color lol1(0, 0, 0, 0, 0, 0);
+	Color lol2(0, 0, 0, 0, 0, 0);
+	switch (col)
+	{
+	case 1:
+		lol1 = orange;
+		lol2 = orange;
+		break;
+	case 2:
+		lol1 = blue;
+		lol2 = blue;
+		break;
+	case 3:
+		lol1 = green;
+		lol2 = green;
+		break;
+	case 4:
+		lol1 = red_lower;
+		lol2 = red_upper;
+		break;
+	case 5:
+		lol1 = yellow;
+		lol2 = yellow;
+		break;
+	}
+	cvtColor(frame, hsv, CV_BGR2HSV);
+	inRange(hsv, Scalar(lol1.lower_h, lol1.lower_s, lol1.lower_v), Scalar(lol1.upper_h, lol1.upper_s, lol1.upper_v), blue_mask);
+	inRange(hsv, Scalar(lol2.lower_h, lol2.lower_s, lol2.lower_v), Scalar(lol2.upper_h, lol2.upper_s, lol2.upper_v), orange_mask);
+	blue_mask = blue_mask + red_mask;
+	
+	vector<vector<Point>> blue_contours;      // Vector for storing contour
+    vector<Vec4i> hierarchy;
+	int largest_area = 0;
+	int largest_contour_index = 0;
+	int largest_color = 0;  
+	Rect x;
+	
+	findContours(blue_mask, blue_contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+	
+	for (size_t i = 0; i < blue_contours.size(); i++) // iterate through each contour.
+		{
+			double a = contourArea(blue_contours[i], false);       //  Find the area of contour
+			if(a > largest_area)
+			{
+				x = boundingRect(blue_contours[i]);
+				if (x.y > 40 && x.y < 125)
+				{
+					largest_area = a;
+					*bounding_rect = x;
+				}
+			}
+		}
+}
+
 int checkCube(VideoCapture* cap)
 {
 	cap->set(CAP_PROP_FRAME_HEIGHT, 240);
@@ -23,12 +94,12 @@ int checkCube(VideoCapture* cap)
 	inRange(hsv, Scalar(red_upper.lower_h, red_upper.lower_s, red_upper.lower_v), Scalar(red_upper.upper_h, red_upper.upper_s, red_upper.upper_v), red_upper_mask);
 	red_mask = red_lower_mask + red_upper_mask;
 	inRange(hsv, Scalar(yellow.lower_h, yellow.lower_s, yellow.lower_v), Scalar(yellow.upper_h, yellow.upper_s, yellow.upper_v), yellow_mask);
-	vector<vector<Point>> orange_contours, blue_contours, green_contours, red_contours, yellow_contours;     // Vector for storing contour
+	vector<vector<Point>> orange_contours, blue_contours, green_contours, red_contours, yellow_contours;      // Vector for storing contour
     vector<Vec4i> hierarchy;
 	int largest_area = 0;
 	int largest_contour_index = 0;
 	Rect bounding_rect;
-	int largest_color = 0;   // 1 - orange, 2 - blue, 3 - green, 4 - red, 5 - yellow, 0 - none
+	int largest_color = 0;    // 1 - orange, 2 - blue, 3 - green, 4 - red, 5 - yellow, 0 - none
 	
 	findContours(orange_mask, orange_contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 	findContours(blue_mask, blue_contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
@@ -38,7 +109,7 @@ int checkCube(VideoCapture* cap)
 	
 	for (size_t i = 0; i < orange_contours.size(); i++) // iterate through each contour.
 		{
-			double a = contourArea(orange_contours[i], false);    //  Find the area of contour
+			double a = contourArea(orange_contours[i], false);     //  Find the area of contour
 			if(a > largest_area)
 			{
 				
@@ -50,7 +121,7 @@ int checkCube(VideoCapture* cap)
 	
 	for (size_t i = 0; i < blue_contours.size(); i++) // iterate through each contour.
 		{
-			double a = contourArea(blue_contours[i], false);     //  Find the area of contour
+			double a = contourArea(blue_contours[i], false);      //  Find the area of contour
 			if(a > largest_area)
 			{
 				largest_area = a;
@@ -60,7 +131,7 @@ int checkCube(VideoCapture* cap)
 	
 	for (size_t i = 0; i < green_contours.size(); i++) // iterate through each contour.
 		{
-			double a = contourArea(green_contours[i], false);      //  Find the area of contour
+			double a = contourArea(green_contours[i], false);       //  Find the area of contour
 			if(a > largest_area)
 			{
 				largest_area = a;
@@ -71,7 +142,7 @@ int checkCube(VideoCapture* cap)
 	
 	for (size_t i = 0; i < red_contours.size(); i++) // iterate through each contour.
 		{
-			double a = contourArea(red_contours[i], false);       //  Find the area of contour
+			double a = contourArea(red_contours[i], false);        //  Find the area of contour
 			if(a > largest_area)
 			{
 				largest_area = a;
@@ -80,7 +151,7 @@ int checkCube(VideoCapture* cap)
 		}
 	for (size_t i = 0; i < yellow_contours.size(); i++) // iterate through each contour.
 		{
-			double a = contourArea(yellow_contours[i], false);        //  Find the area of contour
+			double a = contourArea(yellow_contours[i], false);         //  Find the area of contour
 			if(a > largest_area)
 			{
 				largest_area = a;
@@ -115,12 +186,12 @@ int checkObject(VideoCapture* cap)
 	inRange(hsv, Scalar(red_upper.lower_h, red_upper.lower_s, red_upper.lower_v), Scalar(red_upper.upper_h, red_upper.upper_s, red_upper.upper_v), red_upper_mask);
 	red_mask = red_lower_mask + red_upper_mask;
 	inRange(hsv, Scalar(yellow.lower_h, yellow.lower_s, yellow.lower_v), Scalar(yellow.upper_h, yellow.upper_s, yellow.upper_v), yellow_mask);
-	vector<vector<Point>> orange_contours, blue_contours, green_contours, red_contours, yellow_contours;     // Vector for storing contour
+	vector<vector<Point>> orange_contours, blue_contours, green_contours, red_contours, yellow_contours;      // Vector for storing contour
     vector<Vec4i> hierarchy;
 	int largest_area = 0;
 	int largest_contour_index = 0;
 	Rect bounding_rect;
-	int largest_color = 0;   // 1 - orange, 2 - blue, 3 - green, 4 - red, 5 - yellow, 0 - none
+	int largest_color = 0;    // 1 - orange, 2 - blue, 3 - green, 4 - red, 5 - yellow, 0 - none
 	
 	findContours(orange_mask, orange_contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 	findContours(blue_mask, blue_contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
@@ -132,7 +203,7 @@ int checkObject(VideoCapture* cap)
 	
 	for (size_t i = 0; i < orange_contours.size(); i++) // iterate through each contour.
 		{
-			double a = contourArea(orange_contours[i], false);    //  Find the area of contour
+			double a = contourArea(orange_contours[i], false);     //  Find the area of contour
 			if(a > largest_area)
 			{
 				
@@ -144,7 +215,7 @@ int checkObject(VideoCapture* cap)
 	
 	for (size_t i = 0; i < blue_contours.size(); i++) // iterate through each contour.
 		{
-			double a = contourArea(blue_contours[i], false);     //  Find the area of contour
+			double a = contourArea(blue_contours[i], false);      //  Find the area of contour
 			if(a > largest_area)
 			{
 				largest_area = a;
@@ -154,7 +225,7 @@ int checkObject(VideoCapture* cap)
 	
 	for (size_t i = 0; i < green_contours.size(); i++) // iterate through each contour.
 		{
-			double a = contourArea(green_contours[i], false);      //  Find the area of contour
+			double a = contourArea(green_contours[i], false);       //  Find the area of contour
 			if(a > largest_area)
 			{
 				largest_area = a;
@@ -165,7 +236,7 @@ int checkObject(VideoCapture* cap)
 	
 	for (size_t i = 0; i < red_contours.size(); i++) // iterate through each contour.
 		{
-			double a = contourArea(red_contours[i], false);       //  Find the area of contour
+			double a = contourArea(red_contours[i], false);        //  Find the area of contour
 			if(a > largest_area)
 			{
 				largest_area = a;
@@ -174,7 +245,7 @@ int checkObject(VideoCapture* cap)
 		}
 	for (size_t i = 0; i < yellow_contours.size(); i++) // iterate through each contour.
 		{
-			double a = contourArea(yellow_contours[i], false);        //  Find the area of contour
+			double a = contourArea(yellow_contours[i], false);         //  Find the area of contour
 			if(a > largest_area)
 			{
 				largest_area = a;
@@ -215,12 +286,12 @@ bool isWall(VideoCapture* cap)
 	inRange(hsv, Scalar(red_upper.lower_h, red_upper.lower_s, red_upper.lower_v), Scalar(red_upper.upper_h, red_upper.upper_s, red_upper.upper_v), red_upper_mask);
 	red_mask = red_lower_mask + red_upper_mask;
 	inRange(hsv, Scalar(yellow.lower_h, yellow.lower_s, yellow.lower_v), Scalar(yellow.upper_h, yellow.upper_s, yellow.upper_v), yellow_mask);
-	vector<vector<Point>> orange_contours, blue_contours, green_contours, red_contours, yellow_contours;      // Vector for storing contour
+	vector<vector<Point>> orange_contours, blue_contours, green_contours, red_contours, yellow_contours;       // Vector for storing contour
     vector<Vec4i> hierarchy;
 	int largest_area = 0;
 	int largest_contour_index = 0;
 	Rect bounding_rect;
-	int largest_color = 0;    // 1 - orange, 2 - blue, 3 - green, 4 - red, 5 - yellow, 0 - none
+	int largest_color = 0;     // 1 - orange, 2 - blue, 3 - green, 4 - red, 5 - yellow, 0 - none
 	
 	findContours(orange_mask, orange_contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 	findContours(blue_mask, blue_contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
@@ -229,56 +300,56 @@ bool isWall(VideoCapture* cap)
 	findContours(yellow_mask, yellow_contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 	
 	for (size_t i = 0; i < orange_contours.size(); i++) // iterate through each contour.
-	{
-		double a = contourArea(orange_contours[i], false);     //  Find the area of contour
-		if(a > largest_area)
 		{
+			double a = contourArea(orange_contours[i], false);      //  Find the area of contour
+			if(a > largest_area)
+			{
 				
-			largest_area = a;
-			largest_color = 1;
+				largest_area = a;
+				largest_color = 1;
+			}
 		}
-	}
 	
 	
 	for (size_t i = 0; i < blue_contours.size(); i++) // iterate through each contour.
-	{
-		double a = contourArea(blue_contours[i], false);      //  Find the area of contour
-		if(a > largest_area)
 		{
-			largest_area = a;
-			largest_color = 2;
+			double a = contourArea(blue_contours[i], false);       //  Find the area of contour
+			if(a > largest_area)
+			{
+				largest_area = a;
+				largest_color = 2;
+			}
 		}
-	}
 	
 	for (size_t i = 0; i < green_contours.size(); i++) // iterate through each contour.
-	{
-		double a = contourArea(green_contours[i], false);       //  Find the area of contour
-		if(a > largest_area)
 		{
-			largest_area = a;
-			largest_color = 3;
-		}
+			double a = contourArea(green_contours[i], false);        //  Find the area of contour
+			if(a > largest_area)
+			{
+				largest_area = a;
+				largest_color = 3;
+			}
 			
-	}
+		}
 	
 	for (size_t i = 0; i < red_contours.size(); i++) // iterate through each contour.
-	{
-		double a = contourArea(red_contours[i], false);        //  Find the area of contour
-		if(a > largest_area)
 		{
-			largest_area = a;
-			largest_color = 4;
+			double a = contourArea(red_contours[i], false);         //  Find the area of contour
+			if(a > largest_area)
+			{
+				largest_area = a;
+				largest_color = 4;
+			}
 		}
-	}
 	for (size_t i = 0; i < yellow_contours.size(); i++) // iterate through each contour.
-	{
-		double a = contourArea(yellow_contours[i], false);         //  Find the area of contour
-		if(a > largest_area)
 		{
-			largest_area = a;
-			largest_color = 5;
+			double a = contourArea(yellow_contours[i], false);          //  Find the area of contour
+			if(a > largest_area)
+			{
+				largest_area = a;
+				largest_color = 5;
+			}
 		}
-	}
 	cout << "color " << largest_color << "\n";
 	
 	return largest_color == 0;
