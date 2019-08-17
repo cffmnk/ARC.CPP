@@ -23,18 +23,6 @@ struct Color
 		, upper_v(uv) {}
 };
 
-typedef enum
-{
-	orange = 1,
-	blue = 2,
-	green = 3,
-	red = 4,
-	yellow = 5,
-	none = 0
-} Clr;
-
-void findCube(VideoCapture* cap, Rect* bounding_rect, int col);
-
 int checkCube(VideoCapture* cap);
 
 int checkObject(VideoCapture* cap);

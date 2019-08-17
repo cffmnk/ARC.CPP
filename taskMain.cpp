@@ -74,7 +74,7 @@ void taskMain(MyRio_I2c & i2c, MotorController & mc1, MotorController & mc2, Ser
 		}
 		
 		
-	//	shtuka(&i2c, mc1, mc2, &lidar); 
+		shtuka(&i2c, mc1, mc2, &lidar); 
 	
 		pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, true, true);     // motors reset
 		pos = Position(dots[k].x * 115, dots[k].y * 115, dots[k].theta);     // reset position

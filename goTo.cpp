@@ -76,7 +76,7 @@ Position turn(MyRio_I2c* i2c, MotorController & mc1, MotorController & mc2, Posi
 	while (std::fabs(dtheta) > b)
 	{
 		dtheta = goal.theta - pos.theta;
-		//std::cout << goal.theta << " " << pos.theta << "\n";
+		std::cout << goal.theta << " " << pos.theta << "\n";
 		double theta_speed = std::max(std::min(dtheta * 1.3, M_PI / 2), -M_PI / 2);
 		pos = moveRobot(pos, i2c, mc1, mc2, 0, 0, theta_speed, false, false);  
 	}
