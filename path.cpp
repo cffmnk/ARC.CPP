@@ -1,6 +1,6 @@
 #include "path.h"
 const double INF = 65000;
-const int8_t N = 23;
+const int8_t N = 46;
 double f[N][N];
 
 int16_t ddx[8] = {-1, -1, -1, 0, 1, 1, 1, 0};//{0, -1, 0, 1, 0, -1, 0, 1}; //
@@ -69,8 +69,11 @@ std::vector<pii> aStar(pii start, pii goal, std::vector<std::vector<int16_t>> & 
 
             double newd = d[cur.second][cur.first] + dis(cur, u);
 	        
-	        if (field[u.second + 1][u.first + 1] == 6 || field[u.second + 1][u.first + 1] == 2 || field[u.second + 1][u.first + 1] == 7)
-		        newd += 1000;
+	        //std::cout << field.size() << " " << u.first + 1 << " " <<  u.second + 1  << "\n";
+	        
+	        if (u.second + 1 < 46 && u.first + 1 < 46)
+				if (field[u.second + 1][u.first + 1] == 6 || field[u.second + 1][u.first + 1] == 2 || field[u.second + 1][u.first + 1] == 7)
+					newd += 1000;
 	        
 	       // std::cout << "U " << (int)u.x << " " << (int)u.y << " " << newd << " " <<  d[u.y][u.x] << "\n";
 

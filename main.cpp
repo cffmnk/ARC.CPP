@@ -31,7 +31,7 @@ using namespace std;
 #include "taskMain.h"
 #include "taskFinal.h"
 
-const int N = 23;
+const int N = 46;
 std::vector<std::vector<int16_t>> field(N, std::vector<int16_t>(N));
 
 void taskOne(Position& pos, MotorController& mc1, MotorController& mc2, ServoController& s1, MyRio_I2c& i2c, MyRio_Dio& LED1, MyRio_Dio& ButtonL, MyRio_Dio& ButtonR)
@@ -97,7 +97,6 @@ double sharpRange(MyRio_Aio* sharp)
 
 int main()
 {
-	
 	NiFpga_Status status;
 	MyRio_I2c i2c;
 	NiFpga_Bool buttonState;
@@ -159,17 +158,114 @@ int main()
 	*/
 	{
 		int n = 46;
-		Position pos(22 * 115, 22 * 115, 0);
-		vector<vector<int16_t>> f(46, vector<int16_t>(46));
+		int cnt = 1;
+		Position pos(23 * 115, 23 * 115, 0);
+		//vector<vector<int16_t>> field(46, vector<int16_t>(46));
 		//fill(f);
-		f.at(round((pos.y) / 115) + 1).at(round(pos.x / 115) + 1) = 2;
+		field.at(23 + 1).at(23 + 1) = 2;
 		Lidar lidar;
-		grid(&lidar, &f, &pos);
-		print_map(f);
+		grid(&lidar, &field, &pos);
+		s1.openLeft();
+		s1.openRight();
 		
-		std::vector<Dot> path = cubesCoordinates(&field, &pos);
-		pii current = pii();;
+		std::vector<Dot> cubes = cubesCoordinates(&field, &pos);
+		field.at(23 + 1).at(23 + 1) = 2;
+		print_map(field);
+		for (int i = 0; i < cubes.size(); ++i)
+		{
+			std::cout << cubes[i].x <<  " " << cubes[i].y << " " << cubes[i].theta << std::endl;
+		}
+		cout << "\n";
+		
+		pii current = pii(23, 23);
+		
+		int cube_color[10];
+		int object_color[10];
+	
+		for (int i = 0; i < 10; ++i)
+		{
+			cube_color[i] = -1;
+			object_color[i] = -1;
+		}
+		int needed = 2;
+		for (int k = 0; k < cubes.size();++k)
+		{
+			pii start = current;
+			pii goal = current;
+			int idx = 0;
+			for (int i = k; i < cubes.size(); ++i)
+			{
+				if (hypotl(current.first - cubes[i].x, current.second - cubes[i].y) < hypotl(current.first - cubes[0].x, current.second - cubes[0].y))
+					std::swap(cubes[k], cubes[i]);
+			}
+		
+			if (cubes.size())
+				goal = pii(cubes[k].x, cubes[k].y);
+			std::cout << current.first << " " << current.second << "\n";
+			std::cout << goal.first << " " << goal.second << "\n";
+		
+			std::vector<pii> points = aStar(current, goal, field);       // build the path
+		
+			std::cout << "path: " << 0 << "\n";
+			for (int i = 0; i < points.size(); ++i)
+				std::cout << (int)points[i].first << " " << (int)points[i].second << '\n';
+			std::cout << "\n";
+		
+			pos = goTo(points, pos, cubes[k].theta, &i2c, mc1, mc2); 
+			
+			delay(1000);
+			current = goal;
+			
+			//shtuka(&i2c, mc1, mc2, &lidar); 
+	
+			pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, true, true);      // motors reset
+			pos = Position(cubes[k].x * 115, cubes[k].y * 115, cubes[k].theta);
+			
+			if (cube_color[k] < 1)
+				cube_color[k] = checkCube(&cap);
+			
+			if (object_color[k] < 1)
+				object_color[k] = checkObject(&cap);
+			
+			std::cout << "\n";
+			std::cout << "colors : " << k << " | " << cube_color[k] << " " << object_color[k] << "\n";
+			std::cout << "\n";
+			
+			if (cube_color[k] == needed)
+			{
+				bool left = ((cnt == 1) || (cnt == 3));
+				bool change = (cnt > 1);
+		
+				pos = moveRobot(pos, &i2c, mc1, mc2, 0, 0, 0, true, true); 
+				pos = takeCube(pos, &i2c, mc1, mc2, s1, left, change);   
+				++cnt;
+				needed = object_color[k];
+				int idx = k;
+				for (int j = 0; j < k; ++j)
+				{
+					if (cube_color[j] == needed)
+					{
+						idx = j - 1;
+					}
+				}
+				k = idx;
+			}
+			
+			delay(2000);
+			
+		}
+		
+		delay(1000);
+		grid(&lidar, &field, &pos);
+		std::vector<Dot> cubes2 = cubesCoordinates(&field, &pos);
+		for (int t = 0; t < cubes2.size(); ++t)
+		{
+			cubes.push_back(cubes2[t]);
+		}
 	}
+	
+	
+	
 	
 	
 	//task one

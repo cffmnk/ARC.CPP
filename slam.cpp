@@ -65,7 +65,7 @@ void buildCubes(vector<vector<int16_t>>* f, Position* pos)
 {
 	int n = f->size();
 	int m = f->at(0).size();
-	int cube = 4;
+	int cube = 9;
 	std::vector<pii> cubes;
 	for (int i = 0; i < n; ++i)
 	{
@@ -141,7 +141,7 @@ void buildCubes(vector<vector<int16_t>>* f, Position* pos)
 				int i1 = i + ddy[k];
 				int j1 = j + ddx[k];
 				if (cor(i1, n) && cor(j1, m) && f->at(i1).at(j1) == 0)
-					f->at(i1).at(j1) = 6;			
+					f->at(i1).at(j1) = 6;		
 			}
 		}
 	}
@@ -188,6 +188,7 @@ void grid(Lidar* lidar, vector<vector<int16_t>>* f, Position* pos)
 	int m = f->at(0).size();
 	std::vector<int> ddx = { -1, -1, -1, 0, 1, 1, 1, 0 };
 	std::vector<int> ddy = { -1, 0, 1, 1, 1, 0, -1, -1 };
+	
 	for (int i = 0; i < n; ++i)
 	{
 		for (int j = 0; j < m; ++j)
@@ -202,9 +203,9 @@ void grid(Lidar* lidar, vector<vector<int16_t>>* f, Position* pos)
 			}
 		}
 	}
-	
 	print_map((*f));
 	cout << "\n";
+	buildCubes(f, pos);
 	buildCubes(f, pos);
 }
 
@@ -212,7 +213,8 @@ std::vector<Dot> cubesCoordinates(vector<vector<int16_t>>* f, Position* pos)
 {
 	int n = f->size();
 	int m = f->at(0).size();
-	int cube = 4;
+	int cube = 9;
+	//std::cout << "cubeFound\n";
 	std::vector<Dot> res;
 	std::vector<int> ddx = { -1, -1, -1, 0, 1, 1, 1, 0 };
 	std::vector<int> ddy = { -1, 0, 1, 1, 1, 0, -1, -1 };
@@ -220,8 +222,10 @@ std::vector<Dot> cubesCoordinates(vector<vector<int16_t>>* f, Position* pos)
 	{
 		for (int j = 0; j < m; ++j)
 		{
+			////std::cout << i << " " << j << " " << (f->at(i).at(j)) << "\n" ;
 			if (f->at(i).at(j) != cube) continue;
 			int cnt = 0;
+			
 			for (int k = 0; k < 8; ++k)
 			{
 				int i1 = i + ddy[k];
@@ -229,17 +233,23 @@ std::vector<Dot> cubesCoordinates(vector<vector<int16_t>>* f, Position* pos)
 				if (cor(i1, n) && cor(j1, m) && f->at(i1).at(j1) == cube)
 					cnt++;	
 			}
+			//std::cout << i << " " << j << " " << cnt << "\n";
 			if (cnt == 8)
 			{
-				std::vector<int> dx1 = { 0, 3, 0, -1 };
+				std::vector<int> dx1 = { 0, 3, 0, -3 };
 				std::vector<int> dy1 = { 3, 0, -3, 0 };
 				std::vector<double> ang = {M_PI, M_PI / 2, 0, -M_PI / 2};
 				int best = 0;
 				double dist = 5000;
+				//cout << "cube: " << i << " " << j << "\n";
 				for (int k = 0; k < 4; ++k)
 				{
 					int x1 = (j + dx1[k]) * 115;
 					int y1 = (n - (i + dy1[k]) - 1) * 115;
+					
+					int cur = f->at(i + dy1[k]).at(j + dx1[k]);
+					
+					if (cur == cube || cur == 7 || cur == 6) continue;
 					
 					if (hypotl(x1 - pos->x, y1 - pos->y) < dist)
 					{
@@ -247,7 +257,23 @@ std::vector<Dot> cubesCoordinates(vector<vector<int16_t>>* f, Position* pos)
 						dist = hypotl(x1 - pos->x, y1 - pos->y);
 					}
 				}
-				res.push_back(Dot((j + dx1[best]), (i + dy1[best]), ang[best]));
+				int xx = j + dx1[best];
+				int yy = i + dy1[best];
+				f->at(i).at(j) = 20 + res.size();
+				//f->at(yy).at(xx) = 10 + res.size();
+				/*
+				if (f->at(xx + dx1[best] / 3).at(yy + dy1[best] / 3) == 0)
+				{
+					xx += dx1[best] / 3;
+					yy += dy1[best] / 3;
+					xx += dx1[best] / 3;
+					yy += dy1[best] / 3;
+				}
+				*/
+				std::cout << "cube: " << j << " " << i << "\n";
+					
+					
+				res.push_back(Dot(xx - 1, yy - 1, ang[best]));
 			}
 		}
 	}
