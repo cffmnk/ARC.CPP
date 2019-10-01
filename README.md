@@ -1,3 +1,5 @@
 # Advanced Robotics Challenge WRO 2019
 
-Too much of Bad Code :)
+MyRio1900 cross compilation
+
+Too much Bad Code :)
